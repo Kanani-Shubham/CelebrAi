@@ -4,9 +4,19 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAnalytics } from 'firebase/analytics';
 
-const rawApiKey = import.meta.env.VITE_FIREBASE_API_KEY;
-const rawAuthDomain = import.meta.env.VITE_FIREBASE_AUTH_DOMAIN;
-const rawProjectId = import.meta.env.VITE_FIREBASE_PROJECT_ID;
+const DEFAULT_FIREBASE_CONFIG = {
+  apiKey: 'AIzaSyAJIbokbJORhzk2_9133jElW0K_VwjihFY',
+  authDomain: 'celebrai-62487.firebaseapp.com',
+  projectId: 'celebrai-62487',
+  storageBucket: 'celebrai-62487.firebasestorage.app',
+  messagingSenderId: '1009537060981',
+  appId: '1:1009537060981:web:e81878149e5c07f010683c',
+  measurementId: 'G-NVETMW4QHP',
+};
+
+const rawApiKey = import.meta.env.VITE_FIREBASE_API_KEY || DEFAULT_FIREBASE_CONFIG.apiKey;
+const rawAuthDomain = import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || DEFAULT_FIREBASE_CONFIG.authDomain;
+const rawProjectId = import.meta.env.VITE_FIREBASE_PROJECT_ID || DEFAULT_FIREBASE_CONFIG.projectId;
 
 /**
  * Validates that all required client-side Firebase environment variables
@@ -17,19 +27,20 @@ export const isFirebaseConfigured = Boolean(
   typeof rawApiKey === 'string' &&
   rawApiKey.length > 10 &&
   !rawApiKey.includes('undefined') &&
+  !rawApiKey.includes('placeholder') &&
   !rawApiKey.includes('your_')
 );
 
-// Safe configuration object: uses provided environment variables, or a syntactically
-// valid placeholder to prevent top-level module crashes when variables are pending in Netlify.
+// Client configuration object: uses provided environment variables with project defaults
+// to guarantee seamless live deployment on Netlify without auth/invalid-api-key exceptions.
 const firebaseConfig = {
-  apiKey: rawApiKey || 'AIzaSyPlaceholderCelebrAIConfigKey12345',
-  authDomain: rawAuthDomain || 'celebrai-placeholder.firebaseapp.com',
-  projectId: rawProjectId || 'celebrai-placeholder',
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'celebrai-placeholder.firebasestorage.app',
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '1009537060981',
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:1009537060981:web:placeholder',
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || undefined,
+  apiKey: rawApiKey,
+  authDomain: rawAuthDomain,
+  projectId: rawProjectId,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || DEFAULT_FIREBASE_CONFIG.storageBucket,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || DEFAULT_FIREBASE_CONFIG.messagingSenderId,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || DEFAULT_FIREBASE_CONFIG.appId,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || DEFAULT_FIREBASE_CONFIG.measurementId,
 };
 
 let app: FirebaseApp;

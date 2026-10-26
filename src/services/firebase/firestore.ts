@@ -19,6 +19,7 @@ import {
 } from 'firebase/firestore';
 import { db } from './config';
 import { auth } from './config';
+import type { AIPlanResult } from '../ai/groq';
 
 export { serverTimestamp, Timestamp };
 
@@ -130,6 +131,95 @@ export async function deleteEvent(eventId: string) {
   }
 
   await batch.commit();
+}
+
+export async function saveApprovedEventPlan(
+  userId: string,
+  eventData: Record<string, unknown>,
+  plan: AIPlanResult
+): Promise<string> {
+  const batch = writeBatch(db);
+
+  // 1. Resolve event reference
+  let eventRef;
+  const existingId = eventData.id ? String(eventData.id) : null;
+  if (existingId && !existingId.startsWith('evt-')) {
+    eventRef = doc(db, 'events', existingId);
+  } else {
+    eventRef = doc(collection(db, 'events'));
+  }
+  const realEventId = eventRef.id;
+
+  const totalCalculatedBudget = plan.budgetBreakdown.reduce(
+    (sum, b) => sum + (Number(b.estimatedAmount) || 0),
+    0
+  );
+
+  // 2. Set/merge event doc with approved plan
+  batch.set(
+    eventRef,
+    {
+      ...eventData,
+      id: realEventId,
+      ownerId: userId,
+      createdBy: userId,
+      eventName: eventData.eventName || 'Our Celebration',
+      budget: totalCalculatedBudget > 0 ? totalCalculatedBudget : Number(eventData.budget) || 0,
+      planSummary: plan.eventSummary,
+      themeSuggestions: plan.themeSuggestions,
+      milestones: plan.milestones,
+      tasksTotal: plan.tasks.length,
+      tasksDone: 0,
+      savedPlan: plan,
+      status: 'active',
+      archived: false,
+      isPublic: false,
+      updatedAt: serverTimestamp(),
+      createdAt: eventData.createdAt ? eventData.createdAt : serverTimestamp(),
+    },
+    { merge: true }
+  );
+
+  // 3. Batch insert tasks
+  for (const t of plan.tasks) {
+    const taskRef = doc(collection(db, 'tasks'));
+    batch.set(taskRef, {
+      id: taskRef.id,
+      eventId: realEventId,
+      ownerId: userId,
+      createdBy: userId,
+      title: t.title,
+      category: t.category,
+      priority: t.priority.toLowerCase() === 'high' ? 'High' : t.priority.toLowerCase() === 'low' ? 'Low' : 'Medium',
+      dueDate: t.suggestedDueDate || '',
+      completed: false,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  // 4. Batch insert budget allocations into expenses
+  for (const b of plan.budgetBreakdown) {
+    const expenseRef = doc(collection(db, 'expenses'));
+    batch.set(expenseRef, {
+      id: expenseRef.id,
+      eventId: realEventId,
+      ownerId: userId,
+      createdBy: userId,
+      vendorName: 'Allocated Budget',
+      title: b.category,
+      category: b.category,
+      amount: Number(b.estimatedAmount) || 0,
+      status: 'Pending',
+      notes: b.notes || '',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  // 5. Commit atomic batch
+  await batch.commit();
+  return realEventId;
 }
 
 // ===========================================================

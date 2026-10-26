@@ -14,8 +14,11 @@ export interface EventData {
   tasksTotal: number;
   status: 'active' | 'past' | 'archived';
   daysLeft: number;
+  ownerId?: string;
   requirements?: string;
   planSummary?: string;
+  themeSuggestions?: string[];
+  savedPlan?: unknown;
   milestones?: { targetDate?: string; title: string; description?: string }[];
 }
 

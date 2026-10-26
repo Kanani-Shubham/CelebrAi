@@ -49,13 +49,14 @@ service cloud.firestore {
     match /events/{eventId} {
       allow read: if isAuthenticated() && (
         resource.data.ownerId == request.auth.uid ||
+        resource.data.createdBy == request.auth.uid ||
         resource.data.isPublic == true ||
         (resource.data.collaborators is list && request.auth.uid in resource.data.collaborators)
       );
       allow create: if isAuthenticated()
-        && request.resource.data.ownerId == request.auth.uid;
+        && (request.resource.data.ownerId == request.auth.uid || request.resource.data.createdBy == request.auth.uid);
       allow update, delete: if isAuthenticated()
-        && resource.data.ownerId == request.auth.uid;
+        && (resource.data.ownerId == request.auth.uid || resource.data.createdBy == request.auth.uid);
     }
 
     // ----------------------------------------------------------------
@@ -68,10 +69,12 @@ service cloud.firestore {
         isEventMember(resource.data.eventId)
       );
       allow create: if isAuthenticated() && (
-        request.resource.data.createdBy == request.auth.uid
+        request.resource.data.createdBy == request.auth.uid ||
+        request.resource.data.ownerId == request.auth.uid
       );
       allow update, delete: if isAuthenticated() && (
         resource.data.createdBy == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
         isEventMember(resource.data.eventId)
       );
     }
@@ -82,13 +85,16 @@ service cloud.firestore {
     match /expenses/{expenseId} {
       allow read: if isAuthenticated() && (
         resource.data.createdBy == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
         isEventMember(resource.data.eventId)
       );
       allow create: if isAuthenticated() && (
-        request.resource.data.createdBy == request.auth.uid
+        request.resource.data.createdBy == request.auth.uid ||
+        request.resource.data.ownerId == request.auth.uid
       );
       allow update, delete: if isAuthenticated() && (
         resource.data.createdBy == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
         isEventMember(resource.data.eventId)
       );
     }
@@ -99,13 +105,16 @@ service cloud.firestore {
     match /guests/{guestId} {
       allow read: if isAuthenticated() && (
         resource.data.createdBy == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
         isEventMember(resource.data.eventId)
       );
       allow create: if isAuthenticated() && (
-        request.resource.data.createdBy == request.auth.uid
+        request.resource.data.createdBy == request.auth.uid ||
+        request.resource.data.ownerId == request.auth.uid
       );
       allow update, delete: if isAuthenticated() && (
         resource.data.createdBy == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
         isEventMember(resource.data.eventId)
       );
     }
