@@ -15,6 +15,7 @@ export interface EventData {
   status: 'active' | 'past' | 'archived';
   daysLeft: number;
   requirements?: string;
+  planSummary?: string;
   milestones?: { targetDate?: string; title: string; description?: string }[];
 }
 

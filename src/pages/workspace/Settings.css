@@ -5,6 +5,38 @@
   gap: 18px;
 }
 
+.settings-header-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.settings-back-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-tuxedo-black);
+  transition: all 0.2s ease;
+}
+
+.settings-back-btn:hover {
+  background: var(--border-default);
+  transform: translateX(-1px);
+}
+
+.settings-back-btn:focus-visible {
+  outline: 2px solid var(--color-charcoal);
+  outline-offset: 2px;
+}
+
 .settings-head-info {
   display: flex;
   flex-direction: column;

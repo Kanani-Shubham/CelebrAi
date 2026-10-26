@@ -16,6 +16,7 @@ import {
   Mail,
   Loader2,
   Check,
+  ArrowLeft,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { signOut, resetPassword, updateUserProfile } from '../../services/firebase/auth';
@@ -31,6 +32,14 @@ export function Settings() {
   const [language, setLanguage] = useState(profile?.language || 'English');
   const [saving, setSaving] = useState(false);
   const [sendingReset, setSendingReset] = useState(false);
+
+  const handleBack = () => {
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate('/dashboard');
+    }
+  };
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,9 +88,20 @@ export function Settings() {
 
   return (
     <div className="settings-page">
-      <div className="settings-head-info">
-        <h1 className="settings-title">Settings</h1>
-        <p className="settings-sub">Manage your account preferences and security</p>
+      <div className="settings-header-bar">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="icon-btn settings-back-btn"
+          aria-label="Go back to previous page"
+          title="Go back"
+        >
+          <ArrowLeft size={20} />
+        </button>
+        <div className="settings-head-info">
+          <h1 className="settings-title">Settings</h1>
+          <p className="settings-sub">Manage your account preferences and security</p>
+        </div>
       </div>
 
       {/* Account Profile Form */}

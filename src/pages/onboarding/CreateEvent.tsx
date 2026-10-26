@@ -34,7 +34,7 @@ type EventForm = {
 
 export function CreateEvent() {
   const { user } = useAuth();
-  const { refresh } = useEvent();
+  const { addEvent, refresh } = useEvent();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const totalSteps = 4;
@@ -44,7 +44,7 @@ export function CreateEvent() {
     eventName: '',
     eventDate: '',
     location: '',
-    guestCount: 100,
+    guestCount: 150,
     budget: 500000,
     currency: 'INR',
     theme: '',
@@ -56,23 +56,37 @@ export function CreateEvent() {
   }
 
   async function handleCreate() {
-    if (!user) return;
     if (!form.eventName.trim() || !form.eventDate || !form.location) {
       toast.error('Please fill in event name, date, and location.');
       return;
     }
     setSaving(true);
     try {
-      const id = await createEvent(user.uid, {
+      const created = await addEvent({
         ...form,
         coverImage: '',
-        tasksTotal: 0,
-        tasksDone: 0,
         planSummary: '',
       });
       await refresh();
-      navigate(`/ai-plan?eventId=${id}`);
-    } catch {
+      navigate(`/ai-plan?eventId=${created.id}`);
+    } catch (err) {
+      console.warn('addEvent failed, attempting direct Firestore create:', err);
+      if (user) {
+        try {
+          const id = await createEvent(user.uid, {
+            ...form,
+            coverImage: '',
+            tasksTotal: 0,
+            tasksDone: 0,
+            planSummary: '',
+          });
+          await refresh();
+          navigate(`/ai-plan?eventId=${id}`);
+          return;
+        } catch {
+          // ignore
+        }
+      }
       toast.error('Failed to create event. Please try again.');
     } finally {
       setSaving(false);

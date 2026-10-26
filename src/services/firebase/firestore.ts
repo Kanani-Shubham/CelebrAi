@@ -87,11 +87,21 @@ function requireAuth(): string {
 // ===========================================================
 // EVENTS
 // ===========================================================
+function toMillis(val: unknown): number {
+  if (!val) return 0;
+  if (typeof (val as { toMillis?: () => number }).toMillis === 'function') {
+    return (val as { toMillis: () => number }).toMillis();
+  }
+  if (val instanceof Date) return val.getTime();
+  const d = new Date(val as string | number).getTime();
+  return isNaN(d) ? 0 : d;
+}
+
 export async function getUserEvents(uid: string) {
-  return queryCollection('events', [
+  const docs = await queryCollection('events', [
     where('ownerId', '==', uid),
-    orderBy('createdAt', 'desc'),
   ]);
+  return docs.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
 }
 
 export async function createEvent(ownerId: string, data: Record<string, unknown>) {
@@ -126,10 +136,10 @@ export async function deleteEvent(eventId: string) {
 // TASKS
 // ===========================================================
 export async function getEventTasks(eventId: string) {
-  return queryCollection('tasks', [
+  const docs = await queryCollection('tasks', [
     where('eventId', '==', eventId),
-    orderBy('createdAt', 'asc'),
   ]);
+  return docs.sort((a, b) => toMillis(a.createdAt) - toMillis(b.createdAt));
 }
 
 export async function createTask(eventId: string, data: Record<string, unknown>) {
@@ -154,10 +164,10 @@ export async function deleteTask(taskId: string) {
 // EXPENSES
 // ===========================================================
 export async function getEventExpenses(eventId: string) {
-  return queryCollection('expenses', [
+  const docs = await queryCollection('expenses', [
     where('eventId', '==', eventId),
-    orderBy('createdAt', 'desc'),
   ]);
+  return docs.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
 }
 
 export async function createExpense(eventId: string, data: Record<string, unknown>) {
@@ -182,10 +192,10 @@ export async function deleteExpense(expenseId: string) {
 // GUESTS
 // ===========================================================
 export async function getEventGuests(eventId: string) {
-  return queryCollection('guests', [
+  const docs = await queryCollection('guests', [
     where('eventId', '==', eventId),
-    orderBy('name', 'asc'),
   ]);
+  return docs.sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
 }
 
 export async function createGuest(eventId: string, data: Record<string, unknown>) {
@@ -211,10 +221,10 @@ export async function deleteGuest(guestId: string) {
 // VENDORS (saved by users)
 // ===========================================================
 export async function getSavedVendors(eventId: string) {
-  return queryCollection('vendors', [
+  const docs = await queryCollection('vendors', [
     where('eventId', '==', eventId),
-    orderBy('createdAt', 'desc'),
   ]);
+  return docs.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
 }
 
 export async function saveVendor(eventId: string, data: Record<string, unknown>) {
@@ -233,10 +243,10 @@ export async function deleteVendor(vendorId: string) {
 // AI CONVERSATIONS
 // ===========================================================
 export async function getEventConversations(eventId: string) {
-  return queryCollection('conversations', [
+  const docs = await queryCollection('conversations', [
     where('eventId', '==', eventId),
-    orderBy('createdAt', 'asc'),
   ]);
+  return docs.sort((a, b) => toMillis(a.createdAt) - toMillis(b.createdAt));
 }
 
 export async function saveConversationMessage(
@@ -256,11 +266,12 @@ export async function saveConversationMessage(
 // NOTIFICATIONS
 // ===========================================================
 export async function getUserNotifications(uid: string) {
-  return queryCollection('notifications', [
+  const docs = await queryCollection('notifications', [
     where('userId', '==', uid),
-    orderBy('createdAt', 'desc'),
-    limit(50),
   ]);
+  return docs
+    .sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt))
+    .slice(0, 50);
 }
 
 export async function markNotificationRead(notifId: string) {

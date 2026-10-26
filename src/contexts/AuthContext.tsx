@@ -41,18 +41,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshProfile = useCallback(async () => {
     if (!user) return;
-    const p = await getUserProfile(user.uid);
-    if (p) setProfile(p as UserProfile);
+    try {
+      const p = await getUserProfile(user.uid);
+      if (p) setProfile(p as UserProfile);
+    } catch (err) {
+      console.warn('[AuthContext] Failed to refresh profile:', err);
+    }
   }, [user]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
-        const token = await firebaseUser.getIdToken();
-        setIdToken(token);
-        const p = await getUserProfile(firebaseUser.uid);
-        setProfile(p as UserProfile | null);
+        try {
+          const token = await firebaseUser.getIdToken();
+          setIdToken(token);
+        } catch (tokenErr) {
+          console.warn('[AuthContext] Error retrieving ID token:', tokenErr);
+        }
+
+        try {
+          const p = await getUserProfile(firebaseUser.uid);
+          if (p) {
+            setProfile(p as UserProfile);
+          } else {
+            setProfile({
+              uid: firebaseUser.uid,
+              email: firebaseUser.email || '',
+              displayName: firebaseUser.displayName || 'Celebration Host',
+              currency: 'INR',
+              language: 'English',
+              subscription: 'free',
+            } as UserProfile);
+          }
+        } catch (profileErr) {
+          console.warn('[AuthContext] Profile load error, applying fallback session:', profileErr);
+          setProfile({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email || '',
+            displayName: firebaseUser.displayName || 'Celebration Host',
+            currency: 'INR',
+            language: 'English',
+            subscription: 'free',
+          } as UserProfile);
+        }
       } else {
         setIdToken(null);
         setProfile(null);
