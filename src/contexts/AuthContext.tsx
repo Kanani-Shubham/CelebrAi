@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import { auth } from '../services/firebase/config';
+import { auth, isFirebaseConfigured } from '../services/firebase/config';
 import { getUserProfile } from '../services/firebase/auth';
 
 type UserProfile = {
@@ -22,6 +22,7 @@ type AuthContextType = {
   profile: UserProfile | null;
   loading: boolean;
   idToken: string | null;
+  isConfigured: boolean;
   refreshProfile: () => Promise<void>;
 };
 
@@ -30,6 +31,7 @@ const AuthContext = createContext<AuthContextType>({
   profile: null,
   loading: true,
   idToken: null,
+  isConfigured: true,
   refreshProfile: async () => {},
 });
 
@@ -40,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [idToken, setIdToken] = useState<string | null>(null);
 
   const refreshProfile = useCallback(async () => {
-    if (!user) return;
+    if (!user || !isFirebaseConfigured) return;
     try {
       const p = await getUserProfile(user.uid);
       if (p) setProfile(p as UserProfile);
@@ -50,6 +52,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user]);
 
   useEffect(() => {
+    if (!isFirebaseConfigured) {
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
@@ -105,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, idToken, refreshProfile }}>
+    <AuthContext.Provider value={{ user, profile, loading, idToken, isConfigured: isFirebaseConfigured, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

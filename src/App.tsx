@@ -51,6 +51,8 @@ import { SubscriptionPlans } from './pages/advanced/SubscriptionPlans';
 import { AdminModeration } from './pages/advanced/AdminModeration';
 
 import { Layers, X } from 'lucide-react';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { FirebaseConfigBanner } from './components/common/FirebaseConfigBanner';
 import './App.css';
 
 const ALL_PAGES = [
@@ -151,12 +153,14 @@ function QuickDirectoryDrawer() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <EventProvider>
-          <Routes>
-            {/* Public & Onboarding (requireAuth = false) */}
-            <Route path="/" element={<PublicShell><Landing /></PublicShell>} />
+    <ErrorBoundary>
+      <BrowserRouter>
+        <FirebaseConfigBanner />
+        <AuthProvider>
+          <EventProvider>
+            <Routes>
+              {/* Public & Onboarding (requireAuth = false) */}
+              <Route path="/" element={<PublicShell><Landing /></PublicShell>} />
             <Route path="/explore-events" element={<PublicShell><ExploreEvents /></PublicShell>} />
             <Route path="/signin" element={<PublicShell><Auth /></PublicShell>} />
             <Route path="/signup" element={<PublicShell><Auth /></PublicShell>} />
@@ -213,7 +217,8 @@ function App() {
         </EventProvider>
       </AuthProvider>
     </BrowserRouter>
-  );
+  </ErrorBoundary>
+);
 }
 
 export default App;

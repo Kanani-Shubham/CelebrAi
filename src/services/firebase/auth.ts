@@ -10,7 +10,16 @@ import {
   type User,
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, db } from './config';
+import { auth, db, isFirebaseConfigured } from './config';
+
+function checkConfig() {
+  if (!isFirebaseConfigured) {
+    throw {
+      code: 'auth/invalid-api-key',
+      message: 'Firebase is not yet configured on this deployment. Please add VITE_FIREBASE_API_KEY in your Netlify site settings.',
+    };
+  }
+}
 
 export type AuthError = {
   code: string;
@@ -30,6 +39,8 @@ function getAuthErrorMessage(code: string): string {
     'auth/cancelled-popup-request': 'Sign-in was cancelled.',
     'auth/invalid-credential': 'Invalid email or password.',
     'auth/user-disabled': 'This account has been disabled.',
+    'auth/invalid-api-key': 'Firebase API key is missing or invalid. Please configure VITE_FIREBASE_API_KEY in Netlify site settings.',
+    'auth/unauthorized-domain': 'celebr-ai.netlify.app is not authorized in Firebase Console. Add it in Firebase Console -> Authentication -> Settings -> Authorized Domains.',
   };
   return messages[code] ?? 'An error occurred. Please try again.';
 }
@@ -39,6 +50,7 @@ export async function signUp(
   password: string,
   displayName: string
 ): Promise<User> {
+  checkConfig();
   const credential = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(credential.user, { displayName });
   await setDoc(doc(db, 'users', credential.user.uid), {
@@ -59,11 +71,13 @@ export async function signUp(
 }
 
 export async function signIn(email: string, password: string): Promise<User> {
+  checkConfig();
   const credential = await signInWithEmailAndPassword(auth, email, password);
   return credential.user;
 }
 
 export async function signInWithGoogle(): Promise<User> {
+  checkConfig();
   const provider = new GoogleAuthProvider();
   provider.addScope('email');
   provider.addScope('profile');
