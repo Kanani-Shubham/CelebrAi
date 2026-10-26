@@ -1,0 +1,244 @@
+.guest-management-page {
+  padding: 16px 20px 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 3 Stat Badges */
+.guest-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.guest-stat-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: 12px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.g-stat-icon {
+  margin-bottom: 2px;
+}
+
+.guest-stat-box.accepted .g-stat-icon { color: #059669; }
+.guest-stat-box.pending .g-stat-icon { color: #D97706; }
+.guest-stat-box.declined .g-stat-icon { color: #DC2626; }
+
+.g-stat-num {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-tuxedo-black);
+}
+
+.g-stat-lbl {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+/* Search Bar */
+.guest-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  padding: 10px 16px;
+}
+
+.guest-search-bar input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.guest-search-bar input::placeholder {
+  color: var(--text-muted);
+}
+
+.filter-icon-btn {
+  color: var(--text-secondary);
+}
+
+/* Filter Tabs */
+.guest-filter-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.g-tab-chip {
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.g-tab-chip.active {
+  background: var(--color-tuxedo-black);
+  color: white;
+  border-color: var(--color-tuxedo-black);
+}
+
+/* Guest List */
+.guest-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.guest-row-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.g-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-xs);
+  border: 1.5px solid var(--color-heritage-grey);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: white;
+  background: white;
+}
+
+.g-avatar-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: var(--color-morning-fog);
+  flex-shrink: 0;
+}
+
+.g-avatar-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.g-info-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.g-name-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.g-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+  flex: 1;
+}
+
+.g-status-pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.g-status-accepted {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.g-status-pending {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.g-status-declined {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.g-menu-btn {
+  color: var(--text-muted);
+}
+
+.g-meta-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.g-dietary, .g-accessible {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Bottom Bar */
+.guest-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-default);
+  padding: 12px 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.add-guest-main-btn {
+  flex: 1;
+  padding: 14px;
+  background: var(--color-tuxedo-black);
+  color: white;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.export-guests-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  color: var(--color-tuxedo-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

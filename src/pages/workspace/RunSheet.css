@@ -1,0 +1,140 @@
+.run-sheet-page {
+  padding: 16px 20px 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rs-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rs-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+}
+
+.rs-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.rs-date-tabs {
+  display: flex;
+  background: var(--bg-surface);
+  border-radius: var(--radius-full);
+  padding: 4px;
+  border: 1px solid var(--border-default);
+}
+
+.rs-date-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.rs-date-btn.active {
+  background: var(--color-tuxedo-black);
+  color: white;
+}
+
+/* Timeline List */
+.rs-timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.rs-timeline-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  position: relative;
+}
+
+.rs-time-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+  width: 65px;
+  padding-top: 10px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.rs-connector-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  width: 28px;
+}
+
+.rs-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  box-shadow: var(--shadow-xs);
+  flex-shrink: 0;
+}
+
+.rs-line {
+  flex: 1;
+  width: 1.5px;
+  background: var(--border-default);
+  margin-top: 4px;
+  margin-bottom: -10px;
+}
+
+.rs-timeline-row:last-child .rs-line {
+  display: none;
+}
+
+.rs-card-content {
+  flex: 1;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rs-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rs-item-title {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+}
+
+.rs-dots-btn {
+  color: var(--text-muted);
+}
+
+.rs-item-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+}

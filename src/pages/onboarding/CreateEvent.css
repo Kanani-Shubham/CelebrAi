@@ -1,0 +1,128 @@
+.create-event-page {
+  min-height: 100dvh;
+  background: var(--bg-app);
+  display: flex;
+  flex-direction: column;
+}
+
+.create-event-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.step-progress {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+}
+
+.step-dot {
+  height: 3px;
+  flex: 1;
+  border-radius: 99px;
+  background: var(--border-default);
+  transition: background 0.3s ease;
+}
+
+.step-dot.active {
+  background: var(--color-tuxedo-black);
+}
+
+.create-event-content {
+  flex: 1;
+  padding: 28px 20px 0;
+  overflow-y: auto;
+}
+
+.create-step {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.create-title {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--color-tuxedo-black);
+}
+
+.create-subtitle {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  margin-top: -12px;
+}
+
+.event-type-select-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.event-type-select-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--border-default);
+  background: var(--bg-surface);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-align: left;
+}
+
+.event-type-select-btn.active {
+  border-color: var(--color-tuxedo-black);
+  background: var(--color-violet);
+}
+
+.et-icon {
+  font-size: 28px;
+}
+
+.event-type-select-btn strong {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
+.et-desc {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-hint {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: -8px;
+}
+
+.create-event-footer {
+  padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-default);
+}
+
+@media (min-width: 768px) {
+  .event-type-select-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .create-event-content {
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 40px 0;
+  }
+}

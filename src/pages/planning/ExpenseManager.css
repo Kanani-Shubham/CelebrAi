@@ -1,0 +1,199 @@
+.expense-manager-page {
+  padding: 16px 20px 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Metrics Grid */
+.expense-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.metric-pill-box {
+  border-radius: var(--radius-xl);
+  padding: 12px 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid transparent;
+}
+
+.metric-pill-box.paid {
+  background: #EBF8F2;
+  border-color: #B7E4CF;
+  color: #065F46;
+}
+
+.metric-pill-box.pending {
+  background: #FEF3C7;
+  border-color: #FDE68A;
+  color: #92400E;
+}
+
+.metric-pill-box.overdue {
+  background: #FEE2E2;
+  border-color: #FECACA;
+  color: #991B1B;
+}
+
+.metric-amt {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.metric-lbl {
+  font-size: 10px;
+  opacity: 0.85;
+}
+
+/* Filter Tabs */
+.expense-filter-tabs {
+  display: flex;
+  background: var(--bg-surface);
+  border-radius: var(--radius-full);
+  padding: 4px;
+  border: 1px solid var(--border-default);
+}
+
+.expense-tab-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.expense-tab-btn.active {
+  background: var(--color-tuxedo-black);
+  color: white;
+}
+
+/* Expenses List */
+.expenses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.expense-item-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.expense-thumb-wrap {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-morning-fog);
+  flex-shrink: 0;
+}
+
+.expense-thumb-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.expense-details-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.expense-vendor-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+}
+
+.expense-sub-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.expense-right-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.expense-amount-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.expense-cost {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+}
+
+.expense-dots-btn {
+  color: var(--text-muted);
+}
+
+.status-badge-pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.status-paid {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.status-pending {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.status-overdue {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+/* Sticky Bottom */
+.sticky-action-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-default);
+  padding: 12px 20px;
+  z-index: 10;
+}
+
+.primary-black-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--color-tuxedo-black);
+  color: white;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}

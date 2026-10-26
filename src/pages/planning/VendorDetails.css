@@ -1,0 +1,256 @@
+.vendor-details-page {
+  padding-bottom: 90px;
+  position: relative;
+}
+
+.vd-top-nav {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.vd-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  color: var(--color-tuxedo-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-xs);
+}
+
+.vd-top-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.vd-photo-hero {
+  width: 100%;
+  height: 250px;
+  position: relative;
+  background: var(--color-morning-fog);
+}
+
+.vd-photo-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vd-photo-count {
+  position: absolute;
+  bottom: 24px;
+  right: 20px;
+  background: rgba(23, 31, 32, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+}
+
+.vd-main-card {
+  margin-top: -18px;
+  position: relative;
+  z-index: 5;
+  background: var(--bg-app);
+  border-top-left-radius: var(--radius-2xl);
+  border-top-right-radius: var(--radius-2xl);
+  padding: 24px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.vd-title-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.vd-name {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+}
+
+.vd-cat {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.vd-quote-btn {
+  background: var(--color-violet);
+  color: var(--color-tuxedo-black);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.vd-quote-btn.requested {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.vd-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vd-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.vd-price-tag {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+}
+
+.vd-tabs-row {
+  display: flex;
+  border-bottom: 1px solid var(--border-default);
+  gap: 16px;
+}
+
+.vd-tab {
+  padding: 8px 4px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.vd-tab.active {
+  color: var(--color-tuxedo-black);
+  border-bottom-color: var(--color-tuxedo-black);
+  font-weight: 600;
+}
+
+/* Amenities */
+.vd-amenities-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.amenity-chip {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-tuxedo-black);
+}
+
+.vd-section-heading {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+  margin-bottom: 8px;
+}
+
+.vd-about-p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* CTAs */
+.vd-cta-row {
+  display: flex;
+  gap: 12px;
+}
+
+.vd-contact-btn {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  color: var(--color-tuxedo-black);
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.vd-book-btn {
+  flex: 1;
+  padding: 12px;
+  background: var(--color-tuxedo-black);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Similar Vendors */
+.similar-vendors-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.similar-card {
+  width: 120px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.sim-img-wrap {
+  width: 100%;
+  height: 70px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.sim-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sim-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sim-price {
+  font-size: 10px;
+  color: var(--text-secondary);
+}

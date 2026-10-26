@@ -1,0 +1,129 @@
+/* App Core Layout */
+.app-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Floating 36 Pages Directory Trigger */
+.floating-directory-trigger {
+  position: fixed;
+  bottom: 86px;
+  left: 20px;
+  background: rgba(23, 31, 32, 0.9);
+  backdrop-filter: blur(8px);
+  color: white;
+  border-radius: var(--radius-full);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  transition: transform 0.2s ease, background 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.floating-directory-trigger:hover {
+  transform: translateY(-2px);
+  background: var(--color-tuxedo-black);
+}
+
+/* Directory Modal Sheet */
+.directory-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.directory-modal-sheet {
+  background: var(--bg-surface);
+  border-top-left-radius: var(--radius-2xl);
+  border-top-right-radius: var(--radius-2xl);
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-xl);
+  animation: slideUp 0.3s ease;
+}
+
+.dir-modal-header {
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dir-modal-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+}
+
+.dir-modal-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  display: block;
+  margin-top: 2px;
+}
+
+.dir-close-btn {
+  color: var(--text-secondary);
+  padding: 4px;
+}
+
+.dir-links-scroll {
+  padding: 12px 16px 30px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dir-link-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  transition: background 0.2s ease;
+}
+
+.dir-link-item:hover {
+  background: var(--bg-app);
+}
+
+.dir-link-item.active {
+  background: #F4EFFF;
+}
+
+.dir-num {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-violet-dark);
+  width: 20px;
+}
+
+.dir-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-tuxedo-black);
+}
+
+.dir-path {
+  font-size: 10px;
+  color: var(--text-muted);
+}

@@ -1,0 +1,261 @@
+.budget-dashboard-page {
+  padding: 16px 20px 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Overview Card */
+.budget-overview-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-2xl);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.budget-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.budget-text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.budget-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.budget-total-amt {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+}
+
+/* Circular Donut */
+.budget-donut-wrap {
+  position: relative;
+  width: 86px;
+  height: 86px;
+}
+
+.donut-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.donut-bg {
+  fill: none;
+  stroke: var(--border-default);
+  stroke-width: 3.5;
+}
+
+.donut-fill {
+  fill: none;
+  stroke: var(--color-violet-dark);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.donut-center-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-pct {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-tuxedo-black);
+  line-height: 1;
+}
+
+.donut-sub {
+  font-size: 9px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.budget-meta-row {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--border-default);
+  padding-top: 14px;
+}
+
+.b-meta-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.b-meta-val {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+}
+
+.b-meta-lbl {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Planned vs Actual Grid */
+.plan-actual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.plan-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-2px);
+}
+
+.plan-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: #F4EFFF;
+  color: #7C3AED;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.plan-card-icon.spent {
+  background: #EBF8F2;
+  color: #059669;
+}
+
+.pa-lbl {
+  font-size: 10px;
+  color: var(--text-secondary);
+  display: block;
+}
+
+.pa-amt {
+  font-size: 14px;
+  color: var(--color-tuxedo-black);
+}
+
+/* Category Breakdown */
+.category-breakdown-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.category-row-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cat-icon-col {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: #F7F3EC;
+  color: var(--color-tuxedo-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cat-details-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cat-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cat-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+}
+
+.cat-amounts {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.cat-planned {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.cat-spent {
+  font-size: 13px;
+  color: var(--color-tuxedo-black);
+}
+
+.cat-progress-track {
+  width: 100%;
+  height: 6px;
+  background: var(--border-default);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.cat-progress-fill {
+  height: 100%;
+  background: var(--color-violet-dark);
+  border-radius: var(--radius-full);
+}
+
+.cat-pct-row {
+  text-align: right;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background circle with gradient -->
+  <defs>
+    <radialGradient id="bgGrad" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#F7F1E8"/>
+      <stop offset="100%" stop-color="#ECE6DE"/>
+    </radialGradient>
+    <radialGradient id="petalGrad" cx="50%" cy="20%" r="80%">
+      <stop offset="0%" stop-color="#E8DFF5"/>
+      <stop offset="100%" stop-color="#D8CBF1"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Outer circle -->
+  <circle cx="32" cy="32" r="30" fill="url(#bgGrad)" stroke="#D8CBF1" stroke-width="1.5"/>
+
+  <!-- Stylised C letterform / celebratory spark -->
+  <!-- Main petal / leaf shape representing celebration -->
+  <path d="M32 12 C22 16 14 24 14 32 C14 42 22 48 32 52 C38 49 44 44 47 38 C50 32 49 24 44 18 C41 14 37 12 32 12Z"
+        fill="url(#petalGrad)" opacity="0.9"/>
+
+  <!-- Inner leaf overlay -->
+  <path d="M32 18 C26 21 21 27 21 32 C21 38 26 43 32 46 C36 43 40 39 42 34 C44 29 43 23 40 19 C38 17 35 16 32 18Z"
+        fill="#F7F1E8" opacity="0.7"/>
+
+  <!-- Central dot -->
+  <circle cx="32" cy="32" r="3.5" fill="#171F20"/>
+
+  <!-- Sparkle accents -->
+  <!-- Top right star -->
+  <path d="M46 16 L47 14 L48 16 L50 17 L48 18 L47 20 L46 18 L44 17Z" fill="#D8CBF1"/>
+  <!-- Bottom left sparkle -->
+  <path d="M16 44 L17 42.5 L18 44 L19.5 45 L18 46 L17 47.5 L16 46 L14.5 45Z" fill="#D8CBF1" opacity="0.7"/>
+  <!-- Top left dot -->
+  <circle cx="19" cy="19" r="1.5" fill="#827A76" opacity="0.5"/>
+</svg>

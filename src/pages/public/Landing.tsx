@@ -1,0 +1,163 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Star, Sparkles, CheckCircle, LayoutDashboard, Users, DollarSign } from 'lucide-react';
+import './Landing.css';
+
+const EVENT_TYPES = [
+  { name: 'Wedding', desc: 'Plan your big day', emoji: '💍', img: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop' },
+  { name: 'Birthday', desc: 'Make it special', emoji: '🎂', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop' },
+  { name: 'Anniversary', desc: 'Celebrate love', emoji: '❤️', img: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=300&fit=crop' },
+  { name: 'Corporate', desc: 'Meetings & events', emoji: '🏢', img: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=300&fit=crop' },
+  { name: 'Community', desc: 'Festivals & gatherings', emoji: '🎉', img: 'https://images.unsplash.com/photo-1529543544282-ea669407fca3?w=400&h=300&fit=crop' },
+  { name: 'College Event', desc: 'Fests, hackathons', emoji: '🎓', img: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=400&h=300&fit=crop' },
+];
+
+const FEATURES = [
+  { icon: <Sparkles size={20} />, title: 'AI Planning', desc: 'Generate complete event plans in seconds with our intelligent AI.' },
+  { icon: <DollarSign size={20} />, title: 'Budget Tracking', desc: 'Track every rupee with smart expense management and alerts.' },
+  { icon: <Users size={20} />, title: 'Guest & RSVP', desc: 'Manage guests, send invitations and track responses easily.' },
+  { icon: <LayoutDashboard size={20} />, title: 'Vendor Discovery', desc: 'Find and compare trusted vendors for every event need.' },
+];
+
+export function Landing() {
+  return (
+    <div className="landing-page">
+      {/* Header */}
+      <header className="landing-header">
+        <div className="landing-logo">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+            <circle cx="14" cy="14" r="13" stroke="#171F20" strokeWidth="1.5"/>
+            <path d="M14 6C14 6 9 9 9 14C9 19 14 22 14 22C14 22 19 19 19 14C19 9 14 6 14 6Z" fill="#D8CBF1"/>
+            <circle cx="14" cy="14" r="2" fill="#171F20"/>
+          </svg>
+          <span style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 18, color: 'var(--color-tuxedo-black)' }}>CelebrAI</span>
+        </div>
+        <Link to="/signin" className="btn btn-secondary btn-sm">Sign In</Link>
+      </header>
+
+      {/* Hero */}
+      <section className="landing-hero">
+        <div className="hero-inner">
+          <div className="hero-text">
+            <h1 className="hero-title font-serif">
+              Plan Beautiful Events,<br />Effortlessly.
+            </h1>
+            <p className="hero-subtitle">
+              Your AI-powered planner for weddings, birthdays, corporate events,
+              community gatherings and more.
+            </p>
+            <Link to="/signup" className="btn btn-primary btn-lg hero-cta">
+              Get Started <ArrowRight size={18} />
+            </Link>
+          </div>
+
+          <div className="hero-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=500&fit=crop"
+              alt="Beautiful wedding setup"
+              className="hero-image"
+            />
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <div className="hero-stat-avatars">
+                  {['👩', '👨', '👩'].map((e, i) => (
+                    <div key={i} className="hero-avatar">{e}</div>
+                  ))}
+                </div>
+                <div>
+                  <strong>50K+</strong>
+                  <span>Happy Planners</span>
+                </div>
+              </div>
+              <div className="hero-stat rating">
+                <Star size={16} fill="#F59E0B" color="#F59E0B" />
+                <strong>4.9</strong>
+                <span>App Rating</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Strip */}
+      <section className="features-strip">
+        {FEATURES.map(f => (
+          <div key={f.title} className="feature-strip-item">
+            <div className="feature-strip-icon">{f.icon}</div>
+            <span>{f.title}</span>
+          </div>
+        ))}
+      </section>
+
+      {/* Event Types */}
+      <section className="landing-section">
+        <div className="section-header">
+          <h2 className="section-title font-serif">What are you planning?</h2>
+          <p className="section-subtitle">Let's create something amazing together.</p>
+        </div>
+        <div className="event-types-grid">
+          {EVENT_TYPES.map(et => (
+            <Link to={`/signup?type=${et.name.toLowerCase()}`} key={et.name} className="event-type-card">
+              <img src={et.img} alt={et.name} className="event-type-img" />
+              <div className="event-type-info">
+                <strong>{et.name}</strong>
+                <span>{et.desc}</span>
+              </div>
+            </Link>
+          ))}
+          <Link to="/signup" className="event-type-card custom-card">
+            <div className="custom-card-inner">
+              <span style={{ fontSize: 32 }}>✨</span>
+              <strong>Custom Event</strong>
+              <span>Create your own event</span>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* AI Benefits */}
+      <section className="landing-section benefits-section">
+        <div className="section-header">
+          <h2 className="section-title font-serif">Why planners love CelebrAI</h2>
+        </div>
+        <div className="benefits-list">
+          {[
+            'Generate a complete event plan in seconds',
+            'Track budgets, expenses and payments',
+            'Manage your entire guest list and RSVPs',
+            'Discover and compare local vendors',
+            'Create beautiful invitations with AI',
+            'Run sheet and day-of coordination',
+          ].map(b => (
+            <div key={b} className="benefit-item">
+              <CheckCircle size={18} style={{ color: 'var(--color-success)', flexShrink: 0 }} />
+              <span>{b}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="landing-cta">
+        <h2 className="font-serif" style={{ fontSize: 'var(--text-3xl)', marginBottom: 12 }}>
+          Start planning your celebration
+        </h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>
+          Free to start. No credit card required.
+        </p>
+        <Link to="/signup" className="btn btn-primary btn-lg">
+          Create Your Event <ArrowRight size={18} />
+        </Link>
+      </section>
+
+      {/* Footer */}
+      <footer className="landing-footer">
+        <p>© 2025 CelebrAI. All rights reserved.</p>
+        <div style={{ display: 'flex', gap: 16, fontSize: 'var(--text-sm)' }}>
+          <Link to="/privacy" style={{ color: 'var(--text-secondary)' }}>Privacy</Link>
+          <Link to="/help" style={{ color: 'var(--text-secondary)' }}>Help</Link>
+        </div>
+      </footer>
+    </div>
+  );
+}

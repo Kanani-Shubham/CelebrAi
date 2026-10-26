@@ -1,0 +1,213 @@
+.invitations-rsvp-page {
+  padding: 16px 20px 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Card Mockup Frame */
+.card-preview-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.carousel-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-tuxedo-black);
+  flex-shrink: 0;
+}
+
+.card-mockup-frame {
+  flex: 1;
+  background: #FFFDF9;
+  border: 1px solid #EADBCC;
+  border-radius: var(--radius-xl);
+  padding: 24px 16px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-inner-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.card-subhead {
+  font-size: 11px;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.card-couple-names {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-tuxedo-black);
+  margin: 4px 0;
+}
+
+.card-invite-phrase {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.card-date-badge {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--color-tuxedo-black);
+  margin-top: 6px;
+}
+
+.card-venue-text {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+.slide-counter {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: -6px;
+}
+
+/* Share Link Card */
+.share-link-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.share-link-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+}
+
+.share-input-row {
+  display: flex;
+  align-items: center;
+  background: var(--bg-app);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  padding: 4px 4px 4px 14px;
+  gap: 8px;
+}
+
+.share-input-row input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.copy-link-btn {
+  background: var(--color-tuxedo-black);
+  color: white;
+  border-radius: var(--radius-full);
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* RSVP Stats */
+.rsvp-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.rsvp-stat-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: 14px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.rsvp-stat-box:hover {
+  transform: translateY(-2px);
+}
+
+.rsvp-stat-box.accepted { color: #059669; }
+.rsvp-stat-box.maybe { color: #D97706; }
+.rsvp-stat-box.declined { color: #DC2626; }
+
+.r-num {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-tuxedo-black);
+}
+
+.r-lbl {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Studio promo */
+.studio-promo-card {
+  background: #FFFBF5;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.promo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--color-violet);
+  color: var(--color-tuxedo-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.promo-text strong {
+  font-size: 13px;
+  color: var(--color-tuxedo-black);
+  display: block;
+}
+
+.promo-text p {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
