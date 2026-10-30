@@ -794,3 +794,26 @@
 .google-signin-btn:hover {
   background: #F9FAFB;
 }
+
+
+/* Desktop & Tablet Responsiveness */
+@media (min-width: 768px) {
+  .ai-plan-page {
+    max-width: 960px;
+    margin: 0 auto;
+    width: 100%;
+    padding-top: 24px;
+  }
+
+  .plan-tabs {
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .plan-floating-bar {
+    max-width: 960px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

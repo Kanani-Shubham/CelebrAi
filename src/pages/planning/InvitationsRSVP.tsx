@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Copy, Check, CheckCircle2, Clock, XCircle, S
 import { useEvent } from '../../contexts/EventContext';
 import { getEventGuests } from '../../services/firebase/firestore';
 import { toast } from '../../components/ui';
+import { formatDisplayDate } from '../../utils/dateUtils';
 import './InvitationsRSVP.css';
 
 export function InvitationsRSVP() {
@@ -30,13 +31,13 @@ export function InvitationsRSVP() {
 
     setLoading(true);
     try {
-      const guests = (await getEventGuests(eventId)) as { status?: string; partySize?: number }[];
+      const guestDocs = (await getEventGuests(eventId)) as { status?: string; partySize?: number }[];
       let acc = 0;
       let pen = 0;
       let dec = 0;
 
-      guests.forEach(g => {
-        const size = Number(g.partySize) || 1;
+      guestDocs.forEach(g => {
+        const size = g.partySize || 1;
         if (g.status === 'Accepted') acc += size;
         else if (g.status === 'Declined') dec += size;
         else pen += size;
@@ -57,7 +58,7 @@ export function InvitationsRSVP() {
   }, [loadGuestStats]);
 
   const eventName = activeEvent?.eventName || 'Our Special Celebration';
-  const eventDate = activeEvent?.eventDate || activeEvent?.date || 'Date TBD';
+  const eventDate = formatDisplayDate(activeEvent?.eventDate || activeEvent?.date);
   const location = activeEvent?.location || 'Venue Location';
   const inviteLink = `${window.location.origin}/guest-rsvp?eventId=${activeEvent?.id || ''}`;
 

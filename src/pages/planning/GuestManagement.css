@@ -242,3 +242,34 @@
   align-items: center;
   justify-content: center;
 }
+
+
+/* Responsive Layout */
+@media (min-width: 768px) {
+  .guest-management-page {
+    padding: 24px 32px 48px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .guest-stats-row {
+    gap: 16px;
+  }
+
+  .guest-stat-box {
+    padding: 16px;
+  }
+
+  .g-stat-num {
+    font-size: 20px;
+  }
+
+  .g-stat-lbl {
+    font-size: 12px;
+  }
+
+  .guest-bottom-bar {
+    max-width: 800px;
+  }
+}

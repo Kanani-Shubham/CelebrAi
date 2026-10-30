@@ -35,7 +35,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
 
   const handleSetActiveEvent = useCallback((ev: Event | null) => {
     setActiveEvent(ev);
-    if (ev) {
+    if (ev?.id) {
       localStorage.setItem('celebrai_active_event', ev.id);
     } else {
       localStorage.removeItem('celebrai_active_event');
@@ -68,7 +68,6 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (err) {
       console.warn('[EventContext] Error loading user events from Firestore:', err);
-      // If error, check local storage
       const saved = localStorage.getItem('celebrai_events');
       if (saved) {
         try {
@@ -89,33 +88,47 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
   }, [user]);
 
   useEffect(() => {
-    refresh();
+    let mounted = true;
+    if (mounted) {
+      refresh();
+    }
+    return () => {
+      mounted = false;
+    };
   }, [refresh]);
 
   const addEvent = useCallback(async (eventInput: Omit<Event, 'id' | 'status' | 'tasksDone' | 'tasksTotal' | 'daysLeft'>): Promise<Event> => {
+    let finalId = `evt-${Date.now()}`;
+
+    if (user) {
+      // Create real Firestore document directly
+      const docId = await createEvent(user.uid, {
+        ...eventInput,
+        ownerId: user.uid,
+        createdBy: user.uid,
+        status: 'active',
+        tasksDone: 0,
+        tasksTotal: 0,
+      } as unknown as Record<string, unknown>);
+      finalId = docId;
+    }
+
     const newEvent: Event = {
       ...eventInput,
-      id: `evt-${Date.now()}`,
+      id: finalId,
+      ownerId: user?.uid,
       status: 'active',
       tasksDone: 0,
       tasksTotal: 0,
       daysLeft: 30,
     };
 
-    if (user) {
-      try {
-        const docId = await createEvent(user.uid, newEvent as unknown as Record<string, unknown>);
-        newEvent.id = docId;
-      } catch (err) {
-        console.error('Failed to create event in Firestore:', err);
-      }
-    }
-
     setEvents(prev => {
-      const updated = [newEvent, ...prev];
+      const updated = [newEvent, ...prev.filter(e => e.id !== finalId)];
       localStorage.setItem('celebrai_events', JSON.stringify(updated));
       return updated;
     });
+
     handleSetActiveEvent(newEvent);
     return newEvent;
   }, [user, handleSetActiveEvent]);
@@ -131,7 +144,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
       setActiveEvent(prev => prev ? { ...prev, ...patch } : null);
     }
 
-    if (user) {
+    if (user && !id.startsWith('evt-')) {
       try {
         await updateEvent(id, patch as Record<string, unknown>);
       } catch (err) {
@@ -156,7 +169,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
       });
     }
 
-    if (user) {
+    if (user && !id.startsWith('evt-')) {
       try {
         await deleteEvent(id);
       } catch (err) {

@@ -18,6 +18,7 @@ service cloud.firestore {
         exists(/databases/$(database)/documents/events/$(eventId)) &&
         (
           get(/databases/$(database)/documents/events/$(eventId)).data.ownerId == request.auth.uid ||
+          get(/databases/$(database)/documents/events/$(eventId)).data.createdBy == request.auth.uid ||
           (
             get(/databases/$(database)/documents/events/$(eventId)).data.collaborators is list &&
             request.auth.uid in get(/databases/$(database)/documents/events/$(eventId)).data.collaborators
@@ -29,7 +30,10 @@ service cloud.firestore {
     function isEventOwner(eventId) {
       return isAuthenticated() && (
         exists(/databases/$(database)/documents/events/$(eventId)) &&
-        get(/databases/$(database)/documents/events/$(eventId)).data.ownerId == request.auth.uid
+        (
+          get(/databases/$(database)/documents/events/$(eventId)).data.ownerId == request.auth.uid ||
+          get(/databases/$(database)/documents/events/$(eventId)).data.createdBy == request.auth.uid
+        )
       );
     }
 
@@ -70,7 +74,8 @@ service cloud.firestore {
       );
       allow create: if isAuthenticated() && (
         request.resource.data.createdBy == request.auth.uid ||
-        request.resource.data.ownerId == request.auth.uid
+        request.resource.data.ownerId == request.auth.uid ||
+        isEventMember(request.resource.data.eventId)
       );
       allow update, delete: if isAuthenticated() && (
         resource.data.createdBy == request.auth.uid ||
@@ -90,7 +95,8 @@ service cloud.firestore {
       );
       allow create: if isAuthenticated() && (
         request.resource.data.createdBy == request.auth.uid ||
-        request.resource.data.ownerId == request.auth.uid
+        request.resource.data.ownerId == request.auth.uid ||
+        isEventMember(request.resource.data.eventId)
       );
       allow update, delete: if isAuthenticated() && (
         resource.data.createdBy == request.auth.uid ||
@@ -110,7 +116,8 @@ service cloud.firestore {
       );
       allow create: if isAuthenticated() && (
         request.resource.data.createdBy == request.auth.uid ||
-        request.resource.data.ownerId == request.auth.uid
+        request.resource.data.ownerId == request.auth.uid ||
+        isEventMember(request.resource.data.eventId)
       );
       allow update, delete: if isAuthenticated() && (
         resource.data.createdBy == request.auth.uid ||
@@ -142,13 +149,18 @@ service cloud.firestore {
     // ----------------------------------------------------------------
     match /conversations/{convId} {
       allow read: if isAuthenticated() && (
-        resource == null || resource.data.userId == request.auth.uid
+        resource == null ||
+        resource.data.userId == request.auth.uid ||
+        resource.data.createdBy == request.auth.uid ||
+        isEventMember(resource.data.eventId)
       );
       allow create: if isAuthenticated() && (
-        request.resource.data.userId == request.auth.uid
+        request.resource.data.userId == request.auth.uid ||
+        request.resource.data.createdBy == request.auth.uid
       );
       allow update, delete: if isAuthenticated() && (
-        resource.data.userId == request.auth.uid
+        resource.data.userId == request.auth.uid ||
+        resource.data.createdBy == request.auth.uid
       );
     }
 

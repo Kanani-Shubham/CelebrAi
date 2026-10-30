@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { MapPin, Calendar, Sparkles, Heart, Clock } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { getDocById } from '../../services/firebase/firestore';
+import { formatDisplayDate, calculateDaysCountdown } from '../../utils/dateUtils';
 import './PublicEvent.css';
 
 export function PublicEvent() {
@@ -35,23 +36,16 @@ export function PublicEvent() {
   }, [queryEventId, activeEvent]);
 
   const eventName = String(eventData?.eventName || 'Special Celebration');
-  const eventDate = String(eventData?.eventDate || eventData?.date || 'Date TBD');
+  const eventDate = formatDisplayDate(eventData?.eventDate as string || eventData?.date as string);
   const location = String(eventData?.location || 'Venue TBD');
   const coverImage = String(eventData?.coverImage || 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80');
   const theme = String(eventData?.theme || 'Classic Elegance');
   const eventType = String(eventData?.eventType || 'Celebration');
 
-  // Compute real countdown
-  let daysLeft = 0;
-  if (eventData?.eventDate || eventData?.date) {
-    const d = new Date(String(eventData.eventDate || eventData.date)).getTime();
-    if (!isNaN(d)) {
-      const diff = Math.ceil((d - Date.now()) / (1000 * 60 * 60 * 24));
-      daysLeft = diff > 0 ? diff : 0;
-    }
-  }
-
-  const currentUrl = window.location.href;
+  // Compute real countdown using safe local date math
+  const rawDate = (eventData?.eventDate || eventData?.date) as string | undefined;
+  const countdown = calculateDaysCountdown(rawDate);
+  const daysLeft = countdown?.days ?? 0;
 
   return (
     <div className="public-event-page">
@@ -85,7 +79,13 @@ export function PublicEvent() {
         <div className="countdown-grid" style={{ gridTemplateColumns: '1fr', maxWidth: '200px', margin: '0 auto 20px' }}>
           <div className="countdown-box">
             <span className="c-num">{daysLeft}</span>
-            <span className="c-lbl">Days Until Celebration</span>
+            <span className="c-lbl">
+              {countdown?.isToday
+                ? 'Celebration is Today!'
+                : countdown?.isPast
+                ? 'Days Since Celebration'
+                : 'Days Until Celebration'}
+            </span>
           </div>
         </div>
 

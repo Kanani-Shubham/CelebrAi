@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   CheckCircle2,
   Clock,
@@ -11,6 +12,7 @@ import {
   Loader2,
   AlertCircle,
   Users,
+  Calendar,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useEvent } from '../../contexts/EventContext';
@@ -35,6 +37,7 @@ const DIETARY_OPTIONS: FirestoreGuest['dietary'][] = [
 ];
 
 export function GuestManagement() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { activeEvent } = useEvent();
 
@@ -57,27 +60,49 @@ export function GuestManagement() {
   const eventId = activeEvent?.id;
 
   const loadGuests = useCallback(async () => {
-    if (!eventId) { setGuests([]); setLoading(false); return; }
+    if (!eventId) {
+      setGuests([]);
+      setLoading(false);
+      return;
+    }
+
+    if (eventId.startsWith('evt-')) {
+      // Mock event that does not exist in Firestore
+      setGuests([]);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
+    if (!user) {
+      setGuests([]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
       const data = await getEventGuests(eventId);
       setGuests(data as FirestoreGuest[]);
     } catch (err) {
-      setError((err as Error).message || 'Failed to load guests');
+      const msg = (err as Error).message || 'Failed to load guests';
+      setError(msg);
       console.error('[GuestManagement]', err);
     } finally {
       setLoading(false);
     }
-  }, [eventId]);
+  }, [eventId, user]);
 
-  useEffect(() => { loadGuests(); }, [loadGuests]);
+  useEffect(() => {
+    loadGuests();
+  }, [loadGuests]);
 
-  // Computed stats from real data
-  const acceptedCount = guests.reduce((sum, g) => g.status === 'Accepted' ? sum + g.partySize : sum, 0);
-  const pendingCount = guests.filter(g => g.status === 'Pending').length;
-  const declinedCount = guests.filter(g => g.status === 'Declined').length;
-  const totalGuests = guests.reduce((sum, g) => sum + g.partySize, 0);
+  // Computed stats from real records
+  const acceptedCount = guests.filter(g => g.status === 'Accepted').reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
+  const pendingCount = guests.filter(g => g.status === 'Pending').reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
+  const declinedCount = guests.filter(g => g.status === 'Declined').reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
+  const totalGuests = guests.reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
 
   const filteredGuests = guests.filter(g => {
     const matches = g.name.toLowerCase().includes(search.toLowerCase());
@@ -110,9 +135,12 @@ export function GuestManagement() {
         email: formEmail.trim().toLowerCase(),
       };
       setGuests(prev => [newGuest, ...prev]);
-      setFormName(''); setFormPartySize('1'); setFormPhone(''); setFormEmail('');
+      setFormName('');
+      setFormPartySize('1');
+      setFormPhone('');
+      setFormEmail('');
       setShowAddModal(false);
-      toast.success('Guest added');
+      toast.success('Guest added successfully');
     } catch (err) {
       toast.error((err as Error).message || 'Failed to add guest');
     } finally {
@@ -150,7 +178,27 @@ export function GuestManagement() {
         <div className="empty-state-container">
           <div className="empty-state-icon">👥</div>
           <h3 className="empty-state-title">No event selected</h3>
-          <p className="empty-state-text">Select an event to manage its guest list.</p>
+          <p className="empty-state-text">Select or create an event to manage its guest list.</p>
+          <button className="btn btn-primary" onClick={() => navigate('/create-event')} style={{ marginTop: 12 }}>
+            <Plus size={16} /> Create an Event
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (eventId.startsWith('evt-')) {
+    return (
+      <div className="guest-management-page">
+        <div className="empty-state-container" style={{ maxWidth: 440, margin: '40px auto', textAlign: 'center' }}>
+          <Calendar size={40} style={{ color: 'var(--color-tuxedo-black)', margin: '0 auto 12px' }} />
+          <h3 className="empty-state-title font-serif">Sample Event Selected</h3>
+          <p className="empty-state-text">
+            "{activeEvent?.eventName}" is a preview template. Create your own persistent event to add and manage live guests.
+          </p>
+          <button className="btn btn-primary" onClick={() => navigate('/create-event')} style={{ marginTop: 16 }}>
+            <Plus size={16} /> Create My Event
+          </button>
         </div>
       </div>
     );
@@ -180,7 +228,7 @@ export function GuestManagement() {
       {totalGuests > 0 && (
         <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: 'var(--text-xs)', margin: '-4px 0 8px' }}>
           <Users size={12} style={{ display: 'inline', marginRight: 4 }} />
-          {totalGuests} total guests across {guests.length} records
+          {totalGuests} total attending guests across {guests.length} RSVP records
         </div>
       )}
 
@@ -188,7 +236,7 @@ export function GuestManagement() {
         <Search size={16} className="search-icon" />
         <input
           type="text"
-          placeholder="Search guests..."
+          placeholder="Search guests by name..."
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
@@ -209,26 +257,35 @@ export function GuestManagement() {
       {loading && (
         <div className="tasks-loading-state">
           <Loader2 size={24} className="animate-spin" />
-          <span>Loading guests...</span>
+          <span>Loading guests from database...</span>
         </div>
       )}
 
       {error && !loading && (
-        <div className="tasks-error-state">
-          <AlertCircle size={20} /><span>{error}</span>
-          <button onClick={loadGuests}>Retry</button>
+        <div className="tasks-error-state" style={{ flexDirection: 'column', gap: 12, padding: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <AlertCircle size={20} style={{ color: '#dc2626' }} />
+            <span style={{ fontWeight: 500 }}>{error}</span>
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button className="btn btn-secondary btn-sm" onClick={loadGuests}>Retry</button>
+            <button className="btn btn-primary btn-sm" onClick={() => navigate('/events')}>Switch Event</button>
+          </div>
         </div>
       )}
 
       {!loading && !error && guests.length === 0 && (
         <div className="empty-state-container">
           <div className="empty-state-icon">👥</div>
-          <h3 className="empty-state-title">No guests yet</h3>
-          <p className="empty-state-text">Add your first guest to start building your list.</p>
+          <h3 className="empty-state-title">No guests added yet</h3>
+          <p className="empty-state-text">Start by adding your first guest or sharing your RSVP link.</p>
+          <button className="btn btn-primary" onClick={() => setShowAddModal(true)} style={{ marginTop: 12 }}>
+            <Plus size={16} /> Add First Guest
+          </button>
         </div>
       )}
 
-      {!loading && !error && (
+      {!loading && !error && guests.length > 0 && (
         <div className="guest-items-list">
           {filteredGuests.map(guest => (
             <div key={guest.id} className="guest-row-card" onClick={e => e.stopPropagation()}>
@@ -248,79 +305,99 @@ export function GuestManagement() {
                   <button
                     className="g-menu-btn"
                     onClick={e => { e.stopPropagation(); setMenuOpen(menuOpen === guest.id ? null : guest.id); }}
-                    aria-label="Guest options"
+                    aria-label="Options"
                   >
-                    <MoreVertical size={14} />
+                    <MoreVertical size={16} />
                   </button>
-
-                  {menuOpen === guest.id && (
-                    <div className="task-menu-dropdown">
-                      <button className="task-menu-item" onClick={() => handleStatusUpdate(guest, 'Accepted')}>✓ Mark Accepted</button>
-                      <button className="task-menu-item" onClick={() => handleStatusUpdate(guest, 'Pending')}>⏱ Mark Pending</button>
-                      <button className="task-menu-item" onClick={() => handleStatusUpdate(guest, 'Declined')}>✕ Mark Declined</button>
-                      <button className="task-menu-item delete" onClick={() => handleDelete(guest.id)}>
-                        <Trash2 size={13} /> Remove
-                      </button>
-                    </div>
-                  )}
                 </div>
 
                 <div className="g-meta-line">
                   <span className="g-party">Party of {guest.partySize}</span>
+                  <span className="g-dot">·</span>
                   <span className="g-dietary">{guest.dietary}</span>
-                  {guest.email && <span className="g-email">{guest.email}</span>}
+                  {guest.phone && (
+                    <>
+                      <span className="g-dot">·</span>
+                      <span className="g-phone">{guest.phone}</span>
+                    </>
+                  )}
                 </div>
               </div>
+
+              {menuOpen === guest.id && (
+                <div className="guest-action-dropdown">
+                  <div className="dropdown-label">Change Status</div>
+                  {(['Accepted', 'Pending', 'Declined'] as const).map(s => (
+                    <button
+                      key={s}
+                      className={`action-drop-item ${guest.status === s ? 'active' : ''}`}
+                      onClick={() => handleStatusUpdate(guest, s)}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                  <div className="dropdown-divider" />
+                  <button
+                    className="action-drop-item danger"
+                    onClick={() => handleDelete(guest.id)}
+                  >
+                    <Trash2 size={13} style={{ display: 'inline', marginRight: 6 }} />
+                    Remove
+                  </button>
+                </div>
+              )}
             </div>
           ))}
-
-          {!loading && filteredGuests.length === 0 && guests.length > 0 && (
-            <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '24px 0' }}>
-              No guests match your filter.
-            </p>
-          )}
         </div>
       )}
 
-      <div className="guest-bottom-bar">
-        <button className="add-guest-main-btn" onClick={() => setShowAddModal(true)}>
-          <Plus size={18} />
-          <span>Add Guest</span>
-        </button>
-      </div>
+      {/* Floating Add Guest Button */}
+      <button className="fab-add-guest" onClick={() => setShowAddModal(true)} title="Add Guest">
+        <Plus size={24} />
+      </button>
 
+      {/* Add Guest Modal */}
       {showAddModal && (
         <div className="modal-backdrop" onClick={() => setShowAddModal(false)}>
-          <div className="modal-sheet" onClick={e => e.stopPropagation()}>
-            <h3 className="modal-title">Add Guest</h3>
-            <form onSubmit={handleAddGuest}>
+          <div className="guest-modal-sheet" onClick={e => e.stopPropagation()}>
+            <div className="guest-modal-header">
+              <h3 className="modal-title font-serif">Add Guest</h3>
+              <button className="modal-close-btn" onClick={() => setShowAddModal(false)}>✕</button>
+            </div>
+
+            <form onSubmit={handleAddGuest} className="guest-modal-form">
               <div className="form-group">
-                <label>Guest Name *</label>
+                <label className="form-label">Full Name *</label>
                 <input
                   type="text"
-                  placeholder="e.g. Rahul & Priya Verma"
+                  required
+                  placeholder="E.g. Priya Sharma"
                   value={formName}
                   onChange={e => setFormName(e.target.value)}
-                  required
-                  autoFocus
+                  className="form-input"
                 />
               </div>
 
-              <div className="form-row">
+              <div className="form-row-2">
                 <div className="form-group">
-                  <label>Party Size</label>
+                  <label className="form-label">Party Size</label>
                   <input
                     type="number"
                     min="1"
-                    max="50"
+                    max="20"
                     value={formPartySize}
                     onChange={e => setFormPartySize(e.target.value)}
-                    required
+                    className="form-input"
                   />
                 </div>
+
                 <div className="form-group">
-                  <label>RSVP Status</label>
-                  <select value={formStatus} onChange={e => setFormStatus(e.target.value as FirestoreGuest['status'])}>
+                  <label className="form-label">RSVP Status</label>
+                  <select
+                    value={formStatus}
+                    onChange={e => setFormStatus(e.target.value as FirestoreGuest['status'])}
+                    className="form-input"
+                  >
                     <option value="Pending">Pending</option>
                     <option value="Accepted">Accepted</option>
                     <option value="Declined">Declined</option>
@@ -329,36 +406,54 @@ export function GuestManagement() {
               </div>
 
               <div className="form-group">
-                <label>Dietary Requirement</label>
-                <select value={formDietary} onChange={e => setFormDietary(e.target.value as FirestoreGuest['dietary'])}>
-                  {DIETARY_OPTIONS.map(d => <option key={d} value={d}>{d}</option>)}
+                <label className="form-label">Dietary Preference</label>
+                <select
+                  value={formDietary}
+                  onChange={e => setFormDietary(e.target.value as FirestoreGuest['dietary'])}
+                  className="form-input"
+                >
+                  {DIETARY_OPTIONS.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
                 </select>
               </div>
 
               <div className="form-group">
-                <label>Email (optional)</label>
-                <input
-                  type="email"
-                  placeholder="guest@email.com"
-                  value={formEmail}
-                  onChange={e => setFormEmail(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Phone (optional)</label>
+                <label className="form-label">Phone Number (optional)</label>
                 <input
                   type="tel"
                   placeholder="+91 98765 43210"
                   value={formPhone}
                   onChange={e => setFormPhone(e.target.value)}
+                  className="form-input"
                 />
               </div>
 
-              <div className="modal-btn-row">
-                <button type="button" className="btn-cancel" onClick={() => setShowAddModal(false)}>Cancel</button>
-                <button type="submit" className="btn-save" disabled={saving || !formName.trim()}>
-                  {saving ? <Loader2 size={14} className="animate-spin" /> : 'Add to List'}
+              <div className="form-group">
+                <label className="form-label">Email Address (optional)</label>
+                <input
+                  type="email"
+                  placeholder="priya@example.com"
+                  value={formEmail}
+                  onChange={e => setFormEmail(e.target.value)}
+                  className="form-input"
+                />
+              </div>
+
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="btn btn-secondary w-full"
+                  onClick={() => setShowAddModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary w-full"
+                  disabled={saving || !formName.trim()}
+                >
+                  {saving ? <Loader2 size={16} className="animate-spin" /> : 'Save Guest'}
                 </button>
               </div>
             </form>

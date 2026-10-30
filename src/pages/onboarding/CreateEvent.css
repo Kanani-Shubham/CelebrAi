@@ -126,3 +126,15 @@
     padding: 40px 0;
   }
 }
+
+
+@media (min-width: 768px) {
+  .create-event-footer {
+    display: flex;
+    justify-content: center;
+  }
+
+  .create-event-footer button {
+    max-width: 640px;
+  }
+}

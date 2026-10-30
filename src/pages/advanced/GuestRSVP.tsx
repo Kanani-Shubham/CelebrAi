@@ -4,6 +4,7 @@ import { ChevronLeft, Calendar, MapPin, Check, Heart, HelpCircle, XCircle, Loade
 import { useEvent } from '../../contexts/EventContext';
 import { createDoc } from '../../services/firebase/firestore';
 import { toast } from '../../components/ui';
+import { formatDisplayDate } from '../../utils/dateUtils';
 import './GuestRSVP.css';
 
 export function GuestRSVP() {
@@ -79,7 +80,7 @@ export function GuestRSVP() {
         <div className="env-card-info">
           <h2 className="env-event-title">{activeEvent?.eventName || 'Our Special Celebration'}</h2>
           <div className="env-meta">
-            <span>📅 {activeEvent?.eventDate || activeEvent?.date || 'Date TBD'}</span>
+            <span>📅 {formatDisplayDate(activeEvent?.eventDate || activeEvent?.date)}</span>
             <span>📍 {activeEvent?.location || 'Venue TBD'}</span>
           </div>
         </div>

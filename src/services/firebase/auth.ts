@@ -124,6 +124,24 @@ export async function updateUserProfile(uid: string, data: Record<string, unknow
     ...data,
     updatedAt: serverTimestamp(),
   });
+
+  // Keep Firebase Auth in sync with display name or photo
+  if (auth.currentUser && auth.currentUser.uid === uid) {
+    const authUpdates: { displayName?: string; photoURL?: string } = {};
+    if (typeof data.displayName === 'string' && data.displayName.trim().length > 0) {
+      authUpdates.displayName = data.displayName.trim();
+    }
+    if (typeof data.photoURL === 'string') {
+      authUpdates.photoURL = data.photoURL;
+    }
+    if (Object.keys(authUpdates).length > 0) {
+      try {
+        await updateProfile(auth.currentUser, authUpdates);
+      } catch (err) {
+        console.warn('[auth] Could not update auth profile directly:', err);
+      }
+    }
+  }
 }
 
 export { getAuthErrorMessage, onAuthStateChanged, type User };

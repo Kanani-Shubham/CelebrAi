@@ -151,17 +151,17 @@ export function AIPlanPreview() {
         }
       }
 
-      // Priority 4: Fallback mock if event context was empty
+      // Priority 4: Fallback if event context was empty
       if (!targetEvent) {
         setTargetEvent({
           id: queryEventId || `evt-${Date.now()}`,
           eventName: 'My Celebration',
           eventType: 'Celebration',
-          eventDate: 'TBD',
-          location: 'Mumbai, India',
-          guestCount: 100,
-          budget: 500000,
-          theme: 'Classic Elegance',
+          eventDate: '',
+          location: '',
+          guestCount: 0,
+          budget: 0,
+          theme: '',
         });
       }
     }
@@ -532,11 +532,11 @@ export function AIPlanPreview() {
         eventName: String(targetEvent.eventName || 'Our Celebration'),
         eventType: String(targetEvent.eventType || 'Celebration'),
         eventDate: String(targetEvent.eventDate || targetEvent.date || 'TBD'),
-        location: String(targetEvent.location || 'India'),
-        guestCount: Number(targetEvent.guestCount) || 100,
-        budget: totalAllocatedBudget > 0 ? totalAllocatedBudget : Number(targetEvent.budget) || 500000,
-        currency: '₹',
-        theme: String(targetEvent.theme || 'Classic Elegance'),
+        location: String(targetEvent.location || 'TBD'),
+        guestCount: Number(targetEvent.guestCount) || 0,
+        budget: totalAllocatedBudget > 0 ? totalAllocatedBudget : Number(targetEvent.budget) || 0,
+        currency: String(targetEvent.currency || '₹'),
+        theme: String(targetEvent.theme || ''),
         coverImage: String(targetEvent.coverImage || ''),
         status: 'active',
         tasksTotal: plan.tasks.length,

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, MoreVertical, Calendar, Check, Trash2, Archive, Loader2 } from 'lucide-react';
 import { useEvent, type Event } from '../../contexts/EventContext';
 import { toast } from '../../components/ui';
+import { formatDisplayDate } from '../../utils/dateUtils';
 import './AllEvents.css';
 
 export function AllEvents() {
@@ -188,7 +189,7 @@ export function AllEvents() {
                     </div>
                   </div>
 
-                  <span className="event-card-date">{ev.eventDate || ev.date || 'Date TBD'}</span>
+                  <span className="event-card-date">{formatDisplayDate(ev.eventDate || ev.date)}</span>
 
                   <div className="event-card-progress">
                     <div className="progress-track">

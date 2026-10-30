@@ -1,19 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Globe,
   Coins,
-  Calendar,
-  Clock,
-  Bell,
-  Eye,
-  Palette,
   Lock,
   ChevronRight,
   LogOut,
   User,
   ShieldCheck,
-  Mail,
+  ShieldAlert,
   Loader2,
   Check,
   ArrowLeft,
@@ -33,11 +28,22 @@ export function Settings() {
   const [saving, setSaving] = useState(false);
   const [sendingReset, setSendingReset] = useState(false);
 
+  // Sync state when profile loads asynchronously from Firestore
+  useEffect(() => {
+    if (profile) {
+      if (profile.displayName) setDisplayName(profile.displayName);
+      if (profile.currency) setCurrency(profile.currency);
+      if (profile.language) setLanguage(profile.language);
+    } else if (user?.displayName) {
+      setDisplayName(user.displayName);
+    }
+  }, [profile, user]);
+
   const handleBack = () => {
     if (window.history.state && window.history.state.idx > 0) {
       navigate(-1);
     } else {
-      navigate('/dashboard');
+      navigate('/profile');
     }
   };
 
@@ -52,8 +58,9 @@ export function Settings() {
         language,
       });
       await refreshProfile();
-      toast.success('Settings updated successfully');
+      toast.success('Preferences saved successfully');
     } catch (err) {
+      console.error('[Settings] Failed to save profile:', err);
       toast.error('Failed to update settings: ' + (err as Error).message);
     } finally {
       setSaving(false);
@@ -70,6 +77,7 @@ export function Settings() {
       await resetPassword(user.email);
       toast.success(`Password reset email sent to ${user.email}`);
     } catch (err) {
+      console.error('[Settings] Password reset error:', err);
       toast.error('Failed to send reset email: ' + (err as Error).message);
     } finally {
       setSendingReset(false);
@@ -93,13 +101,13 @@ export function Settings() {
           type="button"
           onClick={handleBack}
           className="icon-btn settings-back-btn"
-          aria-label="Go back to previous page"
+          aria-label="Go back to profile"
           title="Go back"
         >
           <ArrowLeft size={20} />
         </button>
         <div className="settings-head-info">
-          <h1 className="settings-title">Settings</h1>
+          <h1 className="settings-title font-serif">Settings</h1>
           <p className="settings-sub">Manage your account preferences and security</p>
         </div>
       </div>
@@ -107,29 +115,29 @@ export function Settings() {
       {/* Account Profile Form */}
       <div className="settings-group">
         <span className="group-title">Profile & Regional Preferences</span>
-        <form onSubmit={handleSaveProfile} style={{ background: '#FFFFFF', padding: '16px', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <form onSubmit={handleSaveProfile} style={{ background: '#FFFFFF', padding: '20px', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-tuxedo-black)', display: 'block', marginBottom: '4px' }}>
-              Display Name
+            <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-tuxedo-black)', display: 'flex', alignItems: 'center', gap: 6, marginBottom: '6px' }}>
+              <User size={14} /> Full Name / Display Name
             </label>
             <input
               type="text"
               value={displayName}
               onChange={e => setDisplayName(e.target.value)}
               placeholder="Your name"
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)' }}
+              className="form-input"
             />
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
-              <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-tuxedo-black)', display: 'block', marginBottom: '4px' }}>
-                Currency
+              <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-tuxedo-black)', display: 'flex', alignItems: 'center', gap: 6, marginBottom: '6px' }}>
+                <Coins size={14} /> Currency
               </label>
               <select
                 value={currency}
                 onChange={e => setCurrency(e.target.value)}
-                style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', background: '#fff' }}
+                className="form-input"
               >
                 <option value="INR">INR (₹)</option>
                 <option value="USD">USD ($)</option>
@@ -140,13 +148,13 @@ export function Settings() {
             </div>
 
             <div>
-              <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-tuxedo-black)', display: 'block', marginBottom: '4px' }}>
-                Language
+              <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-tuxedo-black)', display: 'flex', alignItems: 'center', gap: 6, marginBottom: '6px' }}>
+                <Globe size={14} /> Language
               </label>
               <select
                 value={language}
                 onChange={e => setLanguage(e.target.value)}
-                style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', background: '#fff' }}
+                className="form-input"
               >
                 <option value="English">English</option>
                 <option value="Hindi">Hindi (हिंदी)</option>
@@ -160,7 +168,7 @@ export function Settings() {
             type="submit"
             disabled={saving}
             className="btn btn-primary"
-            style={{ alignSelf: 'flex-start', padding: '8px 20px', borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}
+            style={{ alignSelf: 'flex-start', padding: '10px 24px', borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}
           >
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
             <span>Save Preferences</span>
@@ -177,8 +185,8 @@ export function Settings() {
               <Lock size={16} />
               <div>
                 <span>Reset Password via Email</span>
-                <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-secondary)' }}>
-                  {user?.email || 'Send reset link to registered email'}
+                <span style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                  {user?.email ? `Send reset link to ${user.email}` : 'Send reset link to registered email'}
                 </span>
               </div>
             </div>
@@ -190,7 +198,12 @@ export function Settings() {
           <div className="setting-row" onClick={() => navigate('/privacy')} style={{ cursor: 'pointer' }}>
             <div className="st-left">
               <ShieldCheck size={16} />
-              <span>Privacy & Consent Controls</span>
+              <div>
+                <span>Privacy & Consent Controls</span>
+                <span style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                  Manage data retention and AI processing preferences
+                </span>
+              </div>
             </div>
             <div className="st-right">
               <ChevronRight size={16} />
@@ -202,11 +215,22 @@ export function Settings() {
       {/* Account Info Details */}
       <div className="settings-group">
         <span className="group-title">Account Diagnostics</span>
-        <div style={{ background: '#FFFFFF', padding: '14px 16px', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)', fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <div><strong>Account UID:</strong> <span style={{ fontFamily: 'monospace' }}>{user?.uid || 'Not signed in'}</span></div>
-          <div><strong>Email:</strong> {user?.email || 'None'}</div>
-          <div><strong>Provider:</strong> {user?.providerData?.[0]?.providerId || 'email/password'}</div>
-          <div><strong>Email Verified:</strong> {user?.emailVerified ? '✅ Yes' : '⚠️ Pending'}</div>
+        <div style={{ background: '#FFFFFF', padding: '16px 20px', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)', fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div><strong>Account UID:</strong> <span style={{ fontFamily: 'monospace', color: 'var(--color-tuxedo-black)' }}>{user?.uid || 'Not signed in'}</span></div>
+          <div><strong>Email Address:</strong> <span style={{ color: 'var(--color-tuxedo-black)' }}>{user?.email || 'None'}</span></div>
+          <div><strong>Sign-In Provider:</strong> <span style={{ color: 'var(--color-tuxedo-black)' }}>{user?.providerData?.[0]?.providerId || 'password'}</span></div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <strong>Email Verification:</strong>
+            {user?.emailVerified ? (
+              <span style={{ color: '#16a34a', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 500 }}>
+                <ShieldCheck size={14} /> Verified
+              </span>
+            ) : (
+              <span style={{ color: '#ea580c', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 500 }}>
+                <ShieldAlert size={14} /> Pending verification
+              </span>
+            )}
+          </div>
         </div>
       </div>
 

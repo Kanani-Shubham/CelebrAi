@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   ChevronLeft,
   Share2,
-  MoreVertical,
   Calendar,
   MapPin,
   Users,
@@ -12,12 +11,11 @@ import {
   Store,
   UserCheck,
   Wallet,
-  Camera,
-  Edit2,
   CalendarCheck,
 } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { toast } from '../../components/ui';
+import { formatDisplayDate } from '../../utils/dateUtils';
 import './EventOverview.css';
 
 export function EventOverview() {
@@ -106,7 +104,7 @@ export function EventOverview() {
           <div className="meta-col">
             <div className="meta-item">
               <Calendar size={14} />
-              <span>{currentEvent.eventDate || currentEvent.date || 'Date TBD'}</span>
+              <span>{formatDisplayDate(currentEvent.eventDate || currentEvent.date)}</span>
             </div>
             <div className="meta-item">
               <Users size={14} />

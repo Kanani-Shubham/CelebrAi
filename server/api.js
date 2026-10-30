@@ -156,21 +156,39 @@ app.post('/api/ai/chat', rateLimit, async (req, res) => {
 
     logRequest('/api/ai/chat', { msgCount: messages.length });
 
-    const eventName = sanitize(eventContext.eventName || 'your event', 100);
-    const eventType = sanitize(eventContext.eventType || 'Event', 50);
-    const location = sanitize(eventContext.location || 'India', 100);
-    const guestCount = sanitizeNumber(eventContext.guestCount, 1, 100000, 100);
-    const budget = sanitizeNumber(eventContext.budget, 0, 100_000_000, 500000);
+    const eventName = sanitize(eventContext.eventName || '', 100);
+    const eventType = sanitize(eventContext.eventType || '', 50);
+    const location = sanitize(eventContext.location || '', 100);
+    const guestCount = Number(eventContext.guestCount) > 0 ? Number(eventContext.guestCount) : null;
+    const budget = Number(eventContext.budget) > 0 ? Number(eventContext.budget) : null;
+    const currency = sanitize(eventContext.currency || '₹', 5);
 
-    const systemPrompt = `You are CelebrAI, a warm and professional AI event planning assistant powered by GPT-OSS 120B. You are helping plan "${eventName}" (${eventType}) in ${location} for ${guestCount} guests with a budget of ₹${budget.toLocaleString('en-IN')}.
+    const contextParts = [];
+    if (eventName && eventName !== 'your event') contextParts.push(`- Event Name: "${eventName}"`);
+    if (eventType && eventType !== 'Event') contextParts.push(`- Type: ${eventType}`);
+    if (location && location !== 'India' && location !== 'TBD') contextParts.push(`- Location: ${location}`);
+    if (guestCount) contextParts.push(`- Confirmed Guests: ${guestCount}`);
+    if (budget) contextParts.push(`- Confirmed Budget: ${currency} ${budget.toLocaleString('en-IN')}`);
 
-Guidelines:
-- Provide specific, actionable event planning advice
-- Suggest vendors, timelines, checklists, decor ideas, and budget breakdowns
-- Be warm, encouraging, and professional
-- Use bullet points or numbered lists for clarity
-- Tailor advice specifically to the event details provided
-- Never make up vendor names or claim bookings unless the user confirms them`;
+    const contextBlock = contextParts.length > 0
+      ? `CURRENT EVENT CONTEXT (Use ONLY when relevant to the user request. NEVER invent unconfirmed details):\n${contextParts.join('\n')}`
+      : 'CURRENT EVENT CONTEXT: No specific event details confirmed yet.';
+
+    const systemPrompt = `You are CelebrAI, an intelligent, versatile AI event planning mentor and assistant powered by GPT-OSS 120B.
+
+${contextBlock}
+
+CRITICAL BEHAVIOR INSTRUCTIONS:
+1. GREETINGS: If the user says "hi", "hello", "hey", or offers a casual greeting, respond with a short, warm greeting (1-2 sentences) asking how you can assist them today. NEVER fabricate an event plan, budget breakdown, or venue list for a simple greeting.
+2. ANSWER DIRECTLY: Always answer the user's specific prompt directly.
+   - If the user asks for code (e.g. HTML/CSS for a lamp, JavaScript, Python), provide clean, complete code directly. Do NOT force the response back to event planning.
+   - If the user asks for writing, invitation drafts, decor, timelines, or general advice, fulfill that exact request.
+3. CONTEXT INTEGRITY:
+   - Use current event context only when relevant.
+   - Do NOT invent fake venue names, prices, availability, or pretend external databases have been checked.
+   - If information is missing for an event task, ask a brief clarifying question instead of inventing numbers.
+4. CONCISENESS & QUALITY:
+   - Keep answers appropriately concise and well-formatted with markdown unless the user specifically asks for deep detail.`;
 
     // Sanitize and limit message history
     const sanitizedMessages = messages.slice(-12).map(m => ({

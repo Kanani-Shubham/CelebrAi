@@ -265,3 +265,45 @@
 .priority-high { background: #FEE2E2; color: #DC2626; }
 .priority-medium { background: #FEF3C7; color: #D97706; }
 .priority-low { background: #D1FAE5; color: #059669; }
+
+
+/* Desktop & Tablet Responsiveness */
+@media (min-width: 768px) {
+  .home-dashboard {
+    padding: 24px 32px;
+    gap: 24px;
+  }
+
+  .hero-countdown-card {
+    padding: 32px;
+  }
+
+  .countdown-img-wrap {
+    width: 240px;
+    height: 160px;
+  }
+
+  .days-number {
+    font-size: 56px;
+  }
+
+  .stats-badges-grid {
+    gap: 16px;
+  }
+
+  .stat-badge-item {
+    padding: 16px 12px;
+  }
+
+  .stat-val {
+    font-size: 16px;
+  }
+
+  .quick-action-tiles {
+    gap: 16px;
+  }
+
+  .action-tile {
+    padding: 16px 12px;
+  }
+}

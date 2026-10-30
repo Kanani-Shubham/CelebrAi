@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Clock, Plus, Loader2 } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { getEventTasks } from '../../services/firebase/firestore';
+import { formatDisplayDate } from '../../utils/dateUtils';
 import './TimelineCalendar.css';
 
 interface TimelineItem {
@@ -202,7 +203,7 @@ export function TimelineCalendar() {
                       <span className="milestone-connector" />
                     </div>
                     <div className="milestone-info">
-                      <span className="milestone-date">{item.date}</span>
+                      <span className="milestone-date">{formatDisplayDate(item.date)}</span>
                       <h4 className="milestone-title">{item.title}</h4>
                     </div>
                     <span className={`task-priority-tag priority-${item.priority.toLowerCase()}`}>
@@ -238,7 +239,7 @@ export function TimelineCalendar() {
                 <div>
                   <strong style={{ fontSize: '14px', color: 'var(--color-tuxedo-black)', display: 'block' }}>{item.title}</strong>
                   <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                    <Clock size={12} /> {item.date}
+                    <Clock size={12} /> {formatDisplayDate(item.date)}
                   </span>
                 </div>
                 <span className={`task-priority-tag priority-${item.priority.toLowerCase()}`}>

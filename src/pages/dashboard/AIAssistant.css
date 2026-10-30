@@ -319,3 +319,41 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+
+/* Desktop Layout Enhancements */
+@media (min-width: 768px) {
+  .ai-top-header {
+    padding: 16px 32px;
+  }
+
+  .chat-messages-container {
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    padding: 24px 32px;
+  }
+
+  .quick-prompts-scroll-wrap {
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+
+  .chat-input-dock {
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
+  }
+
+  .message-bubble {
+    max-width: 75%;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+}

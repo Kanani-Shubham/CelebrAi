@@ -66,7 +66,7 @@ export async function deleteDocById(col: string, id: string): Promise<void> {
 
 export async function getDocById(col: string, id: string) {
   const snap = await getDoc(doc(db, col, id));
-  return snap.exists() ? { id: snap.id, ...snap.data() } : null;
+  return snap.exists() ? { ...snap.data(), id: snap.id } : null;
 }
 
 export async function queryCollection(
@@ -75,7 +75,8 @@ export async function queryCollection(
 ): Promise<(DocumentData & { id: string })[]> {
   const q = query(collection(db, col), ...constraints);
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  // Important: ensure real Firestore doc ID `d.id` always overrides any internal data.id
+  return snap.docs.map(d => ({ ...d.data(), id: d.id }));
 }
 
 // ---- Current user uid helper ----
@@ -106,13 +107,21 @@ export async function getUserEvents(uid: string) {
 }
 
 export async function createEvent(ownerId: string, data: Record<string, unknown>) {
-  return createDoc('events', {
-    ...data,
+  const ref = doc(collection(db, 'events'));
+  // Strip any client-generated ID so Firestore doc ID is canonical
+  const { id: _ignore, ...cleanData } = data;
+  await setDoc(ref, {
+    ...cleanData,
+    id: ref.id,
     ownerId,
+    createdBy: ownerId,
     archived: false,
     isPublic: false,
     collaborators: [],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
   });
+  return ref.id;
 }
 
 export async function updateEvent(eventId: string, data: Record<string, unknown>) {
@@ -120,7 +129,7 @@ export async function updateEvent(eventId: string, data: Record<string, unknown>
 }
 
 export async function deleteEvent(eventId: string) {
-  // Batch delete: event + all its tasks, expenses, guests, vendors
+  // Batch delete: event + all its tasks, expenses, guests, vendors, conversations
   const batch = writeBatch(db);
   batch.delete(doc(db, 'events', eventId));
 
@@ -140,7 +149,7 @@ export async function saveApprovedEventPlan(
 ): Promise<string> {
   const batch = writeBatch(db);
 
-  // 1. Resolve event reference
+  // 1. Resolve event reference: check if valid Firestore doc exists
   let eventRef;
   const existingId = eventData.id ? String(eventData.id) : null;
   if (existingId && !existingId.startsWith('evt-')) {
@@ -156,10 +165,11 @@ export async function saveApprovedEventPlan(
   );
 
   // 2. Set/merge event doc with approved plan
+  const { id: _ignore, ...cleanEventData } = eventData;
   batch.set(
     eventRef,
     {
-      ...eventData,
+      ...cleanEventData,
       id: realEventId,
       ownerId: userId,
       createdBy: userId,
@@ -226,6 +236,7 @@ export async function saveApprovedEventPlan(
 // TASKS
 // ===========================================================
 export async function getEventTasks(eventId: string) {
+  if (!eventId || eventId.startsWith('evt-')) return [];
   const docs = await queryCollection('tasks', [
     where('eventId', '==', eventId),
   ]);
@@ -237,6 +248,7 @@ export async function createTask(eventId: string, data: Record<string, unknown>)
   return createDoc('tasks', {
     ...data,
     eventId,
+    ownerId: uid,
     createdBy: uid,
     completed: false,
   });
@@ -254,6 +266,7 @@ export async function deleteTask(taskId: string) {
 // EXPENSES
 // ===========================================================
 export async function getEventExpenses(eventId: string) {
+  if (!eventId || eventId.startsWith('evt-')) return [];
   const docs = await queryCollection('expenses', [
     where('eventId', '==', eventId),
   ]);
@@ -265,6 +278,7 @@ export async function createExpense(eventId: string, data: Record<string, unknow
   return createDoc('expenses', {
     ...data,
     eventId,
+    ownerId: uid,
     createdBy: uid,
     amount: Number(data.amount) || 0,
   });
@@ -282,6 +296,7 @@ export async function deleteExpense(expenseId: string) {
 // GUESTS
 // ===========================================================
 export async function getEventGuests(eventId: string) {
+  if (!eventId || eventId.startsWith('evt-')) return [];
   const docs = await queryCollection('guests', [
     where('eventId', '==', eventId),
   ]);
@@ -293,6 +308,7 @@ export async function createGuest(eventId: string, data: Record<string, unknown>
   return createDoc('guests', {
     ...data,
     eventId,
+    ownerId: uid,
     createdBy: uid,
     status: data.status || 'Pending',
     partySize: Number(data.partySize) || 1,
@@ -311,6 +327,7 @@ export async function deleteGuest(guestId: string) {
 // VENDORS (saved by users)
 // ===========================================================
 export async function getSavedVendors(eventId: string) {
+  if (!eventId || eventId.startsWith('evt-')) return [];
   const docs = await queryCollection('vendors', [
     where('eventId', '==', eventId),
   ]);
@@ -318,7 +335,8 @@ export async function getSavedVendors(eventId: string) {
 }
 
 export async function saveVendor(eventId: string, data: Record<string, unknown>) {
-  return createDoc('vendors', { ...data, eventId });
+  const uid = requireAuth();
+  return createDoc('vendors', { ...data, eventId, ownerId: uid, createdBy: uid });
 }
 
 export async function updateVendor(vendorId: string, data: Record<string, unknown>) {
@@ -333,9 +351,16 @@ export async function deleteVendor(vendorId: string) {
 // AI CONVERSATIONS
 // ===========================================================
 export async function getEventConversations(eventId: string) {
+  if (!eventId || eventId.startsWith('evt-')) return [];
+  const uid = auth.currentUser?.uid;
+  if (!uid) return [];
+
+  // Query by eventId and userId
   const docs = await queryCollection('conversations', [
     where('eventId', '==', eventId),
+    where('userId', '==', uid),
   ]);
+  // Sort ascending by creation time so chat order is chronological
   return docs.sort((a, b) => toMillis(a.createdAt) - toMillis(b.createdAt));
 }
 
@@ -347,6 +372,7 @@ export async function saveConversationMessage(
   return createDoc('conversations', {
     eventId,
     userId,
+    createdBy: userId,
     role: message.role,
     content: message.content,
   });

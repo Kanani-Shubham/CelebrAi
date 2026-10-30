@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ChevronLeft,
@@ -30,34 +30,6 @@ interface MessageItem {
   error?: boolean;
 }
 
-const QUICK_PROMPTS = [
-  {
-    icon: Search,
-    label: 'Recommend caterers',
-    prompt: 'Recommend top catering menu styles and service options for our event based on our budget and guest count.',
-  },
-  {
-    icon: Palette,
-    label: 'Suggest decor themes',
-    prompt: 'Suggest 3 unique and elegant decor themes suitable for our event date and venue.',
-  },
-  {
-    icon: Clock,
-    label: 'Create hour-by-hour timeline',
-    prompt: 'Generate an hour-by-hour event day schedule for our celebration from morning setup to night wrap-up.',
-  },
-  {
-    icon: PieChart,
-    label: 'Optimize my budget',
-    prompt: 'Review our event budget and suggest percentage allocations across venue, catering, decor, photography, and entertainment.',
-  },
-  {
-    icon: Mail,
-    label: 'Draft invitation text',
-    prompt: 'Write an elegant, warm invitation message for our WhatsApp and digital cards.',
-  },
-];
-
 export function AIAssistant() {
   const navigate = useNavigate();
   const { activeEvent } = useEvent();
@@ -82,12 +54,14 @@ export function AIAssistant() {
 
   // Restore conversation history from Firestore
   const loadHistory = useCallback(async () => {
-    if (!eventId || !user) {
+    if (!eventId || !user || eventId.startsWith('evt-')) {
       setMessages([
         {
           id: 'welcome',
           sender: 'ai',
-          text: "👋 Hi! I'm CelebrAI, your personal event planner powered by GPT-OSS 120B. How can I help you plan your celebration today?",
+          text: activeEvent?.eventName
+            ? `👋 Hi! I'm CelebrAI, powered by GPT-OSS 120B. How can I help you with "${activeEvent.eventName}" today?`
+            : "👋 Hi! I'm CelebrAI, your personal event assistant powered by GPT-OSS 120B. How can I help you today?",
           timestamp: 'Just now',
         },
       ]);
@@ -103,7 +77,9 @@ export function AIAssistant() {
           id: r.id,
           sender: (r.role === 'assistant' ? 'ai' : 'user') as 'ai' | 'user',
           text: String(r.content || ''),
-          timestamp: r.createdAt?.toDate ? r.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Saved',
+          timestamp: r.createdAt?.toDate
+            ? r.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            : 'Saved',
         }));
         setMessages(restored);
       } else {
@@ -111,7 +87,7 @@ export function AIAssistant() {
           {
             id: 'welcome',
             sender: 'ai',
-            text: `👋 Hi! I'm CelebrAI, your personal event planner powered by GPT-OSS 120B. I am ready to help you plan "${activeEvent.eventName || 'your celebration'}". What would you like to work on?`,
+            text: `👋 Hi! I'm CelebrAI, your personal event planner powered by GPT-OSS 120B. How can I help you with "${activeEvent.eventName || 'your celebration'}"?`,
             timestamp: 'Just now',
           },
         ]);
@@ -122,7 +98,7 @@ export function AIAssistant() {
         {
           id: 'welcome',
           sender: 'ai',
-          text: "👋 Hi! I'm CelebrAI, powered by GPT-OSS 120B. How can I assist with your celebration today?",
+          text: "👋 Hi! I'm CelebrAI, powered by GPT-OSS 120B. How can I assist you today?",
           timestamp: 'Just now',
         },
       ]);
@@ -134,6 +110,48 @@ export function AIAssistant() {
   useEffect(() => {
     loadHistory();
   }, [loadHistory]);
+
+  // Dynamic quick action prompts using real event context
+  const quickPrompts = useMemo(() => {
+    const eventName = activeEvent?.eventName || 'our celebration';
+    const hasGuests = Boolean(activeEvent?.guestCount && Number(activeEvent.guestCount) > 0);
+    const hasBudget = Boolean(activeEvent?.budget && Number(activeEvent.budget) > 0);
+    const currency = activeEvent?.currency || '₹';
+
+    return [
+      {
+        icon: Search,
+        label: 'Recommend caterers',
+        prompt: hasGuests
+          ? `Recommend catering menu styles and service options for "${eventName}" for ${activeEvent?.guestCount} guests.`
+          : `Recommend catering menu styles and service options suitable for "${eventName}".`,
+      },
+      {
+        icon: Palette,
+        label: 'Suggest decor themes',
+        prompt: activeEvent?.theme
+          ? `Suggest 3 refined decor themes inspired by ${activeEvent.theme} for "${eventName}".`
+          : `Suggest 3 unique and elegant decor themes for "${eventName}".`,
+      },
+      {
+        icon: Clock,
+        label: 'Create hour-by-hour timeline',
+        prompt: `Generate an hour-by-hour event day schedule for "${eventName}" from morning setup to night wrap-up.`,
+      },
+      {
+        icon: PieChart,
+        label: 'Optimize my budget',
+        prompt: hasBudget
+          ? `Review our budget of ${currency} ${Number(activeEvent?.budget).toLocaleString('en-IN')} for "${eventName}" and suggest optimal percentage allocations.`
+          : `Suggest percentage budget allocations across venue, catering, decor, and entertainment for "${eventName}".`,
+      },
+      {
+        icon: Mail,
+        label: 'Draft invitation text',
+        prompt: `Write an elegant, warm invitation message for "${eventName}" suitable for digital cards and WhatsApp.`,
+      },
+    ];
+  }, [activeEvent]);
 
   const handleSend = async (textToSend?: string) => {
     const text = (textToSend || inputVal).trim();
@@ -152,8 +170,8 @@ export function AIAssistant() {
     setInputVal('');
     setLoading(true);
 
-    // Save user message to Firestore
-    if (eventId && user) {
+    // Save user message to Firestore if in real event
+    if (eventId && user && !eventId.startsWith('evt-')) {
       try {
         await saveConversationMessage(eventId, user.uid, {
           role: 'user',
@@ -174,14 +192,16 @@ export function AIAssistant() {
         }));
       history.push({ role: 'user', content: text });
 
+      // Pass only confirmed event data without inventing assumptions
       const reply = await sendChatMessage(
         history,
         {
-          eventName: activeEvent?.eventName || 'Our Celebration',
-          eventType: activeEvent?.eventType || 'Event',
-          location: activeEvent?.location || 'India',
-          guestCount: Number(activeEvent?.guestCount) || 100,
-          budget: Number(activeEvent?.budget) || 500000,
+          eventName: activeEvent?.eventName || '',
+          eventType: activeEvent?.eventType || '',
+          location: activeEvent?.location && activeEvent.location !== 'TBD' ? activeEvent.location : '',
+          guestCount: Number(activeEvent?.guestCount) > 0 ? Number(activeEvent?.guestCount) : null,
+          budget: Number(activeEvent?.budget) > 0 ? Number(activeEvent?.budget) : null,
+          currency: activeEvent?.currency || '₹',
         },
         idToken || ''
       );
@@ -189,18 +209,18 @@ export function AIAssistant() {
       const aiMsg: MessageItem = {
         id: `ai-${Date.now()}`,
         sender: 'ai',
-        text: reply,
+        text: reply || 'I received your message. How else may I assist you?',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 
       setMessages(prev => [...prev, aiMsg]);
 
       // Save AI message to Firestore
-      if (eventId && user) {
+      if (eventId && user && !eventId.startsWith('evt-')) {
         try {
           await saveConversationMessage(eventId, user.uid, {
             role: 'assistant',
-            content: reply,
+            content: aiMsg.text,
           });
         } catch (err) {
           console.warn('[AIAssistant] Failed to persist assistant reply to Firestore:', err);
@@ -212,7 +232,7 @@ export function AIAssistant() {
       const errMsg: MessageItem = {
         id: `err-${Date.now()}`,
         sender: 'ai',
-        text: `Error contacting Groq AI: ${(err as Error).message || 'Service temporarily unavailable. Please check your connection and retry.'}`,
+        text: `Error communicating with AI service: ${(err as Error).message || 'Service temporarily unavailable. Please retry.'}`,
         timestamp: 'Error',
         error: true,
       };
@@ -223,7 +243,7 @@ export function AIAssistant() {
   };
 
   const handleRetry = () => {
-    if (lastFailedMessage) {
+    if (lastFailedMessage && !loading) {
       handleSend(lastFailedMessage);
     }
   };
@@ -237,7 +257,7 @@ export function AIAssistant() {
         </button>
         <div className="ai-header-info">
           <div className="ai-title-row">
-            <span className="ai-name">CelebrAI</span>
+            <span className="ai-name font-serif">CelebrAI</span>
             <span className="ai-badge-pill" title="Model: openai/gpt-oss-120b">GPT-OSS 120B</span>
           </div>
           <span className="ai-sub">
@@ -251,7 +271,7 @@ export function AIAssistant() {
         {historyLoading ? (
           <div style={{ textAlign: 'center', padding: '40px' }}>
             <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto', color: 'var(--color-tuxedo-black)' }} />
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '8px' }}>Restoring conversation...</p>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '8px' }}>Loading conversation history...</p>
           </div>
         ) : (
           messages.map(msg => (
@@ -260,37 +280,17 @@ export function AIAssistant() {
               className={`message-row ${msg.sender === 'user' ? 'user-row' : 'ai-row'} ${msg.error ? 'error-row' : ''}`}
             >
               {msg.sender === 'ai' && (
-                <div className={`ai-avatar-circle ${msg.error ? 'error-avatar' : ''}`}>
-                  {msg.error ? <AlertCircle size={15} style={{ color: '#dc2626' }} /> : <Sparkles size={15} />}
+                <div className="ai-avatar-icon">
+                  <Sparkles size={16} />
                 </div>
               )}
-
-              <div className="bubble-wrapper">
-                <div
-                  className={`chat-bubble ${msg.sender === 'user' ? 'user-bubble' : 'ai-bubble'}`}
-                  style={msg.error ? { border: '1px solid #f87171', background: '#fef2f2', color: '#991b1b' } : undefined}
-                >
-                  <p className="bubble-text" style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</p>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className="bubble-timestamp">{msg.timestamp}</span>
-                  {msg.error && lastFailedMessage && (
-                    <button
-                      onClick={handleRetry}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        background: 'none',
-                        border: 'none',
-                        color: '#dc2626',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        padding: 0,
-                      }}
-                    >
-                      <RotateCcw size={11} /> Retry
+              <div className="message-bubble">
+                <div className="msg-text-content" style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</div>
+                <div className="msg-meta-row">
+                  <span className="msg-timestamp">{msg.timestamp}</span>
+                  {msg.error && (
+                    <button className="msg-retry-btn" onClick={handleRetry} title="Retry sending">
+                      <RotateCcw size={12} /> Retry
                     </button>
                   )}
                 </div>
@@ -301,15 +301,12 @@ export function AIAssistant() {
 
         {loading && (
           <div className="message-row ai-row">
-            <div className="ai-avatar-circle">
-              <Sparkles size={15} />
+            <div className="ai-avatar-icon">
+              <Sparkles size={16} />
             </div>
-            <div className="bubble-wrapper">
-              <div className="chat-bubble ai-bubble typing-bubble">
-                <span className="typing-dot" />
-                <span className="typing-dot" />
-                <span className="typing-dot" />
-              </div>
+            <div className="message-bubble typing-bubble">
+              <Loader2 size={16} className="animate-spin" />
+              <span>Thinking with GPT-OSS 120B...</span>
             </div>
           </div>
         )}
@@ -317,43 +314,53 @@ export function AIAssistant() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Quick Prompts Carousel */}
-      <div className="quick-prompts-scroller">
-        {QUICK_PROMPTS.map((qp, idx) => {
-          const Icon = qp.icon;
-          return (
-            <button
-              key={idx}
-              className="quick-prompt-chip"
-              onClick={() => handleSend(qp.prompt)}
-              disabled={loading}
-            >
-              <Icon size={14} className="chip-icon" />
-              <span>{qp.label}</span>
-            </button>
-          );
-        })}
+      {/* Quick Action Suggestion Chips */}
+      <div className="quick-prompts-scroll-wrap">
+        <div className="quick-prompts-row">
+          {quickPrompts.map((qp, idx) => {
+            const Icon = qp.icon;
+            return (
+              <button
+                key={idx}
+                type="button"
+                className="quick-chip-btn"
+                disabled={loading}
+                onClick={() => handleSend(qp.prompt)}
+              >
+                <Icon size={14} className="chip-icon" />
+                <span>{qp.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Input Bar */}
-      <div className="chat-input-bar">
-        <input
-          type="text"
-          className="chat-text-input"
-          placeholder="Ask CelebrAI anything about your event..."
-          value={inputVal}
-          onChange={e => setInputVal(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleSend()}
-          disabled={loading}
-        />
-        <button
-          className={`chat-send-btn ${inputVal.trim() && !loading ? 'active' : ''}`}
-          onClick={() => handleSend()}
-          disabled={!inputVal.trim() || loading}
-          aria-label="Send message"
+      {/* Bottom Message Input Box */}
+      <div className="chat-input-dock">
+        <form
+          className="chat-input-form"
+          onSubmit={e => {
+            e.preventDefault();
+            handleSend();
+          }}
         >
-          {loading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
-        </button>
+          <input
+            type="text"
+            className="chat-text-input"
+            placeholder={activeEvent?.eventName ? `Ask anything about "${activeEvent.eventName}"...` : "Ask anything about your celebration..."}
+            value={inputVal}
+            onChange={e => setInputVal(e.target.value)}
+            disabled={loading}
+          />
+          <button
+            type="submit"
+            className="chat-send-btn"
+            disabled={!inputVal.trim() || loading}
+            aria-label="Send message"
+          >
+            {loading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} />}
+          </button>
+        </form>
       </div>
     </div>
   );
