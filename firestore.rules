@@ -133,7 +133,11 @@ service cloud.firestore {
       allow create: if request.resource.data.eventId is string
         && request.resource.data.name is string
         && request.resource.data.name.size() > 0;
-      allow read, update, delete: if isAuthenticated();
+      allow read, update, delete: if isAuthenticated() && (
+        resource.data.createdBy == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
+        isEventMember(resource.data.eventId)
+      );
     }
 
     // ----------------------------------------------------------------
@@ -162,6 +166,24 @@ service cloud.firestore {
         resource.data.userId == request.auth.uid ||
         resource.data.createdBy == request.auth.uid
       );
+
+      // Messages subcollection within a conversation
+      match /messages/{messageId} {
+        allow read: if isAuthenticated() && (
+          get(/databases/$(database)/documents/conversations/$(convId)).data.userId == request.auth.uid ||
+          get(/databases/$(database)/documents/conversations/$(convId)).data.createdBy == request.auth.uid ||
+          isEventMember(get(/databases/$(database)/documents/conversations/$(convId)).data.eventId)
+        );
+        allow create: if isAuthenticated() && (
+          get(/databases/$(database)/documents/conversations/$(convId)).data.userId == request.auth.uid ||
+          get(/databases/$(database)/documents/conversations/$(convId)).data.createdBy == request.auth.uid ||
+          isEventMember(get(/databases/$(database)/documents/conversations/$(convId)).data.eventId)
+        );
+        allow update, delete: if isAuthenticated() && (
+          get(/databases/$(database)/documents/conversations/$(convId)).data.userId == request.auth.uid ||
+          get(/databases/$(database)/documents/conversations/$(convId)).data.createdBy == request.auth.uid
+        );
+      }
     }
 
     // ----------------------------------------------------------------
@@ -173,14 +195,42 @@ service cloud.firestore {
     }
 
     // ----------------------------------------------------------------
-    // Run Sheets & Team responsibilities
+    // Run Sheets & Team responsibilities — scoped to event and creator
     // ----------------------------------------------------------------
     match /runsheets/{sheetId} {
-      allow read, write: if isAuthenticated();
+      allow read: if isAuthenticated() && (
+        resource.data.createdBy == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
+        isEventMember(resource.data.eventId)
+      );
+      allow create: if isAuthenticated() && (
+        request.resource.data.createdBy == request.auth.uid ||
+        request.resource.data.ownerId == request.auth.uid ||
+        isEventMember(request.resource.data.eventId)
+      );
+      allow update, delete: if isAuthenticated() && (
+        resource.data.createdBy == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
+        isEventMember(resource.data.eventId)
+      );
     }
 
     match /team/{memberId} {
-      allow read, write: if isAuthenticated();
+      allow read: if isAuthenticated() && (
+        resource.data.createdBy == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
+        isEventMember(resource.data.eventId)
+      );
+      allow create: if isAuthenticated() && (
+        request.resource.data.createdBy == request.auth.uid ||
+        request.resource.data.ownerId == request.auth.uid ||
+        isEventMember(request.resource.data.eventId)
+      );
+      allow update, delete: if isAuthenticated() && (
+        resource.data.createdBy == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
+        isEventMember(resource.data.eventId)
+      );
     }
 
     // Default deny everything else

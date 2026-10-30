@@ -22,17 +22,8 @@ import { signOut } from '../../services/firebase/auth';
 import { formatDisplayDate } from '../../utils/dateUtils';
 import './AppHeader.css';
 
-const LOGO = (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="14" cy="14" r="13" stroke="#171F20" strokeWidth="1.5" />
-    <path d="M14 6C14 6 9 9 9 14C9 19 14 22 14 22C14 22 19 19 19 14C19 9 14 6 14 6Z" fill="#D8CBF1" />
-    <path d="M8 10.5C8 10.5 11 8 14 8C17 8 20 10.5 20 10.5" stroke="#171F20" strokeWidth="1.2" strokeLinecap="round" />
-    <circle cx="14" cy="14" r="2" fill="#171F20" />
-  </svg>
-);
-
 export function AppHeader() {
-  const { user } = useAuth();
+  const { user, avatarUrl } = useAuth();
   const { events, activeEvent, setActiveEvent } = useEvent();
   const navigate = useNavigate();
   const [showEventMenu, setShowEventMenu] = useState(false);
@@ -71,8 +62,12 @@ export function AppHeader() {
   return (
     <header className="app-header">
       <div className="header-left-cluster">
-        <Link to="/dashboard" className="header-logo">
-          {LOGO}
+        <Link to="/dashboard" className="header-logo" aria-label="CelebrAI Home">
+          <img
+            src="/assets/branding/celebrai-icon.png"
+            alt="CelebrAI logo"
+            className="header-brand-icon"
+          />
           <span className="header-logo-text">CelebrAI</span>
         </Link>
 
@@ -185,8 +180,8 @@ export function AppHeader() {
               aria-label="Account menu"
               title="Account"
             >
-              {user?.photoURL ? (
-                <img src={user.photoURL} alt="avatar" className="avatar avatar-sm" />
+              {avatarUrl || user?.photoURL ? (
+                <img src={avatarUrl || user?.photoURL || undefined} alt={user?.displayName || 'User profile photo'} className="avatar avatar-sm" />
               ) : (
                 <div className="avatar avatar-sm">
                   {initials(user?.displayName ?? user?.email ?? 'Host')}
@@ -221,26 +216,26 @@ export function AppHeader() {
 
 export function BottomNav() {
   return (
-    <nav className="bottom-nav">
-      <NavLink to="/dashboard" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
+    <nav className="bottom-nav" aria-label="Mobile Navigation">
+      <NavLink to="/dashboard" aria-label="Home Dashboard" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
         <LayoutDashboard size={22} />
         <span>Home</span>
       </NavLink>
-      <NavLink to="/events" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
+      <NavLink to="/events" aria-label="All Events" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
         <Calendar size={22} />
         <span>Events</span>
       </NavLink>
-      <NavLink to="/ai" className={({ isActive }) => `bottom-nav-item center ${isActive ? 'active' : ''}`}>
+      <NavLink to="/ai" aria-label="AI Event Planner and Mentor" className={({ isActive }) => `bottom-nav-item center ${isActive ? 'active' : ''}`}>
         <div className="ai-nav-btn">
           <Sparkles size={22} />
         </div>
         <span>AI</span>
       </NavLink>
-      <NavLink to="/guests" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
+      <NavLink to="/guests" aria-label="Guest Management" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
         <Users size={22} />
         <span>Guests</span>
       </NavLink>
-      <NavLink to="/profile" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
+      <NavLink to="/profile" aria-label="User Profile and Settings" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
         <User size={22} />
         <span>Profile</span>
       </NavLink>

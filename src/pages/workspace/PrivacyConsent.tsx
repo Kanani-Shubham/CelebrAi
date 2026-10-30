@@ -1,10 +1,35 @@
 import React from 'react';
-import { Shield, Sparkles, Download, Trash2, Cookie, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Shield, Sparkles, Download, Trash2, Cookie, ChevronRight, ArrowLeft } from 'lucide-react';
 import './PrivacyConsent.css';
 
 export function PrivacyConsent() {
+  const navigate = useNavigate();
   return (
     <div className="privacy-consent-page">
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        aria-label="Go back"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          fontFamily: 'var(--font-sans, "DM Sans", sans-serif)',
+          fontWeight: 600,
+          fontSize: 'var(--text-sm, 14px)',
+          color: 'var(--color-tuxedo-black, #1a1a1a)',
+          padding: '8px 0 16px',
+          letterSpacing: '0.01em',
+        }}
+      >
+        <ArrowLeft size={18} />
+        Back
+      </button>
+
       <div className="privacy-head-info">
         <h1 className="privacy-title">Privacy &amp; Consent</h1>
         <p className="privacy-sub">

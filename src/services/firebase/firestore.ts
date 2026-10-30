@@ -348,19 +348,184 @@ export async function deleteVendor(vendorId: string) {
 }
 
 // ===========================================================
-// AI CONVERSATIONS
+// AI CONVERSATIONS & CHAT HISTORY
 // ===========================================================
+
+export interface ConversationRecord {
+  id: string;
+  userId: string;
+  title: string;
+  eventId?: string | null;
+  eventName?: string | null;
+  createdAt: unknown;
+  updatedAt: unknown;
+  lastMessagePreview?: string;
+}
+
+export interface ConversationMessageRecord {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  createdAt: unknown;
+  status?: string;
+}
+
+/**
+ * Loads all conversation threads for an authenticated user,
+ * ordered by updatedAt descending (newest first).
+ */
+export async function getUserConversations(userId: string): Promise<ConversationRecord[]> {
+  if (!userId) return [];
+  try {
+    const docs = await queryCollection('conversations', [
+      where('userId', '==', userId),
+    ]);
+    // Filter only thread documents (ignore raw legacy flat message docs if any)
+    const threads = docs
+      .filter((d) => d.title || !d.role)
+      .map((d) => ({
+        id: d.id,
+        userId: String(d.userId || userId),
+        title: String(d.title || 'New conversation'),
+        eventId: d.eventId ? String(d.eventId) : null,
+        eventName: d.eventName ? String(d.eventName) : null,
+        createdAt: d.createdAt,
+        updatedAt: d.updatedAt || d.createdAt,
+        lastMessagePreview: d.lastMessagePreview ? String(d.lastMessagePreview) : '',
+      })) as ConversationRecord[];
+
+    return threads.sort((a, b) => toMillis(b.updatedAt) - toMillis(a.updatedAt));
+  } catch (err) {
+    console.warn('[firestore.ts] Error in getUserConversations:', err);
+    return [];
+  }
+}
+
+/**
+ * Creates a new conversation thread in Firestore atomically.
+ * If initialMessage is provided, persists the first user message in the subcollection
+ * within the same atomic batch write, eliminating race conditions.
+ */
+export async function createConversation(data: {
+  userId: string;
+  title: string;
+  eventId?: string | null;
+  eventName?: string | null;
+  initialMessage?: string;
+}): Promise<string> {
+  const convRef = doc(collection(db, 'conversations'));
+  const batch = writeBatch(db);
+
+  batch.set(convRef, {
+    userId: data.userId,
+    createdBy: data.userId,
+    title: data.title || 'New conversation',
+    eventId: data.eventId || null,
+    eventName: data.eventName || null,
+    lastMessagePreview: data.initialMessage ? data.initialMessage.slice(0, 100) : '',
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+
+  if (data.initialMessage) {
+    const msgRef = doc(collection(db, 'conversations', convRef.id, 'messages'));
+    batch.set(msgRef, {
+      role: 'user',
+      content: data.initialMessage,
+      createdAt: serverTimestamp(),
+    });
+  }
+
+  await batch.commit();
+  return convRef.id;
+}
+
+/**
+ * Appends a message to a conversation's 'messages' subcollection
+ * and updates the conversation's updatedAt timestamp and preview.
+ */
+export async function addMessageToConversation(
+  convId: string,
+  message: { role: 'user' | 'assistant'; content: string; titleUpdate?: string }
+): Promise<string> {
+  // 1. Add message to subcollection
+  const msgCol = collection(db, 'conversations', convId, 'messages');
+  const msgRef = await addDoc(msgCol, {
+    role: message.role,
+    content: message.content,
+    createdAt: serverTimestamp(),
+  });
+
+  // 2. Update parent conversation metadata
+  const updates: Record<string, unknown> = {
+    updatedAt: serverTimestamp(),
+    lastMessagePreview: message.content.slice(0, 100),
+  };
+  if (message.titleUpdate) {
+    updates.title = message.titleUpdate.slice(0, 50);
+  }
+
+  try {
+    await updateDoc(doc(db, 'conversations', convId), updates);
+  } catch (err) {
+    console.warn('[firestore.ts] Error updating conversation header:', err);
+  }
+
+  return msgRef.id;
+}
+
+/**
+ * Retrieves all messages in a conversation in chronological order.
+ */
+export async function getConversationMessages(
+  convId: string
+): Promise<ConversationMessageRecord[]> {
+  if (!convId) return [];
+  try {
+    const msgCol = collection(db, 'conversations', convId, 'messages');
+    const snap = await getDocs(msgCol);
+    const messages = snap.docs.map((d) => ({
+      ...d.data(),
+      id: d.id,
+    })) as ConversationMessageRecord[];
+
+    return messages.sort((a, b) => toMillis(a.createdAt) - toMillis(b.createdAt));
+  } catch (err) {
+    console.warn('[firestore.ts] Error fetching conversation messages:', err);
+    return [];
+  }
+}
+
+/**
+ * Deletes a conversation thread and its messages.
+ */
+export async function deleteConversation(convId: string): Promise<void> {
+  if (!convId) return;
+  try {
+    // Delete subcollection messages
+    const msgCol = collection(db, 'conversations', convId, 'messages');
+    const snap = await getDocs(msgCol);
+    const batch = writeBatch(db);
+    snap.docs.forEach((d) => batch.delete(d.ref));
+    batch.delete(doc(db, 'conversations', convId));
+    await batch.commit();
+  } catch (err) {
+    console.warn('[firestore.ts] Error deleting conversation:', err);
+    // Fallback to single doc delete
+    await deleteDoc(doc(db, 'conversations', convId));
+  }
+}
+
+// Backward-compatibility wrappers
 export async function getEventConversations(eventId: string) {
   if (!eventId || eventId.startsWith('evt-')) return [];
   const uid = auth.currentUser?.uid;
   if (!uid) return [];
 
-  // Query by eventId and userId
   const docs = await queryCollection('conversations', [
     where('eventId', '==', eventId),
     where('userId', '==', uid),
   ]);
-  // Sort ascending by creation time so chat order is chronological
   return docs.sort((a, b) => toMillis(a.createdAt) - toMillis(b.createdAt));
 }
 

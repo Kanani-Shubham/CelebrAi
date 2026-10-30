@@ -29,10 +29,10 @@
 
 .auth-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   background: var(--bg-surface);
   border-radius: var(--radius-2xl);
-  padding: 32px 24px;
+  padding: 32px 28px;
   box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
@@ -41,25 +41,28 @@
   z-index: 1;
 }
 
-.auth-logo {
+.auth-brand-wrap {
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin-bottom: 4px;
 }
 
-.auth-brand {
-  font-family: var(--font-serif);
-  font-size: var(--text-xl);
-  font-weight: 600;
-  text-align: center;
-  color: var(--color-tuxedo-black);
-  margin-top: -8px;
+.auth-brand-logo {
+  max-width: 250px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
-.auth-tagline {
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  text-align: center;
-  margin-top: -8px;
+.auth-reset-icon {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 16px;
+  display: block;
+  margin: 0 auto 12px;
 }
 
 .auth-title {

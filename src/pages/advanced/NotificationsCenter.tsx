@@ -1,21 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Calendar,
   Heart,
   Store,
   TrendingUp,
-  MessageSquare,
   Sparkles,
-  UserPlus,
   Clock,
   Loader2,
   CheckCircle2,
+  ArrowLeft,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useEvent } from '../../contexts/EventContext';
 import {
   getUserNotifications,
-  markNotificationRead,
   getEventTasks,
   getEventGuests,
 } from '../../services/firebase/firestore';
@@ -32,11 +31,23 @@ interface NotifItem {
 }
 
 export function NotificationsCenter() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { activeEvent } = useEvent();
   const [filter, setFilter] = useState<'All' | 'Tasks' | 'RSVP' | 'System'>('All');
   const [items, setItems] = useState<NotifItem[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const activeEventId = activeEvent?.id;
+  const activeEventName = activeEvent?.eventName || 'your celebration';
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/dashboard');
+    }
+  };
 
   const loadNotifications = useCallback(async () => {
     if (!user) {
@@ -46,54 +57,71 @@ export function NotificationsCenter() {
     }
 
     setLoading(true);
+
+    // Timeout safety fallback ensures loading state never hangs
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3500);
+
     try {
       const liveItems: NotifItem[] = [];
 
-      // 1. Fetch Firestore stored user notifications
+      // 1. Fetch Firestore stored user notifications with safe error handling
       try {
-        const stored = (await getUserNotifications(user.uid)) as unknown as { id: string; type: NotifItem['type']; title: string; body: string; read: boolean; createdAt?: { toDate?: () => Date } }[];
-        stored.forEach(s => {
-          liveItems.push({
-            id: s.id,
-            type: s.type || 'system',
-            title: s.title,
-            desc: s.body,
-            time: s.createdAt?.toDate ? s.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent',
-            unread: !s.read,
-          });
-        });
-      } catch {
-        // Fall through to real event status notifications
-      }
-
-      // 2. Generate actual notifications based on active event status
-      if (activeEvent?.id) {
-        // Unfinished tasks
-        const tasks = (await getEventTasks(activeEvent.id)) as unknown as { title: string; completed: boolean; priority?: string }[];
-        const pendingTasks = tasks.filter(t => !t.completed);
-        if (pendingTasks.length > 0) {
-          liveItems.push({
-            id: 'dyn-task-due',
-            type: 'task',
-            title: `${pendingTasks.length} Pending Tasks`,
-            desc: `"${pendingTasks[0].title}" and ${pendingTasks.length - 1} other tasks need attention for ${activeEvent.eventName}.`,
-            time: 'Today',
-            unread: true,
+        const stored = await getUserNotifications(user.uid);
+        if (Array.isArray(stored)) {
+          stored.forEach((s: any) => {
+            liveItems.push({
+              id: s.id,
+              type: s.type || 'system',
+              title: s.title || 'Notification',
+              desc: s.body || s.desc || '',
+              time: s.createdAt?.toDate ? s.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent',
+              unread: !s.read,
+            });
           });
         }
+      } catch (notifErr) {
+        console.warn('[NotificationsCenter] User notifications load skipped:', notifErr);
+      }
 
-        // Guests & RSVPs
-        const guests = (await getEventGuests(activeEvent.id)) as unknown as { name: string; status: string }[];
-        const pendingGuests = guests.filter(g => g.status === 'Pending');
-        if (pendingGuests.length > 0) {
-          liveItems.push({
-            id: 'dyn-rsvp-pending',
-            type: 'rsvp',
-            title: `${pendingGuests.length} Pending RSVPs`,
-            desc: `${pendingGuests.length} guests have not responded yet for ${activeEvent.eventName}.`,
-            time: 'Today',
-            unread: false,
-          });
+      // 2. Fetch event status tasks & guests if real event
+      if (activeEventId && !activeEventId.startsWith('evt-')) {
+        try {
+          const [tasksRes, guestsRes] = await Promise.allSettled([
+            getEventTasks(activeEventId),
+            getEventGuests(activeEventId),
+          ]);
+
+          if (tasksRes.status === 'fulfilled' && Array.isArray(tasksRes.value)) {
+            const pendingTasks = tasksRes.value.filter((t: any) => !t.completed);
+            if (pendingTasks.length > 0) {
+              liveItems.push({
+                id: 'dyn-task-due',
+                type: 'task',
+                title: `${pendingTasks.length} Pending Tasks`,
+                desc: `"${pendingTasks[0].title}" and ${pendingTasks.length - 1} other tasks need attention for ${activeEventName}.`,
+                time: 'Today',
+                unread: true,
+              });
+            }
+          }
+
+          if (guestsRes.status === 'fulfilled' && Array.isArray(guestsRes.value)) {
+            const pendingGuests = guestsRes.value.filter((g: any) => g.status === 'Pending');
+            if (pendingGuests.length > 0) {
+              liveItems.push({
+                id: 'dyn-rsvp-pending',
+                type: 'rsvp',
+                title: `${pendingGuests.length} Pending RSVPs`,
+                desc: `${pendingGuests.length} guests have not responded yet for ${activeEventName}.`,
+                time: 'Today',
+                unread: false,
+              });
+            }
+          }
+        } catch (evErr) {
+          console.warn('[NotificationsCenter] Event notifications load skipped:', evErr);
         }
       }
 
@@ -101,9 +129,10 @@ export function NotificationsCenter() {
     } catch (err) {
       console.warn('[NotificationsCenter] Error loading notifications:', err);
     } finally {
+      clearTimeout(timer);
       setLoading(false);
     }
-  }, [user, activeEvent]);
+  }, [user?.uid, activeEventId, activeEventName]);
 
   useEffect(() => {
     loadNotifications();
@@ -134,6 +163,30 @@ export function NotificationsCenter() {
 
   return (
     <div className="notifications-center-page">
+      {/* Back button */}
+      <button
+        type="button"
+        onClick={handleBack}
+        className="notif-back-btn"
+        aria-label="Go back"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          fontFamily: 'var(--font-sans, "DM Sans", sans-serif)',
+          fontWeight: 600,
+          fontSize: '14px',
+          color: 'var(--color-tuxedo-black, #171F20)',
+          padding: '4px 0 12px',
+        }}
+      >
+        <ArrowLeft size={18} />
+        Back
+      </button>
+
       <div className="notif-head-row">
         <h1 className="notif-title">Notifications</h1>
         {items.some(i => i.unread) && (

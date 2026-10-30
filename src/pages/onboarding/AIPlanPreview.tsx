@@ -78,7 +78,7 @@ export function AIPlanPreview() {
     conceptSummary: '',
     location: '',
     guestCount: 100,
-    budget: 500000,
+    budget: 0,
   });
   const [newThemeTag, setNewThemeTag] = useState('');
 
@@ -193,7 +193,7 @@ export function AIPlanPreview() {
     const eventDate = String(targetEvent.eventDate || targetEvent.date || 'TBD');
     const location = String(targetEvent.location || 'India');
     const guestCount = Number(targetEvent.guestCount) || 100;
-    const budget = Number(targetEvent.budget) || 500000;
+    const budget = Number(targetEvent.budget) || 0;
     const currency = String(targetEvent.currency || '₹');
     const theme = String(targetEvent.theme || 'Classic Elegance');
     const requirements = String(targetEvent.requirements || '');
@@ -236,7 +236,7 @@ export function AIPlanPreview() {
     return plan.budgetBreakdown.reduce((sum, b) => sum + (Number(b.estimatedAmount) || 0), 0);
   }, [plan?.budgetBreakdown]);
 
-  const targetBudget = Number(targetEvent?.budget) || 500000;
+  const targetBudget = Number(targetEvent?.budget) || 0;
   const budgetDifference = targetBudget - totalAllocatedBudget;
 
   // --- Handlers for Editing Overview ---
@@ -247,7 +247,7 @@ export function AIPlanPreview() {
       conceptSummary: plan.eventSummary,
       location: String(targetEvent.location || 'India'),
       guestCount: Number(targetEvent.guestCount) || 100,
-      budget: Number(targetEvent.budget) || 500000,
+      budget: Number(targetEvent.budget) || 0,
     });
     setIsOverviewModalOpen(true);
   };

@@ -169,93 +169,158 @@
   color: var(--color-tuxedo-black);
 }
 
-/* Category Breakdown */
-.category-breakdown-section {
+/* Category Breakdown Section */
+.category-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  margin-bottom: 12px;
+}
+
+.category-section-title {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.manage-expenses-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-tuxedo-black);
+  background: #FFFFFF;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: inherit;
+  box-shadow: 0 1px 3px rgba(23, 31, 32, 0.03);
+}
+
+.manage-expenses-btn:hover {
+  background: #FAF7F2;
+  border-color: var(--color-tuxedo-black);
+  transform: translateX(1px);
+}
+
+/* Category Cards Responsive Grid */
+.category-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .category-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+/* Individual Category Expense Card */
+.category-expense-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(23, 31, 32, 0.04);
   display: flex;
   flex-direction: column;
+  gap: 6px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.category-expense-card:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 14px rgba(23, 31, 32, 0.07);
+}
+
+.cat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
 }
 
-.categories-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.category-row-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-xl);
-  padding: 14px 16px;
+.cat-header-left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+  min-width: 0;
 }
 
-.cat-icon-col {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-md);
-  background: #F7F3EC;
-  color: var(--color-tuxedo-black);
+.cat-icon-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.15s ease;
 }
 
-.cat-details-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.cat-card-name {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.cat-title-row {
+.cat-card-amount {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-tuxedo-black);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.cat-card-progress-track {
+  width: 100%;
+  height: 6px;
+  background: var(--border-default, #ECE6DE);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.cat-card-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cat-card-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.cat-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-tuxedo-black);
-}
-
-.cat-amounts {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.cat-planned {
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--text-secondary);
+  font-weight: 500;
+  margin-top: 2px;
 }
 
-.cat-spent {
-  font-size: 13px;
-  color: var(--color-tuxedo-black);
-}
-
-.cat-progress-track {
-  width: 100%;
-  height: 6px;
-  background: var(--border-default);
-  border-radius: var(--radius-full);
-  overflow: hidden;
-}
-
-.cat-progress-fill {
-  height: 100%;
-  background: var(--color-violet-dark);
-  border-radius: var(--radius-full);
-}
-
-.cat-pct-row {
-  text-align: right;
-  font-size: 10px;
-  font-weight: 600;
+.category-empty-state {
+  grid-column: 1 / -1;
+  background: #FFFFFF;
+  border: 1px dashed var(--border-default);
+  border-radius: 16px;
+  padding: 36px 20px;
+  text-align: center;
   color: var(--text-secondary);
 }

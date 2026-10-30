@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   CheckCircle2,
@@ -18,6 +18,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useEvent } from '../../contexts/EventContext';
 import { getEventGuests, createGuest, updateGuest, deleteGuest } from '../../services/firebase/firestore';
 import { toast } from '../../components/ui';
+import { validateGuestForm } from '../../utils/validation';
 import './GuestManagement.css';
 
 interface FirestoreGuest {
@@ -56,6 +57,7 @@ export function GuestManagement() {
   const [formStatus, setFormStatus] = useState<FirestoreGuest['status']>('Pending');
   const [formPhone, setFormPhone] = useState('');
   const [formEmail, setFormEmail] = useState('');
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   const eventId = activeEvent?.id;
 
@@ -67,7 +69,6 @@ export function GuestManagement() {
     }
 
     if (eventId.startsWith('evt-')) {
-      // Mock event that does not exist in Firestore
       setGuests([]);
       setLoading(false);
       setError(null);
@@ -98,47 +99,92 @@ export function GuestManagement() {
     loadGuests();
   }, [loadGuests]);
 
-  // Computed stats from real records
-  const acceptedCount = guests.filter(g => g.status === 'Accepted').reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
-  const pendingCount = guests.filter(g => g.status === 'Pending').reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
-  const declinedCount = guests.filter(g => g.status === 'Declined').reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
-  const totalGuests = guests.reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
+  // Computed stats from real records with useMemo
+  const { acceptedCount, pendingCount, declinedCount, totalGuests } = useMemo(() => {
+    let accepted = 0;
+    let pending = 0;
+    let declined = 0;
+    let total = 0;
 
-  const filteredGuests = guests.filter(g => {
-    const matches = g.name.toLowerCase().includes(search.toLowerCase());
-    if (!matches) return false;
-    if (filter === 'All') return true;
-    return g.status === filter;
-  });
+    for (const g of guests) {
+      const size = Number(g.partySize) || 1;
+      total += size;
+      if (g.status === 'Accepted') accepted += size;
+      else if (g.status === 'Declined') declined += size;
+      else pending += size;
+    }
+
+    return {
+      acceptedCount: accepted,
+      pendingCount: pending,
+      declinedCount: declined,
+      totalGuests: total,
+    };
+  }, [guests]);
+
+  const filteredGuests = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return guests.filter(g => {
+      if (q && !g.name.toLowerCase().includes(q)) return false;
+      if (filter === 'All') return true;
+      return g.status === filter;
+    });
+  }, [guests, search, filter]);
 
   const handleAddGuest = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formName.trim() || !eventId || !user) return;
+    if (!eventId || !user) {
+      toast.error('Active event and user authentication required.');
+      return;
+    }
+
+    const valResult = validateGuestForm({
+      name: formName,
+      partySize: formPartySize,
+      status: formStatus,
+      dietary: formDietary,
+      phone: formPhone,
+      email: formEmail,
+    });
+
+    if (!valResult.valid || !valResult.cleaned) {
+      setFormErrors(valResult.errors);
+      const firstError = Object.values(valResult.errors)[0];
+      if (firstError) toast.error(firstError);
+      return;
+    }
+
+    setFormErrors({});
     setSaving(true);
+    const cleaned = valResult.cleaned;
+
     try {
       const id = await createGuest(eventId, {
-        name: formName.trim(),
-        partySize: Number(formPartySize) || 1,
-        dietary: formDietary,
-        status: formStatus,
-        phone: formPhone.trim(),
-        email: formEmail.trim().toLowerCase(),
+        name: cleaned.name,
+        partySize: cleaned.partySize,
+        dietary: cleaned.dietary as FirestoreGuest['dietary'],
+        status: cleaned.status,
+        phone: cleaned.phone,
+        email: cleaned.email,
       });
+
       const newGuest: FirestoreGuest = {
         id,
-        name: formName.trim(),
-        partySize: Number(formPartySize) || 1,
-        dietary: formDietary,
-        status: formStatus,
+        name: cleaned.name,
+        partySize: cleaned.partySize,
+        dietary: cleaned.dietary as FirestoreGuest['dietary'],
+        status: cleaned.status,
         eventId,
-        phone: formPhone.trim(),
-        email: formEmail.trim().toLowerCase(),
+        phone: cleaned.phone,
+        email: cleaned.email,
       };
+
       setGuests(prev => [newGuest, ...prev]);
       setFormName('');
       setFormPartySize('1');
       setFormPhone('');
       setFormEmail('');
+      setFormErrors({});
       setShowAddModal(false);
       toast.success('Guest added successfully');
     } catch (err) {
@@ -237,6 +283,7 @@ export function GuestManagement() {
         <input
           type="text"
           placeholder="Search guests by name..."
+          aria-label="Search guests by name"
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
@@ -351,10 +398,12 @@ export function GuestManagement() {
         </div>
       )}
 
-      {/* Floating Add Guest Button */}
-      <button className="fab-add-guest" onClick={() => setShowAddModal(true)} title="Add Guest">
-        <Plus size={24} />
-      </button>
+      {/* Floating Add Guest Button — only shown when guests exist (empty state has its own "+ Add First Guest") */}
+      {guests.length > 0 && (
+        <button className="fab-add-guest" onClick={() => setShowAddModal(true)} title="Add Guest">
+          <Plus size={24} />
+        </button>
+      )}
 
       {/* Add Guest Modal */}
       {showAddModal && (
@@ -373,9 +422,17 @@ export function GuestManagement() {
                   required
                   placeholder="E.g. Priya Sharma"
                   value={formName}
-                  onChange={e => setFormName(e.target.value)}
-                  className="form-input"
+                  onChange={e => {
+                    setFormName(e.target.value);
+                    if (formErrors.name) setFormErrors(prev => ({ ...prev, name: '' }));
+                  }}
+                  className={`form-input ${formErrors.name ? 'input-error' : ''}`}
                 />
+                {formErrors.name && (
+                  <span style={{ color: '#dc2626', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                    {formErrors.name}
+                  </span>
+                )}
               </div>
 
               <div className="form-row-2">
@@ -386,9 +443,17 @@ export function GuestManagement() {
                     min="1"
                     max="20"
                     value={formPartySize}
-                    onChange={e => setFormPartySize(e.target.value)}
-                    className="form-input"
+                    onChange={e => {
+                      setFormPartySize(e.target.value);
+                      if (formErrors.partySize) setFormErrors(prev => ({ ...prev, partySize: '' }));
+                    }}
+                    className={`form-input ${formErrors.partySize ? 'input-error' : ''}`}
                   />
+                  {formErrors.partySize && (
+                    <span style={{ color: '#dc2626', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                      {formErrors.partySize}
+                    </span>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -424,9 +489,18 @@ export function GuestManagement() {
                   type="tel"
                   placeholder="+91 98765 43210"
                   value={formPhone}
-                  onChange={e => setFormPhone(e.target.value)}
-                  className="form-input"
+                  onChange={e => {
+                    const cleaned = e.target.value.replace(/[^\d+\s\-()]/g, '');
+                    setFormPhone(cleaned);
+                    if (formErrors.phone) setFormErrors(prev => ({ ...prev, phone: '' }));
+                  }}
+                  className={`form-input ${formErrors.phone ? 'input-error' : ''}`}
                 />
+                {formErrors.phone && (
+                  <span style={{ color: '#dc2626', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                    {formErrors.phone}
+                  </span>
+                )}
               </div>
 
               <div className="form-group">
@@ -435,9 +509,17 @@ export function GuestManagement() {
                   type="email"
                   placeholder="priya@example.com"
                   value={formEmail}
-                  onChange={e => setFormEmail(e.target.value)}
-                  className="form-input"
+                  onChange={e => {
+                    setFormEmail(e.target.value);
+                    if (formErrors.email) setFormErrors(prev => ({ ...prev, email: '' }));
+                  }}
+                  className={`form-input ${formErrors.email ? 'input-error' : ''}`}
                 />
+                {formErrors.email && (
+                  <span style={{ color: '#dc2626', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                    {formErrors.email}
+                  </span>
+                )}
               </div>
 
               <div className="modal-actions">

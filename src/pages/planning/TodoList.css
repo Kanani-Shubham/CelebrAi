@@ -5,6 +5,37 @@
   gap: 16px;
 }
 
+/* ==========================================================================
+   0. Top Header Bar with Back Button
+   ========================================================================== */
+.todo-top-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.todo-top-header .back-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full, 9999px);
+  background: #FFFFFF;
+  border: 1px solid var(--border-default, #E5E0D8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-tuxedo-black, #171F20);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.todo-top-header .back-btn:hover {
+  background: var(--color-morning-fog, #ECE6DE);
+  transform: translateX(-1px);
+}
+
 .todo-header {
   display: flex;
   justify-content: space-between;
@@ -17,39 +48,73 @@
 
 .todo-heading {
   font-family: var(--font-serif);
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 600;
   color: var(--color-tuxedo-black);
-  margin-bottom: 6px;
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.todo-sub-heading {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   1. Progress Card
+   ========================================================================== */
+.todo-progress-card {
+  background: var(--bg-surface, #FFFFFF);
+  border: 1px solid var(--border-default, #E5E0D8);
+  border-radius: var(--radius-xl, 16px);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .todo-progress-info {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
+  align-items: center;
+  font-size: 13px;
   color: var(--text-secondary);
-  margin-bottom: 6px;
+}
+
+.todo-progress-text {
+  color: var(--text-secondary);
+}
+
+.todo-progress-text strong {
+  color: var(--color-tuxedo-black);
+  font-weight: 600;
 }
 
 .todo-progress-percent {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-tuxedo-black);
+  font-size: 14px;
 }
 
 .todo-bar-track {
   width: 100%;
-  height: 6px;
-  background: var(--border-default);
-  border-radius: var(--radius-full);
+  height: 7px;
+  background: var(--border-default, #E5E0D8);
+  border-radius: var(--radius-full, 9999px);
   overflow: hidden;
 }
 
 .todo-bar-fill {
   height: 100%;
-  background: var(--color-violet-dark);
-  border-radius: var(--radius-full);
+  background: var(--color-tuxedo-black, #171F20);
+  border-radius: var(--radius-full, 9999px);
+  transition: width 0.3s ease;
 }
 
+/* ==========================================================================
+   2. Search Wrap
+   ========================================================================== */
 .todo-search-wrap {
   display: flex;
   align-items: center;
@@ -77,15 +142,19 @@
   color: var(--text-secondary);
 }
 
+/* ==========================================================================
+   3. Filter Chips
+   ========================================================================== */
 .todo-filter-chips {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .filter-chip {
-  padding: 6px 14px;
+  padding: 7px 14px;
   border-radius: var(--radius-full);
   background: var(--bg-surface);
   border: 1px solid var(--border-default);
@@ -93,7 +162,16 @@
   font-weight: 500;
   color: var(--text-secondary);
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.filter-chip .filter-count {
+  font-size: 11px;
+  opacity: 0.8;
 }
 
 .filter-chip.active {
@@ -102,6 +180,9 @@
   border-color: var(--color-tuxedo-black);
 }
 
+/* ==========================================================================
+   4. Task Items List & Cards
+   ========================================================================== */
 .todo-items-list {
   display: flex;
   flex-direction: column;
@@ -118,20 +199,30 @@
   gap: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .task-card-item:hover {
   border-color: var(--color-heritage-grey);
 }
 
+.task-card-item.status-overdue {
+  border-left: 3px solid #DC2626;
+}
+
+.task-card-item.status-due-today {
+  border-left: 3px solid #D97706;
+}
+
 .task-card-item.completed {
-  opacity: 0.7;
+  opacity: 0.75;
+  border-left: 3px solid #10B981;
 }
 
 .task-check-circle {
-  width: 20px;
-  height: 20px;
-  border-radius: var(--radius-sm);
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
   border: 1.5px solid var(--color-heritage-grey);
   display: flex;
   align-items: center;
@@ -140,6 +231,11 @@
   margin-top: 2px;
   flex-shrink: 0;
   transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.task-check-circle:hover {
+  border-color: var(--color-tuxedo-black);
 }
 
 .task-check-circle.checked {
@@ -152,6 +248,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
 }
 
 .task-line-top {
@@ -159,6 +256,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  flex-wrap: wrap;
+  position: relative;
 }
 
 .task-name {
@@ -166,11 +265,49 @@
   font-weight: 500;
   color: var(--color-tuxedo-black);
   flex: 1;
+  min-width: 140px;
 }
 
 .task-card-item.completed .task-name {
   text-decoration: line-through;
   color: var(--text-muted);
+}
+
+/* Status Pills */
+.task-status-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--radius-full, 9999px);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.task-status-pill.pill-overdue {
+  background: #FEE2E2;
+  color: #991B1B;
+  border-color: #FECACA;
+}
+
+.task-status-pill.pill-due-today {
+  background: #FEF3C7;
+  color: #92400E;
+  border-color: #FDE68A;
+}
+
+.task-status-pill.pill-completed {
+  background: #D1FAE5;
+  color: #065F46;
+  border-color: #A7F3D0;
+}
+
+.task-status-pill.pill-pending {
+  background: #F3F4F6;
+  color: #4B5563;
+  border-color: #E5E7EB;
 }
 
 .priority-pill {
@@ -186,18 +323,82 @@
 
 .task-menu-btn {
   color: var(--text-muted);
-  padding: 2px;
+  padding: 4px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-menu-btn:hover {
+  background: var(--bg-app);
+  color: var(--color-tuxedo-black);
+}
+
+.task-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 25;
+  background: #FFFFFF;
+  border: 1px solid var(--border-default, #E5E0D8);
+  border-radius: var(--radius-md, 8px);
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.task-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-tuxedo-black);
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.task-menu-item:hover {
+  background: var(--bg-app, #F7F1E8);
+}
+
+.task-menu-item.delete {
+  color: #DC2626;
+  border-top: 1px solid var(--border-default, #E5E0D8);
+}
+
+.task-menu-item.delete:hover {
+  background: #FEF2F2;
 }
 
 .task-line-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
 }
 
 .task-due-date {
   font-size: 11px;
   color: var(--text-secondary);
+}
+
+.task-card-item.status-overdue .task-due-date {
+  color: #DC2626;
+  font-weight: 500;
 }
 
 .task-category-tag {
@@ -208,6 +409,9 @@
   border-radius: var(--radius-full);
 }
 
+/* ==========================================================================
+   5. Floating Action Button
+   ========================================================================== */
 .add-task-floating-btn {
   position: fixed;
   bottom: 80px;
@@ -222,15 +426,80 @@
   box-shadow: var(--shadow-lg);
   font-size: 14px;
   font-weight: 500;
+  border: none;
+  cursor: pointer;
   z-index: 15;
   transition: transform 0.2s ease;
 }
 
 .add-task-floating-btn:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
-/* Modal */
+/* ==========================================================================
+   6. States & Notifications
+   ========================================================================== */
+.tasks-loading-state,
+.tasks-error-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.tasks-error-state {
+  color: #DC2626;
+}
+
+.tasks-error-state button {
+  margin-left: 8px;
+  background: transparent;
+  border: 1px solid #DC2626;
+  color: #DC2626;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-default);
+  border-radius: var(--radius-xl);
+  margin-top: 8px;
+}
+
+.empty-state-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.empty-state-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black);
+  margin-bottom: 6px;
+}
+
+.empty-state-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+/* ==========================================================================
+   7. Modal
+   ========================================================================== */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -282,6 +551,16 @@
   outline: none;
 }
 
+.date-hint {
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.past-date-warning {
+  color: #DC2626;
+  font-weight: 500;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -299,9 +578,11 @@
   padding: 12px;
   border-radius: var(--radius-full);
   border: 1px solid var(--border-default);
+  background: #FFFFFF;
   color: var(--color-tuxedo-black);
   font-size: 13px;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .btn-save {
@@ -312,4 +593,30 @@
   color: white;
   font-size: 13px;
   font-weight: 500;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .todo-top-header {
+    gap: 10px;
+  }
+
+  .todo-top-header .back-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .todo-heading {
+    font-size: 22px;
+  }
 }

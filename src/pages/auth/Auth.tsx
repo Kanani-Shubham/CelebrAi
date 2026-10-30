@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
-import { signIn, signUp, signInWithGoogle, resetPassword, getAuthErrorMessage } from '../../services/firebase/auth';
+import {
+  signIn,
+  signUp,
+  signInWithGoogle,
+  signInWithGoogleRedirect,
+  resetPassword,
+  getAuthErrorMessage,
+} from '../../services/firebase/auth';
 import { toast } from '../../components/ui';
 import './Auth.css';
-
-const LOGO = (
-  <svg width="40" height="40" viewBox="0 0 28 28" fill="none">
-    <circle cx="14" cy="14" r="13" stroke="#171F20" strokeWidth="1.5"/>
-    <path d="M14 6C14 6 9 9 9 14C9 19 14 22 14 22C14 22 19 19 19 14C19 9 14 6 14 6Z" fill="#D8CBF1"/>
-    <circle cx="14" cy="14" r="2" fill="#171F20"/>
-  </svg>
-);
 
 type Mode = 'signin' | 'signup' | 'reset';
 
 export function Auth() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const [mode, setMode] = useState<Mode>(() =>
     window.location.pathname.includes('signup') ? 'signup' : 'signin'
   );
@@ -28,6 +26,7 @@ export function Auth() {
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [popupBlocked, setPopupBlocked] = useState(false);
 
   const set = (k: string, v: string | boolean) => {
     setForm(f => ({ ...f, [k]: v }));
@@ -53,7 +52,7 @@ export function Auth() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate() || loading) return;
     setLoading(true);
     try {
       if (mode === 'signin') {
@@ -75,14 +74,32 @@ export function Auth() {
   }
 
   async function handleGoogle() {
+    if (loading) return;
     setLoading(true);
+    setPopupBlocked(false);
     try {
       await signInWithGoogle();
       navigate('/dashboard');
     } catch (err: unknown) {
       const code = (err as { code?: string }).code ?? '';
+      console.warn('[Auth] Google sign-in failed with code:', code, err);
+      if (code === 'auth/popup-blocked') {
+        setPopupBlocked(true);
+      }
       toast.error(getAuthErrorMessage(code));
     } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGoogleRedirect() {
+    if (loading) return;
+    setLoading(true);
+    try {
+      await signInWithGoogleRedirect();
+    } catch (err: unknown) {
+      const code = (err as { code?: string }).code ?? '';
+      toast.error(getAuthErrorMessage(code));
       setLoading(false);
     }
   }
@@ -91,7 +108,13 @@ export function Auth() {
     return (
       <div className="auth-page">
         <div className="auth-card">
-          <div className="auth-logo">{LOGO}</div>
+          <div className="auth-brand-wrap">
+            <img
+              src="/assets/branding/celebrai-icon.png"
+              alt="CelebrAI"
+              className="auth-reset-icon"
+            />
+          </div>
           <h2 className="auth-title font-serif">Check your email</h2>
           <p className="auth-subtitle">
             We sent a password reset link to <strong>{form.email}</strong>.
@@ -109,9 +132,13 @@ export function Auth() {
     <div className="auth-page">
       <div className="auth-decor" />
       <div className="auth-card animate-slide-up">
-        <div className="auth-logo">{LOGO}</div>
-        <p className="auth-brand">CelebrAI</p>
-        <p className="auth-tagline">Your Celebration Partner</p>
+        <div className="auth-brand-wrap">
+          <img
+            src="/assets/branding/celebrai-logo.png"
+            alt="CelebrAI — Plan Smarter. Celebrate Better."
+            className="auth-brand-logo"
+          />
+        </div>
 
         {mode !== 'reset' && (
           <div className="auth-tabs">
@@ -210,7 +237,12 @@ export function Auth() {
           <>
             <div className="divider-text">or continue with</div>
             <div className="social-buttons">
-              <button className="btn btn-secondary social-btn" onClick={handleGoogle} disabled={loading}>
+              <button
+                type="button"
+                className="btn btn-secondary social-btn"
+                onClick={handleGoogle}
+                disabled={loading}
+              >
                 <svg width="18" height="18" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -219,13 +251,27 @@ export function Auth() {
                 </svg>
                 Google
               </button>
-              <button className="btn btn-secondary social-btn" disabled>
+              <button type="button" className="btn btn-secondary social-btn" disabled>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.32.07 2.2.78 3.02.82.92-.17 1.8-.91 3.07-.97 1.55-.09 2.72.6 3.46 1.58-3.14 1.8-2.4 5.78.47 6.94-.58 1.52-1.32 3.02-2.02 4.51zm-3.19-17.5c.07 2.38-2.02 4.33-4.12 4.12C9.47 4.46 11.4 2 13.86 2.78z"/>
                 </svg>
                 Apple
               </button>
             </div>
+
+            {popupBlocked && (
+              <div style={{ marginTop: 12, textAlign: 'center' }}>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm"
+                  style={{ textDecoration: 'underline', color: 'var(--text-secondary)' }}
+                  onClick={handleGoogleRedirect}
+                  disabled={loading}
+                >
+                  Popup blocked? Click here to sign in with page redirect
+                </button>
+              </div>
+            )}
 
             <p className="auth-footer-text">
               {mode === 'signin' ? "Don't have an account? " : "Already have an account? "}

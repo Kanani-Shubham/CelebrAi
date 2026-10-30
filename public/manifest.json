@@ -1,0 +1,23 @@
+{
+  "name": "CelebrAI — Plan Smarter. Celebrate Better.",
+  "short_name": "CelebrAI",
+  "description": "Your AI-powered event planning companion for weddings, birthdays, corporate events, and celebrations.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F1E8",
+  "theme_color": "#171F20",
+  "icons": [
+    {
+      "src": "/assets/branding/celebrai-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
+

@@ -5,6 +5,7 @@ import { useEvent } from '../../contexts/EventContext';
 import { createDoc } from '../../services/firebase/firestore';
 import { toast } from '../../components/ui';
 import { formatDisplayDate } from '../../utils/dateUtils';
+import { validateRSVPPayload, sanitizeGuestName, sanitizeText } from '../../utils/security';
 import './GuestRSVP.css';
 
 export function GuestRSVP() {
@@ -27,23 +28,35 @@ export function GuestRSVP() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!guest1.trim()) {
-      toast.error('Please enter your full name');
+
+    const validation = validateRSVPPayload({
+      eventId,
+      name: guest1,
+      attending,
+      partySize: guestsCount,
+      email: email.trim() || undefined,
+      phone: phone.trim() || undefined,
+    });
+
+    if (!validation.valid || !validation.cleaned) {
+      const firstError = Object.values(validation.errors)[0];
+      toast.error(firstError || 'Please correct the form errors');
       return;
     }
 
     setSubmitting(true);
     try {
+      const cleaned = validation.cleaned;
       await createDoc('rsvp', {
-        eventId,
-        name: guest1.trim(),
-        additionalGuest: guestsCount > 1 ? guest2.trim() : null,
-        attending,
-        partySize: attending === 'no' ? 0 : guestsCount,
-        email: email.trim() || null,
-        phone: phone.trim() || null,
-        dietary: attending === 'no' ? 'None' : dietary,
-        notes: notes.trim() || null,
+        eventId: cleaned.eventId,
+        name: cleaned.name,
+        additionalGuest: guestsCount > 1 ? sanitizeGuestName(guest2) : null,
+        attending: cleaned.attending,
+        partySize: cleaned.partySize,
+        email: cleaned.email || null,
+        phone: cleaned.phone || null,
+        dietary: cleaned.attending === 'no' ? 'None' : dietary,
+        notes: sanitizeText(notes, 500) || null,
       });
 
       setSubmitted(true);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star, Sparkles, CheckCircle, LayoutDashboard, Users, DollarSign } from 'lucide-react';
+import { ArrowRight, Sparkles, CheckCircle, LayoutDashboard, Users, DollarSign } from 'lucide-react';
 import './Landing.css';
 
 const HERO_IMAGE_URL = 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85';
@@ -29,15 +29,14 @@ export function Landing() {
     <div className="landing-page">
       {/* Header */}
       <header className="landing-header">
-        <div className="landing-logo">
-          <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
-            <circle cx="14" cy="14" r="13" stroke="#171F20" strokeWidth="1.5"/>
-            <path d="M14 6C14 6 9 9 9 14C9 19 14 22 14 22C14 22 19 19 19 14C19 9 14 6 14 6Z" fill="#D8CBF1"/>
-            <circle cx="14" cy="14" r="2" fill="#171F20"/>
-          </svg>
-          <span style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 18, color: 'var(--color-tuxedo-black)' }}>CelebrAI</span>
-        </div>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <Link to="/" className="landing-logo" aria-label="CelebrAI Home">
+          <img
+            src="/assets/branding/celebrai-logo.png"
+            alt="CelebrAI — Plan Smarter. Celebrate Better."
+            className="landing-brand-logo"
+          />
+        </Link>
+        <div className="landing-header-actions">
           <Link to="/explore-events" className="btn btn-secondary btn-sm">Explore</Link>
           <Link to="/signin" className="btn btn-primary btn-sm">Sign In</Link>
         </div>
@@ -75,22 +74,21 @@ export function Landing() {
                 }
               }}
             />
-            <div className="hero-stats">
-              <div className="hero-stat">
-                <div className="hero-stat-avatars">
-                  {['🌸', '💍', '✨'].map((e, i) => (
-                    <div key={i} className="hero-avatar">{e}</div>
-                  ))}
-                </div>
-                <div>
-                  <strong>50,000+</strong>
-                  <span>Celebrations Planned</span>
-                </div>
-              </div>
-              <div className="hero-stat rating">
-                <Star size={16} fill="#F59E0B" color="#F59E0B" />
-                <strong>4.9/5</strong>
-                <span>Host Rating</span>
+            <div className="hero-overlay-card">
+              <h2 className="hero-overlay-title font-serif">Every Detail, Beautifully Planned.</h2>
+              <p className="hero-overlay-desc">
+                From your first idea to the final celebration, keep your event organized in one place.
+              </p>
+              <div className="hero-overlay-tags">
+                <span className="hero-overlay-tag">
+                  <span className="hero-tag-icon">✦</span> AI-Powered Planning
+                </span>
+                <span className="hero-overlay-tag">
+                  <span className="hero-tag-icon">✓</span> Smart Budget Tracking
+                </span>
+                <span className="hero-overlay-tag">
+                  <span className="hero-tag-icon">♡</span> Guest Management
+                </span>
               </div>
             </div>
           </div>

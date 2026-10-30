@@ -12,26 +12,100 @@ import {
   Loader2,
   AlertCircle,
   ArrowRight,
+  Music,
 } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { getEventExpenses } from '../../services/firebase/firestore';
 import './BudgetDashboard.css';
 
+interface CategoryTheme {
+  icon: typeof Building2;
+  bg: string;
+  color: string;
+  barColor: string;
+}
+
+const CATEGORY_THEMES: Record<string, CategoryTheme> = {
+  Catering: {
+    icon: Utensils,
+    bg: '#FEF3C7',
+    color: '#B45309',
+    barColor: '#F59E0B',
+  },
+  Food: {
+    icon: Utensils,
+    bg: '#FEF3C7',
+    color: '#B45309',
+    barColor: '#F59E0B',
+  },
+  Venue: {
+    icon: Building2,
+    bg: '#DBEAFE',
+    color: '#1D4ED8',
+    barColor: '#3B82F6',
+  },
+  'Decor & Styling': {
+    icon: Sparkles,
+    bg: '#EDE9FE',
+    color: '#6D28D9',
+    barColor: '#8B5CF6',
+  },
+  Decor: {
+    icon: Sparkles,
+    bg: '#EDE9FE',
+    color: '#6D28D9',
+    barColor: '#8B5CF6',
+  },
+  'Photography & Video': {
+    icon: Camera,
+    bg: '#FFE4E6',
+    color: '#BE123C',
+    barColor: '#F43F5E',
+  },
+  Photography: {
+    icon: Camera,
+    bg: '#FFE4E6',
+    color: '#BE123C',
+    barColor: '#F43F5E',
+  },
+  Entertainment: {
+    icon: Music,
+    bg: '#DCFCE7',
+    color: '#047857',
+    barColor: '#10B981',
+  },
+  Music: {
+    icon: Music,
+    bg: '#DCFCE7',
+    color: '#047857',
+    barColor: '#10B981',
+  },
+  Miscellaneous: {
+    icon: Package,
+    bg: '#F1F5F9',
+    color: '#334155',
+    barColor: '#64748B',
+  },
+  Other: {
+    icon: Package,
+    bg: '#F1F5F9',
+    color: '#334155',
+    barColor: '#64748B',
+  },
+};
+
+const DEFAULT_CATEGORY_THEME: CategoryTheme = {
+  icon: Package,
+  bg: '#F4EFFF',
+  color: '#7E57C2',
+  barColor: '#8B5CF6',
+};
+
 interface CategorySummary {
   name: string;
   spent: number;
-  icon: typeof Building2;
+  theme: CategoryTheme;
 }
-
-const CATEGORY_ICON_MAP: Record<string, typeof Building2> = {
-  Venue: Building2,
-  Catering: Utensils,
-  'Decor & Styling': Sparkles,
-  Decor: Sparkles,
-  'Photography & Video': Camera,
-  Photography: Camera,
-  Other: Package,
-};
 
 export function BudgetDashboard() {
   const navigate = useNavigate();
@@ -76,11 +150,13 @@ export function BudgetDashboard() {
     categoryTotals[cat] = (categoryTotals[cat] || 0) + (Number(e.amount) || 0);
   });
 
-  const categoryList: CategorySummary[] = Object.entries(categoryTotals).map(([name, spent]) => ({
-    name,
-    spent,
-    icon: CATEGORY_ICON_MAP[name] || Package,
-  }));
+  const categoryList: CategorySummary[] = Object.entries(categoryTotals)
+    .sort(([, a], [, b]) => b - a)
+    .map(([name, spent]) => ({
+      name,
+      spent,
+      theme: CATEGORY_THEMES[name] || DEFAULT_CATEGORY_THEME,
+    }));
 
   if (!eventId) {
     return (
@@ -168,34 +244,28 @@ export function BudgetDashboard() {
         </div>
       </div>
 
-      {/* Action banner */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', marginBottom: '8px' }}>
-        <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: 0, color: 'var(--color-tuxedo-black)' }}>
+      {/* Category Breakdown Header */}
+      <div className="category-section-header">
+        <h2 className="category-section-title font-serif">
           Category Breakdown
         </h2>
         <button
-          className="btn btn-secondary"
+          type="button"
+          className="manage-expenses-btn"
           onClick={() => navigate('/expenses')}
-          style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: '6px 14px', borderRadius: 'var(--radius-full)' }}
         >
           <span>Manage Expenses</span>
           <ArrowRight size={14} />
         </button>
       </div>
 
-      {/* Category List */}
-      <div className="category-spending-list">
+      {/* Individual Category Cards Grid */}
+      <div className="category-cards-grid">
         {categoryList.length === 0 ? (
-          <div style={{
-            background: 'var(--bg-surface)',
-            border: '1px dashed var(--border-default)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '30px 20px',
-            textAlign: 'center',
-            color: 'var(--text-secondary)',
-          }}>
+          <div className="category-empty-state">
             <p style={{ margin: '0 0 10px 0', fontSize: '14px' }}>No expense records added yet.</p>
             <button
+              type="button"
               className="btn btn-primary"
               onClick={() => navigate('/expenses')}
               style={{ fontSize: '13px', padding: '6px 16px', borderRadius: 'var(--radius-full)' }}
@@ -205,24 +275,35 @@ export function BudgetDashboard() {
           </div>
         ) : (
           categoryList.map(cat => {
-            const Icon = cat.icon;
-            const pct = totalSpent > 0 ? Math.round((cat.spent / totalSpent) * 100) : 0;
+            const Icon = cat.theme.icon;
+            const pct = totalSpent > 0 ? Math.min(100, Math.round((cat.spent / totalSpent) * 100)) : 0;
             return (
-              <div key={cat.name} className="cat-row-item">
-                <div className="cat-icon-col">
-                  <Icon size={18} />
+              <div key={cat.name} className="category-expense-card">
+                <div className="cat-card-header">
+                  <div className="cat-header-left">
+                    <div
+                      className="cat-icon-badge"
+                      style={{ backgroundColor: cat.theme.bg, color: cat.theme.color }}
+                    >
+                      <Icon size={18} />
+                    </div>
+                    <span className="cat-card-name">{cat.name}</span>
+                  </div>
+                  <strong className="cat-card-amount">₹{cat.spent.toLocaleString('en-IN')}</strong>
                 </div>
-                <div className="cat-info-col">
-                  <div className="cat-name-row">
-                    <span className="cat-name-text">{cat.name}</span>
-                    <span className="cat-amt-text">₹{cat.spent.toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="cat-progress-track">
-                    <div className="cat-progress-bar" style={{ width: `${pct}%` }} />
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px', fontSize: '11px', color: 'var(--text-secondary)' }}>
-                    <span>{pct}% of recorded spend</span>
-                  </div>
+
+                <div className="cat-card-progress-track">
+                  <div
+                    className="cat-card-progress-fill"
+                    style={{
+                      width: `${pct}%`,
+                      backgroundColor: cat.theme.barColor,
+                    }}
+                  />
+                </div>
+
+                <div className="cat-card-meta">
+                  <span>{pct}% of recorded spend</span>
                 </div>
               </div>
             );

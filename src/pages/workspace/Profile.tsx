@@ -15,18 +15,19 @@ import {
   Loader2,
   Check,
   X,
-  UploadCloud,
+  HardDrive,
+  Save,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useEvent } from '../../contexts/EventContext';
 import { signOut } from '../../services/firebase/auth';
-import { uploadUserProfilePhoto, validateImageFile } from '../../services/firebase/storage';
+import { validateAvatarFile } from '../../utils/imageCompressor';
 import { toast } from '../../components/ui';
 import './Profile.css';
 
 export function Profile() {
   const navigate = useNavigate();
-  const { user, profile, refreshProfile } = useAuth();
+  const { user, profile, refreshProfile, avatarUrl, updateAvatar } = useAuth();
   const { events } = useEvent();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -35,10 +36,11 @@ export function Profile() {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const name = user?.displayName || profile?.displayName || 'Celebration Host';
   const email = user?.email || profile?.email || 'No email attached';
-  const photo = user?.photoURL || profile?.photoURL || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80';
+  const photo = avatarUrl || user?.photoURL || profile?.photoURL || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80';
   const phone = user?.phoneNumber || (profile as unknown as { phone?: string })?.phone || 'Not provided';
   const isVerified = user?.emailVerified;
 
@@ -54,7 +56,7 @@ export function Profile() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const validation = validateImageFile(file);
+    const validation = validateAvatarFile(file);
     if (!validation.valid) {
       toast.error(validation.error || 'Invalid file format');
       return;
@@ -73,7 +75,9 @@ export function Profile() {
     setSelectedFile(null);
     setPreviewUrl(null);
     setShowPreviewModal(false);
+    setUploading(false);
     setUploadProgress(0);
+    setUploadError(null);
   };
 
   const handleConfirmUpload = async () => {
@@ -83,17 +87,23 @@ export function Profile() {
     }
 
     setUploading(true);
+    setUploadError(null);
+    setUploadProgress(0);
+
     try {
-      await uploadUserProfilePhoto(user.uid, selectedFile, (pct) => {
+      const stats = await updateAvatar(selectedFile, (pct) => {
         setUploadProgress(pct);
       });
 
-      await refreshProfile();
-      toast.success('Profile photo updated successfully!');
+      const origMB = (stats.originalSize / (1024 * 1024)).toFixed(2);
+      const compKB = Math.round(stats.compressedSize / 1024);
+      toast.success(`Photo optimized (${origMB}MB → ${compKB}KB) and saved to this device!`);
       handleCancelPreview();
     } catch (err) {
-      console.error('[Profile] Upload failed:', err);
-      toast.error((err as Error).message || 'Failed to upload photo');
+      console.error('[Profile] Avatar update failed:', err);
+      const msg = (err as Error).message || 'Failed to save avatar';
+      setUploadError(msg);
+      toast.error(msg);
     } finally {
       setUploading(false);
     }
@@ -139,6 +149,11 @@ export function Profile() {
             <Camera size={14} />
           </button>
         </div>
+        {avatarUrl && (
+          <span style={{ fontSize: '11.5px', color: 'var(--text-secondary)', marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+            <HardDrive size={12} /> Saved on this device
+          </span>
+        )}
       </div>
 
       {/* Personal Info Group */}
@@ -270,12 +285,31 @@ export function Profile() {
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, margin: '16px 0' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, margin: '14px 0 10px' }}>
               <div style={{ width: 140, height: 140, borderRadius: '50%', overflow: 'hidden', border: '3px solid var(--color-morning-fog)', boxShadow: 'var(--shadow-md)' }}>
                 <img src={previewUrl} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
                 {selectedFile?.name} ({selectedFile ? `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB` : ''})
+              </span>
+            </div>
+
+            <div style={{
+              background: '#FAF7F2',
+              border: '1px solid #ECE6DE',
+              borderRadius: '8px',
+              padding: '10px 12px',
+              marginBottom: '16px',
+              display: 'flex',
+              gap: '8px',
+              alignItems: 'flex-start',
+              fontSize: '11.5px',
+              color: '#827A76',
+              lineHeight: '1.45',
+            }}>
+              <HardDrive size={15} style={{ flexShrink: 0, marginTop: '2px', color: '#171F20' }} />
+              <span>
+                <strong>Saved on this device:</strong> Photo will be resized (512×512) and cached securely in your browser's IndexedDB. It is not synced across devices.
               </span>
             </div>
 
@@ -285,8 +319,24 @@ export function Profile() {
                   <div style={{ width: `${uploadProgress}%`, height: '100%', background: 'var(--color-tuxedo-black)', transition: 'width 0.2s ease' }} />
                 </div>
                 <span style={{ fontSize: 11, color: 'var(--text-secondary)', display: 'block', textAlign: 'center', marginTop: 4 }}>
-                  Uploading to Firebase Storage... {uploadProgress}%
+                  Optimizing and saving to local cache... {uploadProgress}%
                 </span>
+              </div>
+            )}
+
+            {uploadError && (
+              <div style={{
+                background: '#fef2f2',
+                border: '1px solid #fecaca',
+                borderRadius: '8px',
+                padding: '10px 12px',
+                marginBottom: '16px',
+                color: '#991b1b',
+                fontSize: '12px',
+                lineHeight: '1.4',
+              }}>
+                <strong style={{ display: 'block', marginBottom: '2px' }}>Save Issue:</strong>
+                {uploadError}
               </div>
             )}
 
@@ -309,12 +359,12 @@ export function Profile() {
                 {uploading ? (
                   <>
                     <Loader2 size={16} className="animate-spin" />
-                    <span>Uploading...</span>
+                    <span>Saving...</span>
                   </>
                 ) : (
                   <>
-                    <UploadCloud size={16} />
-                    <span>Confirm & Upload</span>
+                    <Save size={16} />
+                    <span>Save to Device</span>
                   </>
                 )}
               </button>

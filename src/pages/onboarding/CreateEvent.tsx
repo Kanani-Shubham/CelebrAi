@@ -54,7 +54,7 @@ export function CreateEvent() {
     eventDate: '',
     location: '',
     guestCount: 150,
-    budget: 500000,
+    budget: 0,
     currency: 'INR',
     theme: '',
     requirements: '',
@@ -313,9 +313,11 @@ export function CreateEvent() {
                   </span>
                 ) : (
                   <span className="form-hint" style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4, display: 'block' }}>
-                    {form.currency === 'INR'
-                      ? `₹${(form.budget / 100000).toFixed(2)} Lakhs`
-                      : `${form.currency} ${form.budget.toLocaleString()}`}
+                    {form.budget > 0
+                      ? (form.currency === 'INR'
+                        ? `₹${(form.budget / 100000).toFixed(2)} Lakhs`
+                        : `${form.currency} ${form.budget.toLocaleString()}`)
+                      : 'Leave as 0 if budget is not decided yet'}
                   </span>
                 )}
               </div>

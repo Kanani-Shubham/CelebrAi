@@ -1,7 +1,14 @@
-# Environment secrets — NEVER commit these
+# Environment secrets & templates - NEVER commit these
 .env
+.env.*
+.env.example
 .env.local
 .env.*.local
+*.env*
+
+# Temporary test captures
+test-dashboard.png
+test-populated-dashboard.png
 
 # Logs
 logs
@@ -11,6 +18,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+
 # Build & deploy caches
 node_modules
 dist

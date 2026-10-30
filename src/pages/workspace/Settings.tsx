@@ -50,6 +50,10 @@ export function Settings() {
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+    if (!displayName.trim() || displayName.trim().length < 2) {
+      toast.error('Display name must be at least 2 characters.');
+      return;
+    }
     setSaving(true);
     try {
       await updateUserProfile(user.uid, {

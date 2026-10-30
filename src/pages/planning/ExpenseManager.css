@@ -1,37 +1,120 @@
+/* ==========================================================================
+   CelebrAI — Expense Manager Styling
+   Design tokens:
+   - Soft Satin background: #F7F1E8
+   - Bridal White card: #FFFFFF
+   - Tuxedo Black text/buttons: #171F20
+   - Secondary text: #827A76
+   - Morning Fog: #ECE6DE
+   ========================================================================== */
+
 .expense-manager-page {
-  padding: 16px 20px 90px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 18px 90px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background-color: transparent;
+  min-height: 100%;
 }
 
-/* Metrics Grid */
+/* ==========================================================================
+   0. Top Header Bar with Back Button
+   ========================================================================== */
+.expense-top-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.expense-top-header .back-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full, 9999px);
+  background: #FFFFFF;
+  border: 1px solid var(--border-default, #E5E0D8);
+  color: var(--color-tuxedo-black, #171F20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.expense-top-header .back-btn:hover {
+  background: var(--color-morning-fog, #ECE6DE);
+  transform: translateX(-1px);
+}
+
+.expense-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.expense-page-title {
+  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-tuxedo-black, #171F20);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.expense-page-sub {
+  font-size: 12px;
+  color: var(--text-secondary, #827A76);
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+}
+
+/* ==========================================================================
+   1. Summary Metrics Cards (Paid, Pending, Remaining)
+   ========================================================================== */
 .expense-metrics-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 12px;
 }
 
 .metric-pill-box {
-  border-radius: var(--radius-xl);
-  padding: 12px 6px;
-  text-align: center;
+  border-radius: 16px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  justify-content: space-between;
+  gap: 6px;
   border: 1px solid transparent;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  min-height: 86px;
+  box-sizing: border-box;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.metric-pill-box:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .metric-pill-box.paid {
-  background: #EBF8F2;
+  background: #EAF7F1;
   border-color: #B7E4CF;
   color: #065F46;
 }
 
 .metric-pill-box.pending {
-  background: #FEF3C7;
+  background: #FFF4D5;
   border-color: #FDE68A;
   color: #92400E;
+}
+
+.metric-pill-box.remaining {
+  background: #FFFFFF;
+  border-color: var(--border-default, #E5E0D8);
+  color: var(--color-tuxedo-black, #171F20);
 }
 
 .metric-pill-box.overdue {
@@ -40,160 +123,582 @@
   color: #991B1B;
 }
 
-.metric-amt {
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.metric-lbl {
-  font-size: 10px;
-  opacity: 0.85;
-}
-
-/* Filter Tabs */
-.expense-filter-tabs {
-  display: flex;
-  background: var(--bg-surface);
-  border-radius: var(--radius-full);
-  padding: 4px;
-  border: 1px solid var(--border-default);
-}
-
-.expense-tab-btn {
-  flex: 1;
-  padding: 8px;
-  border-radius: var(--radius-full);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  text-align: center;
-  transition: all 0.2s ease;
-}
-
-.expense-tab-btn.active {
-  background: var(--color-tuxedo-black);
-  color: white;
-}
-
-/* Expenses List */
-.expenses-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.expense-item-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-xl);
-  padding: 12px 14px;
+.metric-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.expense-thumb-wrap {
-  width: 50px;
-  height: 50px;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--color-morning-fog);
-  flex-shrink: 0;
-}
-
-.expense-thumb-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.expense-details-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.expense-vendor-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-tuxedo-black);
-}
-
-.expense-sub-desc {
-  font-size: 11px;
-  color: var(--text-secondary);
-}
-
-.expense-right-col {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  justify-content: space-between;
   gap: 6px;
 }
 
-.expense-amount-row {
+.metric-lbl {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  opacity: 0.85;
+}
+
+.metric-pill-box.remaining .metric-lbl {
+  color: var(--text-secondary, #827A76);
+}
+
+.metric-icon {
+  opacity: 0.85;
+  flex-shrink: 0;
+}
+
+.metric-amt {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   2. Toolbar (Filter Segmented Control + Add Expense Button)
+   ========================================================================== */
+.expense-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 4px 0 6px 0;
+}
+
+.expense-filter-tabs {
+  display: flex;
+  background: #FFFFFF;
+  border-radius: 9999px;
+  padding: 4px;
+  border: 1px solid var(--border-default, #E5E0D8);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.expense-filter-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.expense-tab-btn {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary, #827A76);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.expense-tab-btn:hover {
+  color: var(--color-tuxedo-black, #171F20);
+}
+
+.expense-tab-btn.active {
+  background: var(--color-tuxedo-black, #171F20);
+  color: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(23, 31, 32, 0.2);
+}
+
+.btn-add-expense {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--color-tuxedo-black, #171F20);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(23, 31, 32, 0.15);
+}
+
+.btn-add-expense:hover {
+  background: var(--color-blackened-oak, #272E2E);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   3. Expense Cards List
+   ========================================================================== */
+.expenses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.expense-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-default, #E5E0D8);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  position: relative;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.expense-card:hover {
+  border-color: #D3CDC4;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Card Top Row */
+.expense-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.expense-card-top-left {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 10px;
 }
 
-.expense-cost {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-tuxedo-black);
-}
-
-.expense-dots-btn {
-  color: var(--text-muted);
-}
-
-.status-badge-pill {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: var(--radius-full);
-}
-
-.status-paid {
-  background: #D1FAE5;
-  color: #065F46;
-}
-
-.status-pending {
-  background: #FEF3C7;
-  color: #92400E;
-}
-
-.status-overdue {
-  background: #FEE2E2;
-  color: #991B1B;
-}
-
-/* Sticky Bottom */
-.sticky-action-bottom {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
-  background: var(--bg-surface);
-  border-top: 1px solid var(--border-default);
-  padding: 12px 20px;
-  z-index: 10;
-}
-
-.primary-black-btn {
-  width: 100%;
-  padding: 14px;
-  background: var(--color-tuxedo-black);
-  color: white;
-  border-radius: var(--radius-full);
+.expense-category-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+.expense-category-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-tuxedo-black, #171F20);
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+}
+
+/* Card Menu */
+.expense-card-menu-container {
+  position: relative;
+}
+
+.expense-menu-btn {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-secondary, #827A76);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.expense-menu-btn:hover {
+  background: var(--color-morning-fog, #ECE6DE);
+  color: var(--color-tuxedo-black, #171F20);
+}
+
+.expense-menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-default, #E5E0D8);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  z-index: 30;
+  min-width: 160px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: fadeInDropdown 0.15s ease;
+}
+
+@keyframes fadeInDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.expense-menu-item {
+  display: flex;
+  align-items: center;
   gap: 8px;
-  font-size: 14px;
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 12px;
   font-weight: 500;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+  color: var(--color-tuxedo-black, #171F20);
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.expense-menu-item:hover {
+  background: #F7F1E8;
+}
+
+.expense-menu-divider {
+  margin: 4px 0;
+  border: none;
+  border-top: 1px solid var(--border-default, #E5E0D8);
+}
+
+.expense-menu-item.delete {
+  color: #DC2626;
+}
+
+.expense-menu-item.delete:hover {
+  background: #FEE2E2;
+}
+
+/* Card Middle Row (Labels & Subtitles) */
+.expense-card-middle {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 48px;
+}
+
+.expense-subtitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-blackened-oak, #272E2E);
+  line-height: 1.3;
+}
+
+.expense-allocated-label {
+  font-size: 12px;
+  color: var(--text-secondary, #827A76);
+}
+
+.expense-allocated-label strong {
+  color: var(--color-tuxedo-black, #171F20);
+  font-weight: 600;
+}
+
+.expense-vendor-label {
+  font-size: 12px;
+  color: var(--text-secondary, #827A76);
+}
+
+.expense-vendor-label span {
+  color: var(--color-tuxedo-black, #171F20);
+  font-weight: 500;
+}
+
+.expense-date-label {
+  font-size: 11px;
+  color: #9CA3AF;
+  margin-top: 2px;
+}
+
+/* Card Bottom Row (Amount & Status Badge) */
+.expense-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid #F1ECE4;
+  margin-top: 2px;
+}
+
+.expense-amount-val {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-tuxedo-black, #171F20);
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  letter-spacing: -0.01em;
+}
+
+/* Status Badges */
+.expense-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.expense-status-badge.badge-paid {
+  background: #D1FAE5;
+  color: #065F46;
+  border-color: #A7F3D0;
+}
+
+.expense-status-badge.badge-pending {
+  background: #FFF4D5;
+  color: #92400E;
+  border-color: #FDE68A;
+}
+
+.expense-status-badge.badge-overdue {
+  background: #FEE2E2;
+  color: #991B1B;
+  border-color: #FECACA;
+}
+
+/* ==========================================================================
+   4. Empty State
+   ========================================================================== */
+.expenses-empty-state {
+  background: #FFFFFF;
+  border: 1px dashed var(--border-default, #E5E0D8);
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.empty-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--bg-surface, #F7F1E8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary, #827A76);
+  margin-bottom: 4px;
+}
+
+.empty-title {
+  font-family: var(--font-serif, serif);
+  font-size: 18px;
+  color: var(--color-tuxedo-black, #171F20);
+  margin: 0;
+}
+
+.empty-desc {
+  font-size: 13px;
+  color: var(--text-secondary, #827A76);
+  margin: 0;
+  max-width: 380px;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   5. Modal (Add / Edit Expense)
+   ========================================================================== */
+.expense-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(23, 31, 32, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+  animation: fadeInModal 0.2s ease;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.expense-modal-content {
+  background: #FFFFFF;
+  border-radius: 20px;
+  max-width: 440px;
+  width: 100%;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+}
+
+.expense-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.expense-modal-title {
+  font-family: var(--font-serif, serif);
+  font-size: 20px;
+  color: var(--color-tuxedo-black, #171F20);
+  margin: 0;
+}
+
+.expense-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary, #827A76);
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.expense-modal-close:hover {
+  color: var(--color-tuxedo-black, #171F20);
+}
+
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-tuxedo-black, #171F20);
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-default, #E5E0D8);
+  border-radius: 10px;
+  font-size: 14px;
+  background: #FFFFFF;
+  color: var(--color-tuxedo-black, #171F20);
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.15s ease;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--color-tuxedo-black, #171F20);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   6. Mobile & Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 480px) {
+  .expense-manager-page {
+    padding: 14px 14px 80px;
+    gap: 14px;
+  }
+
+  .expense-top-header {
+    gap: 10px;
+  }
+
+  .expense-top-header .back-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .expense-page-title {
+    font-size: 19px;
+  }
+
+  .expense-metrics-grid {
+    gap: 8px;
+  }
+
+  .metric-pill-box {
+    padding: 10px 8px;
+    min-height: 72px;
+    border-radius: 14px;
+  }
+
+  .metric-lbl {
+    font-size: 10px;
+  }
+
+  .metric-amt {
+    font-size: 15px;
+  }
+
+  .metric-icon {
+    width: 13px;
+    height: 13px;
+  }
+
+  .expense-toolbar {
+    gap: 8px;
+  }
+
+  .expense-tab-btn {
+    padding: 5px 11px;
+    font-size: 12px;
+  }
+
+  .btn-add-expense {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+
+  .expense-card {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .expense-card-middle {
+    padding-left: 0;
+  }
+
+  .expense-amount-val {
+    font-size: 16px;
+  }
+
+  .expense-status-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
 }

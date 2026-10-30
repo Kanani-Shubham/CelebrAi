@@ -7,8 +7,8 @@
  *   Production:   NODE_ENV=production node server/api.js
  *
  * Available models on this account (verified 2026-10-26):
- *   openai/gpt-oss-120b   ← requested model (GPT-OSS 120B)
- *   openai/gpt-oss-20b
+ *   meta-llama/llama-4-scout-17b-16e-instruct  ← primary model
+ *   llama-3.3-70b-versatile                    ← fallback model
  */
 
 import express from 'express';
@@ -23,9 +23,10 @@ const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const GROQ_BASE_URL = 'https://api.groq.com/openai/v1';
 
 // ---- Model Configuration ----
-// User requested: GPT-OSS 120B
-// Verified available on this Groq account: openai/gpt-oss-120b
-const MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
+// Primary model: meta-llama/llama-4-scout-17b-16e-instruct
+// Fallback model: llama-3.3-70b-versatile
+const MODEL = process.env.GROQ_MODEL || 'meta-llama/llama-4-scout-17b-16e-instruct';
+const FALLBACK_MODEL = 'llama-3.3-70b-versatile';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -76,6 +77,31 @@ function logRequest(endpoint, extras = {}) {
 }
 
 // ---- Groq Caller ----
+async function callGroqWithModel(model, messages, temperature, maxTokens, signal) {
+  const response = await fetch(`${GROQ_BASE_URL}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${GROQ_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ model, messages, temperature, max_tokens: maxTokens }),
+    signal,
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    let errJson;
+    try { errJson = JSON.parse(errText); } catch { errJson = null; }
+    const msg = errJson?.error?.message || errText || `HTTP ${response.status}`;
+    const err = new Error(`Groq API: ${msg}`);
+    err.status = response.status;
+    throw err;
+  }
+
+  const data = await response.json();
+  return data.choices?.[0]?.message?.content ?? '';
+}
+
 async function callGroq(messages, options = {}) {
   if (!GROQ_API_KEY) {
     throw new Error('GROQ_API_KEY is not configured on the server. Add it to your .env file.');
@@ -91,28 +117,20 @@ async function callGroq(messages, options = {}) {
   const timeout = setTimeout(() => controller.abort(), 30_000);
 
   try {
-    const response = await fetch(`${GROQ_BASE_URL}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${GROQ_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ model, messages, temperature, max_tokens: maxTokens }),
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeout);
-
-    if (!response.ok) {
-      const errText = await response.text();
-      let errJson;
-      try { errJson = JSON.parse(errText); } catch { errJson = null; }
-      const msg = errJson?.error?.message || errText || `HTTP ${response.status}`;
-      throw new Error(`Groq API: ${msg}`);
+    try {
+      const result = await callGroqWithModel(model, messages, temperature, maxTokens, controller.signal);
+      clearTimeout(timeout);
+      return result;
+    } catch (err) {
+      // Fallback to reliable model on 400/404 (bad model name or not available)
+      if (err.status === 400 || err.status === 404) {
+        console.warn(`[callGroq] Primary model "${model}" failed (${err.status}), falling back to "${FALLBACK_MODEL}"`);
+        const result = await callGroqWithModel(FALLBACK_MODEL, messages, temperature, maxTokens, controller.signal);
+        clearTimeout(timeout);
+        return result;
+      }
+      throw err;
     }
-
-    const data = await response.json();
-    return data.choices?.[0]?.message?.content ?? '';
   } catch (err) {
     clearTimeout(timeout);
     if (err.name === 'AbortError') throw new Error('Request timed out after 30 seconds.');
@@ -129,6 +147,32 @@ function sanitize(str, maxLen = 2000) {
 function sanitizeNumber(n, min = 0, max = 100_000_000, fallback = 0) {
   const num = Number(n);
   return isNaN(num) ? fallback : Math.min(Math.max(num, min), max);
+}
+
+// ---- Event-Planning Scope & Code Restriction Guard ----
+export const DECLINE_CODE_MESSAGE =
+  "I'm CelebrAI, your event-planning assistant. I specialize in helping with celebrations, budgets, guests, vendors, and event management. I can't generate general-purpose programming code in this assistant.";
+
+export function isGeneralProgrammingRequest(text) {
+  if (!text || typeof text !== 'string') return false;
+  const t = text.trim().toLowerCase();
+
+  const codingPatterns = [
+    /\b(write|create|generate|give me|show me)\s+(an?\s+)?(html|css|python|java|c\+\+|cpp|c#|javascript|typescript|sql|bash|powershell|rust|ruby|php|golang|go)\s+(code|script|program|app|query)/i,
+    /\b(html|css|python|java|javascript|typescript|sql|c\+\+|cpp)\s+(code|script)\s+(for|to)\b/i,
+    /\b(write|create)\s+(html|css|python|js|javascript)\s+code\b/i,
+    /\bcode\s+(for|to create|to make)\s+(a\s+)?(lamp|game|calculator|scraper|server|bot|algorithm|todo app)\b/i,
+    /\b(write|create)\s+a\s+(python|node|bash|shell)\s+script\b/i,
+    /\b(html|css)\s+(for|of)\s+a\s+lamp\b/i,
+    /\bhow to code\b/i,
+  ];
+
+  const isEventException = /\b(invitation|rsvp|email template|guest list)\b/i.test(t);
+  if (isEventException && !/\b(lamp|calculator|scraper|game|fibonacci|sorting)\b/i.test(t)) {
+    return false;
+  }
+
+  return codingPatterns.some(p => p.test(t));
 }
 
 // ============================================================
@@ -174,34 +218,65 @@ app.post('/api/ai/chat', rateLimit, async (req, res) => {
       ? `CURRENT EVENT CONTEXT (Use ONLY when relevant to the user request. NEVER invent unconfirmed details):\n${contextParts.join('\n')}`
       : 'CURRENT EVENT CONTEXT: No specific event details confirmed yet.';
 
-    const systemPrompt = `You are CelebrAI, an intelligent, versatile AI event planning mentor and assistant powered by GPT-OSS 120B.
-
-${contextBlock}
-
-CRITICAL BEHAVIOR INSTRUCTIONS:
-1. GREETINGS: If the user says "hi", "hello", "hey", or offers a casual greeting, respond with a short, warm greeting (1-2 sentences) asking how you can assist them today. NEVER fabricate an event plan, budget breakdown, or venue list for a simple greeting.
-2. ANSWER DIRECTLY: Always answer the user's specific prompt directly.
-   - If the user asks for code (e.g. HTML/CSS for a lamp, JavaScript, Python), provide clean, complete code directly. Do NOT force the response back to event planning.
-   - If the user asks for writing, invitation drafts, decor, timelines, or general advice, fulfill that exact request.
-3. CONTEXT INTEGRITY:
-   - Use current event context only when relevant.
-   - Do NOT invent fake venue names, prices, availability, or pretend external databases have been checked.
-   - If information is missing for an event task, ask a brief clarifying question instead of inventing numbers.
-4. CONCISENESS & QUALITY:
-   - Keep answers appropriately concise and well-formatted with markdown unless the user specifically asks for deep detail.`;
-
     // Sanitize and limit message history
     const sanitizedMessages = messages.slice(-12).map(m => ({
       role: m.role === 'assistant' ? 'assistant' : 'user',
       content: sanitize(m.content, 2000),
     })).filter(m => m.content.length > 0);
 
+    const lastUserMsg = (sanitizedMessages[sanitizedMessages.length - 1]?.content || '').trim();
+
+    // Guard: Restrict unrequested general-purpose programming code generation
+    if (isGeneralProgrammingRequest(lastUserMsg)) {
+      return res.json({ reply: DECLINE_CODE_MESSAGE, model: MODEL });
+    }
+
+    const systemPrompt = `You are CelebrAI, an intelligent, specialized AI event-planning mentor and assistant powered by GPT-OSS 120B.
+
+${contextBlock}
+
+CRITICAL BEHAVIOR INSTRUCTIONS:
+1. EVENT ASSISTANT SCOPE & CODE RESTRICTION:
+   - You are exclusively an event-planning assistant for celebrations, weddings, birthdays, corporate events, budgets, guests, vendors, and schedules.
+   - Do NOT generate general-purpose programming code (e.g., HTML/CSS for lamps, Python scripts, JavaScript algorithms, backend code, SQL queries).
+   - If the user asks for general programming code, politely decline with this exact message:
+     "I'm CelebrAI, your event-planning assistant. I specialize in helping with celebrations, budgets, guests, vendors, and event management. I can't generate general-purpose programming code in this assistant."
+2. GREETINGS: If the user says "hi", "hello", "hey", or offers a casual greeting, respond with a short, warm greeting (1-2 sentences) asking how you can assist them with their celebration today. NEVER fabricate an event plan, budget breakdown, or venue list for a simple greeting.
+3. CONTEXT INTEGRITY & STRICT NO-INVENTION POLICY:
+   - Use confirmed event context only when relevant.
+   - Confirmed Budget: ${budget ? `${currency} ${budget.toLocaleString('en-IN')}` : 'UNSPECIFIED'}.
+   - Confirmed Guests: ${guestCount ? guestCount : 'UNSPECIFIED'}.
+   - STRICT PROHIBITION ON INVENTED DATA:
+     * NEVER invent, assume, or hallucinate an event budget (such as ₹5,00,000 or any other fabricated number), guest count, venue, date, or location if it is NOT in the confirmed event context or specified by the user.
+     * When asked for recommendations (such as catering, decor, or schedules) and NO budget is confirmed, provide suggestions across flexible tiers and politely ask the user what their target budget or guest count is. NEVER state or imply a specific budget number unless the user or confirmed context explicitly provided it.
+     * Do NOT fabricate vendor names, quotes, availability, or pretend external databases have been checked.
+4. FORMATTING & RESPONSE QUALITY:
+   - Present information using clean, standard Markdown.
+   - Use Markdown tables for tabular data, comparisons, or budget breakdowns.
+   - Use bullet points for lists and bold formatting for key concepts.
+   - NEVER output raw HTML tags (e.g. no <br>, <div>, or <span> tags). Use proper Markdown double-newlines for line breaks.
+   - Keep answers appropriately concise, elegant, and warm.`;
+
     const groqMessages = [
       { role: 'system', content: systemPrompt },
       ...sanitizedMessages,
     ];
 
-    const reply = await callGroq(groqMessages, { temperature: 0.7, maxTokens: 1024 });
+    let reply;
+    try {
+      reply = await callGroq(groqMessages, { temperature: 0.7, maxTokens: 1024 });
+    } catch (groqErr) {
+      console.warn('[/api/ai/chat] Groq failed, using resilient reply:', groqErr.message);
+      const lower = lastUserMsg.toLowerCase();
+      if (/^(hi|hello|hey|greetings|good\s*(morning|afternoon|evening))\b/i.test(lower)) {
+        reply = `Hello! I'm CelebrAI, your personal celebration co-planner. How can I assist you with your event today?`;
+      } else if (isGeneralProgrammingRequest(lastUserMsg)) {
+        reply = DECLINE_CODE_MESSAGE;
+      } else {
+        reply = `I am currently in resilient co-planning mode. For ${eventName ? `"${eventName}"` : 'your celebration'}, I can help recommend themes, schedule timelines, or review budget plans. What specific task would you like to tackle?`;
+      }
+    }
+
     res.json({ reply, model: MODEL });
   } catch (err) {
     console.error('[/api/ai/chat]', err.message);
@@ -229,7 +304,7 @@ app.post('/api/ai/generate-plan', rateLimit, async (req, res) => {
     const safeDate = sanitize(eventDate || 'TBD', 30);
     const safeLocation = sanitize(location || 'India', 100);
     const safeGuests = sanitizeNumber(guestCount, 1, 100000, 100);
-    const safeBudget = sanitizeNumber(budget, 0, 100_000_000, 500000);
+    const safeBudget = sanitizeNumber(budget, 0, 100_000_000, 0);
     const safeCurrency = sanitize(currency || '₹', 5);
     const safeTheme = sanitize(theme || 'Classic Elegant', 100);
     const safeReqs = sanitize(requirements || '', 500);

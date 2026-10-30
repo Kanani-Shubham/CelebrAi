@@ -14,6 +14,8 @@ import {
   Sparkles,
   Calendar,
   Loader2,
+  AlertTriangle,
+  Clock,
 } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -24,6 +26,11 @@ import {
   getEventGuests,
 } from '../../services/firebase/firestore';
 import { calculateDaysCountdown, formatDisplayDate } from '../../utils/dateUtils';
+import {
+  calculateTaskStatus,
+  aggregateTaskMetrics,
+} from '../../utils/taskCalculations';
+import { runTaskAndEventAudit } from '../../services/notifications/notificationEngine';
 import './HomeDashboard.css';
 
 interface DashboardTask {
@@ -51,12 +58,18 @@ export function HomeDashboard() {
 
   const loadDashboardData = useCallback(async () => {
     if (!eventId || eventId.startsWith('evt-')) {
-      setTasks([]);
-      setTasksDone(activeEvent?.tasksDone || 0);
-      setTasksTotal(activeEvent?.tasksTotal || 0);
-      setTotalSpent(0);
-      setGuestCount(Number(activeEvent?.guestCount) || 0);
-      setRsvpCount(0);
+      const demoTasks = [
+        { id: 't-1', title: 'Book Grand Palace Banquet Hall', dueDate: '2026-11-15', priority: 'High', completed: true },
+        { id: 't-2', title: 'Finalize Royal Florals stage theme', dueDate: '2026-10-28', priority: 'High', completed: false },
+        { id: 't-3', title: 'Confirm DJ sound & acoustic equipment', dueDate: '2026-10-25', priority: 'Medium', completed: false },
+        { id: 't-4', title: 'Schedule wedding catering food tasting', dueDate: '2026-11-20', priority: 'High', completed: false },
+      ];
+      setTasks(demoTasks);
+      setTasksDone(14);
+      setTasksTotal(24);
+      setTotalSpent(330000);
+      setGuestCount(250);
+      setRsvpCount(180);
       return;
     }
 
@@ -67,6 +80,15 @@ export function HomeDashboard() {
       setTasks(taskDocs);
       setTasksDone(taskDocs.filter(t => t.completed).length);
       setTasksTotal(taskDocs.length);
+
+      // Trigger smart notification audit check for tasks & deadlines
+      if (user && activeEvent && !activeEvent.id.startsWith('evt-')) {
+        runTaskAndEventAudit({
+          userId: user.uid,
+          event: activeEvent,
+          tasks: taskDocs,
+        }).catch(err => console.warn('[HomeDashboard] Audit check skipped:', err));
+      }
 
       // 2. Expenses
       const expenseDocs = (await getEventExpenses(eventId)) as unknown as { amount?: number; status?: string }[];
@@ -116,6 +138,28 @@ export function HomeDashboard() {
   const countdown = useMemo(() => {
     return calculateDaysCountdown(activeEvent?.eventDate || activeEvent?.date);
   }, [activeEvent?.eventDate, activeEvent?.date]);
+
+  // Dynamic task metrics and intelligent focus list
+  const taskMetrics = useMemo(() => aggregateTaskMetrics(tasks), [tasks]);
+
+  const focusTasks = useMemo(() => {
+    return [...tasks].sort((a, b) => {
+      // 1. Incomplete before completed
+      if (a.completed !== b.completed) return a.completed ? 1 : -1;
+
+      // 2. Overdue first, then Due Today, then Pending
+      const statusA = calculateTaskStatus(a);
+      const statusB = calculateTaskStatus(b);
+      const score = (s: string) => (s === 'Overdue' ? 0 : s === 'Due Today' ? 1 : 2);
+      if (score(statusA) !== score(statusB)) return score(statusA) - score(statusB);
+
+      // 3. Earliest due date first
+      if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate);
+      if (a.dueDate) return -1;
+      if (b.dueDate) return 1;
+      return 0;
+    });
+  }, [tasks]);
 
   const plannedBudget = Number(activeEvent?.budget) || 0;
   const budgetLeft = Math.max(0, plannedBudget - totalSpent);
@@ -231,8 +275,13 @@ export function HomeDashboard() {
           <div className="stat-icon-wrap icon-tasks">
             <CheckCircle2 size={16} />
           </div>
-          <span className="stat-val">{tasksDone}/{tasksTotal}</span>
+          <span className="stat-val">{taskMetrics.completed}/{tasks.length || tasksTotal}</span>
           <span className="stat-sub">Tasks Done</span>
+          {taskMetrics.overdue > 0 && (
+            <span className="stat-overdue-alert">
+              <AlertTriangle size={10} /> {taskMetrics.overdue} overdue
+            </span>
+          )}
         </div>
 
         <div className="stat-badge-item" onClick={() => navigate('/guests')}>
@@ -288,12 +337,12 @@ export function HomeDashboard() {
         <div className="section-head-row">
           <h2 className="section-title font-serif">Tasks to Focus On</h2>
           <button className="section-link" onClick={() => navigate('/tasks')}>
-            View All ({tasksTotal})
+            View All ({tasks.length || tasksTotal})
           </button>
         </div>
 
         <div className="urgent-tasks-card">
-          {tasks.length === 0 ? (
+          {focusTasks.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '24px 16px', color: 'var(--text-secondary)' }}>
               <p style={{ margin: '0 0 12px', fontSize: '14px' }}>No pending tasks recorded for this celebration.</p>
               <button
@@ -305,28 +354,37 @@ export function HomeDashboard() {
               </button>
             </div>
           ) : (
-            tasks.slice(0, 3).map(task => (
-              <div
-                key={task.id}
-                className={`urgent-task-item ${task.completed ? 'completed' : ''}`}
-                onClick={() => toggleTask(task)}
-              >
-                <div className={`task-check-circle ${task.completed ? 'checked' : ''}`}>
-                  {task.completed && <Check size={12} strokeWidth={3} />}
-                </div>
-                <div className="task-info">
-                  <span className="task-title-text">{task.title}</span>
-                  <div className="task-meta">
-                    {task.dueDate && <span>Due: {formatDisplayDate(task.dueDate)}</span>}
-                    {task.priority && (
-                      <span className={`task-priority-tag priority-${task.priority.toLowerCase()}`}>
-                        {task.priority}
+            focusTasks.slice(0, 3).map(task => {
+              const status = calculateTaskStatus(task);
+              return (
+                <div
+                  key={task.id}
+                  className={`urgent-task-item ${task.completed ? 'completed' : ''} status-${status.toLowerCase().replace(/\s+/g, '-')}`}
+                  onClick={() => toggleTask(task)}
+                >
+                  <div className={`task-check-circle ${task.completed ? 'checked' : ''}`}>
+                    {task.completed && <Check size={12} strokeWidth={3} />}
+                  </div>
+                  <div className="task-info">
+                    <span className="task-title-text">{task.title}</span>
+                    <div className="task-meta">
+                      <span className={`task-status-pill pill-${status.toLowerCase().replace(/\s+/g, '-')}`}>
+                        {status === 'Overdue' && <AlertTriangle size={10} />}
+                        {status === 'Due Today' && <Clock size={10} />}
+                        {status === 'Completed' && <Check size={10} />}
+                        <span>{status}</span>
                       </span>
-                    )}
+                      {task.dueDate && <span>Due: {formatDisplayDate(task.dueDate)}</span>}
+                      {task.priority && (
+                        <span className={`task-priority-tag priority-${task.priority.toLowerCase()}`}>
+                          {task.priority}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>
