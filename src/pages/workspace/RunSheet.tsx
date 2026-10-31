@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { MoreVertical, Plus, Clock, MapPin, Trash2, X, Loader2 } from 'lucide-react';
+import { Plus, Trash2, X, Loader2 } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { queryCollection, createDoc, deleteDocById } from '../../services/firebase/firestore';
 import { where, orderBy } from 'firebase/firestore';

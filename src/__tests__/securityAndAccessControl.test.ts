@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { sanitizeText, sanitizeEmail, sanitizePhone, isAllowedImageType, isWithinSizeLimit } from '../utils/security';
+import { sanitizeText, isAllowedImageType, isWithinSizeLimit } from '../utils/security';
 import { validateEventForm, validateGuestForm } from '../utils/validation';
 
 describe('CelebrAI Security & Access Control Validation Suite', () => {

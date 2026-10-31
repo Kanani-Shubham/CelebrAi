@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { logger } from '../../utils/logger';
+import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ChevronLeft, Calendar, MapPin, Check, Heart, HelpCircle, XCircle, Loader2 } from 'lucide-react';
+import { ChevronLeft, Check, Heart, HelpCircle, XCircle, Loader2 } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { createDoc } from '../../services/firebase/firestore';
 import { toast } from '../../components/ui';
@@ -62,7 +63,7 @@ export function GuestRSVP() {
       setSubmitted(true);
       toast.success('Your RSVP has been confirmed!');
     } catch (err) {
-      console.error('[GuestRSVP] Submission failed:', err);
+      logger.error('[GuestRSVP] Submission failed:', err);
       toast.error('Failed to submit RSVP: ' + (err as Error).message);
     } finally {
       setSubmitting(false);

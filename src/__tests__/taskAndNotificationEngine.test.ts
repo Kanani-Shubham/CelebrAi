@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { QuerySnapshot, DocumentData } from 'firebase/firestore';
 import {
   validateTaskDueDate,
   calculateTaskStatus,
@@ -179,7 +180,7 @@ describe('CelebrAI Task & Smart Notification Engine', () => {
   it('Scenario 13: Notification deduplication prevents double alerts within the same cycle and day', async () => {
     const { getDocs } = await import('firebase/firestore');
     // Simulate that deduplication query returns existing record
-    vi.mocked(getDocs).mockResolvedValueOnce({ empty: false } as any);
+    vi.mocked(getDocs).mockResolvedValueOnce({ empty: false } as unknown as QuerySnapshot<DocumentData>);
 
     const mockTasks = [
       { id: '1', title: 'Overdue Task', dueDate: '2026-10-25', completed: false },

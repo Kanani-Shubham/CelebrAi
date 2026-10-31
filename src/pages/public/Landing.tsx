@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, CheckCircle, LayoutDashboard, Users, DollarSign } from 'lucide-react';
 import { AI_MODEL_NAME } from '../../config/ai';
@@ -22,6 +22,8 @@ const FEATURES = [
   { icon: <Users size={20} />, title: 'Guest & RSVP', desc: 'Manage guests, send invitations and track responses easily.' },
   { icon: <LayoutDashboard size={20} />, title: 'Vendor Discovery', desc: 'Find and compare trusted vendors for every event need.' },
 ];
+
+const CURRENT_YEAR = new Date().getFullYear();
 
 export function Landing() {
   const [heroSrc, setHeroSrc] = useState(HERO_IMAGE_URL);
@@ -172,7 +174,7 @@ export function Landing() {
 
       {/* Footer */}
       <footer className="landing-footer">
-        <p>© {new Date().getFullYear()} CelebrAI. All rights reserved.</p>
+        <p>© {CURRENT_YEAR} CelebrAI. All rights reserved.</p>
         <div style={{ display: 'flex', gap: 20, fontSize: 'var(--text-sm)' }}>
           <Link to="/explore-events" style={{ color: 'var(--text-secondary)' }}>Event Types</Link>
           <Link to="/privacy" style={{ color: 'var(--text-secondary)' }}>Privacy Policy</Link>

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { MapPin, Calendar, Sparkles, Heart, Clock } from 'lucide-react';
+import { MapPin, Heart } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { getDocById } from '../../services/firebase/firestore';
 import { formatDisplayDate, calculateDaysCountdown } from '../../utils/dateUtils';

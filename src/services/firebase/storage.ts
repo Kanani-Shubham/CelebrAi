@@ -1,3 +1,4 @@
+import { logger } from '../../utils/logger';
 import { ref, uploadBytesResumable, getDownloadURL, type UploadTask } from 'firebase/storage';
 import { updateProfile } from 'firebase/auth';
 import { storage, auth } from './config';
@@ -112,7 +113,7 @@ export function uploadUserProfilePhoto(
       },
       (error) => {
         clearTimeout(timeoutTimer);
-        console.error('[Storage Error]', error);
+        logger.error('[Storage Error]', error);
 
         if (isCancelled || error.code === 'storage/canceled') {
           reject(new Error('Upload was cancelled.'));
@@ -154,7 +155,7 @@ export function uploadUserProfilePhoto(
 
           resolve(downloadUrl);
         } catch (finalizeErr) {
-          console.error('[Storage Finalize Error]', finalizeErr);
+          logger.error('[Storage Finalize Error]', finalizeErr);
           reject(new Error(`Image uploaded, but failed to persist URL: ${(finalizeErr as Error).message}`));
         }
       }

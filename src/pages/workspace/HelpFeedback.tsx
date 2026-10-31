@@ -6,14 +6,11 @@ import {
   Compass,
   Sparkles,
   LifeBuoy,
-  HelpCircle,
-  PlayCircle,
   Mail,
   Send,
   ChevronRight,
   X,
   Loader2,
-  CheckCircle2,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { createDoc } from '../../services/firebase/firestore';

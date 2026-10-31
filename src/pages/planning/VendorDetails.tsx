@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ChevronLeft,
@@ -9,9 +9,6 @@ import {
   Home,
   Car,
   Utensils,
-  Phone,
-  CheckCircle,
-  FileText,
   X,
   Loader2,
 } from 'lucide-react';

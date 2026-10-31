@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { onAuthStateChanged, getRedirectResult, type User } from 'firebase/auth';
 import { auth, isFirebaseConfigured } from '../services/firebase/config';
@@ -60,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const p = await getUserProfile(user.uid);
       if (p) setProfile(p as UserProfile);
     } catch (err) {
-      console.warn('[AuthContext] Failed to refresh profile:', err);
+      logger.warn('[AuthContext] Failed to refresh profile:', err);
     }
   }, [user]);
 
@@ -121,7 +122,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         })
         .catch((err) => {
-          console.warn('[AuthContext] getRedirectResult check:', err);
+          logger.warn('[AuthContext] getRedirectResult check:', err);
         });
     }
 
@@ -147,7 +148,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setAvatarUrl(firebaseUser.photoURL);
           }
         } catch (avatarErr) {
-          console.warn('[AuthContext] Error loading cached avatar:', avatarErr);
+          logger.warn('[AuthContext] Error loading cached avatar:', avatarErr);
           if (firebaseUser.photoURL) {
             setAvatarUrl(firebaseUser.photoURL);
           }
@@ -157,7 +158,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const token = await firebaseUser.getIdToken();
           setIdToken(token);
         } catch (tokenErr) {
-          console.warn('[AuthContext] Error retrieving ID token:', tokenErr);
+          logger.warn('[AuthContext] Error retrieving ID token:', tokenErr);
         }
 
         try {
@@ -175,7 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } as UserProfile);
           }
         } catch (profileErr) {
-          console.warn('[AuthContext] Profile load error, applying fallback session:', profileErr);
+          logger.warn('[AuthContext] Profile load error, applying fallback session:', profileErr);
           setProfile({
             uid: firebaseUser.uid,
             email: firebaseUser.email || '',

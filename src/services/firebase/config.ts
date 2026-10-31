@@ -5,13 +5,13 @@ import { getStorage } from 'firebase/storage';
 import { getAnalytics } from 'firebase/analytics';
 
 const DEFAULT_FIREBASE_CONFIG = {
-  apiKey: 'AIzaSyAJIbokbJORhzk2_9133jElW0K_VwjihFY',
-  authDomain: 'celebrai-62487.firebaseapp.com',
-  projectId: 'celebrai-62487',
-  storageBucket: 'celebrai-62487.firebasestorage.app',
-  messagingSenderId: '1009537060981',
-  appId: '1:1009537060981:web:e81878149e5c07f010683c',
-  measurementId: 'G-NVETMW4QHP',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'celebrai-62487.firebaseapp.com',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'celebrai-62487',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'celebrai-62487.firebasestorage.app',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '1009537060981',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:1009537060981:web:e81878149e5c07f010683c',
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || 'G-NVETMW4QHP',
 };
 
 const rawApiKey = import.meta.env.VITE_FIREBASE_API_KEY || DEFAULT_FIREBASE_CONFIG.apiKey;

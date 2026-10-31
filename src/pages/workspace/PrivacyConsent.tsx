@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { Shield, Sparkles, Download, Trash2, Cookie, ChevronRight, ArrowLeft } from 'lucide-react';
 import './PrivacyConsent.css';

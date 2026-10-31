@@ -1,3 +1,4 @@
+import { logger } from '../../utils/logger';
 /**
  * indexedDBAvatar.ts
  * Local persistent IndexedDB repository for user profile avatars.
@@ -40,7 +41,7 @@ export function openAvatarDB(): Promise<IDBDatabase> {
     };
 
     request.onblocked = () => {
-      console.warn('[IndexedDB] Database upgrade blocked by another open tab.');
+      logger.warn('[IndexedDB] Database upgrade blocked by another open tab.');
     };
   });
 }
@@ -119,7 +120,7 @@ export async function getAvatarBlob(uid: string): Promise<Blob | null> {
       }
     });
   } catch (err) {
-    console.warn('[IndexedDB] Could not read avatar cache:', err);
+    logger.warn('[IndexedDB] Could not read avatar cache:', err);
     return null;
   }
 }
@@ -152,7 +153,7 @@ export async function deleteAvatarBlob(uid: string): Promise<void> {
       }
     });
   } catch (err) {
-    console.warn('[IndexedDB] Could not delete cached avatar:', err);
+    logger.warn('[IndexedDB] Could not delete cached avatar:', err);
   }
 }
 

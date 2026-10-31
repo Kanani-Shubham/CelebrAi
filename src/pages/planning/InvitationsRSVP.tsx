@@ -1,7 +1,8 @@
+import { logger } from '../../utils/logger';
 import { AI_MODEL_NAME } from '../../config/ai';
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Copy, Check, CheckCircle2, Clock, XCircle, Share2, Sparkles, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, CheckCircle2, Clock, XCircle, Share2, Sparkles } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { getEventGuests } from '../../services/firebase/firestore';
 import { toast } from '../../components/ui';
@@ -48,7 +49,7 @@ export function InvitationsRSVP() {
       setPendingCount(pen);
       setDeclinedCount(dec);
     } catch (err) {
-      console.warn('[InvitationsRSVP] Error loading RSVP counts:', err);
+      logger.warn('[InvitationsRSVP] Error loading RSVP counts:', err);
     } finally {
       setLoading(false);
     }

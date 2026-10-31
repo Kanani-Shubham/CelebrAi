@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { logger } from '../../utils/logger';
+import { useState } from 'react';
 import { Download, FileText, CheckCircle2, Loader2 } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import {
@@ -33,7 +34,7 @@ export function ReportsExport() {
     document.body.removeChild(element);
   };
 
-  const handleDownloadSingle = async (repId: string, title: string) => {
+  const handleDownloadSingle = async (repId: string, _title: string) => {
     if (!eventId) {
       toast.error('No active event selected');
       return;
@@ -111,7 +112,7 @@ export function ReportsExport() {
         toast.success('Master event blueprint exported');
       }
     } catch (err) {
-      console.error('[ReportsExport] Download failed:', err);
+      logger.error('[ReportsExport] Download failed:', err);
       toast.error('Failed to generate report: ' + (err as Error).message);
     } finally {
       setDownloadingId(null);

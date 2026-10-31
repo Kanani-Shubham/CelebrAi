@@ -1,6 +1,7 @@
+import { logger } from '../../utils/logger';
 import { AI_MODEL_NAME } from '../../config/ai';
-import React, { useState } from 'react';
-import { Sparkles, Heart, RefreshCw, Loader2, Bookmark, Check } from 'lucide-react';
+import { useState } from 'react';
+import { Sparkles, Heart, RefreshCw, Loader2, Bookmark } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { generateDecorIdeas } from '../../services/ai/groq';
@@ -67,7 +68,7 @@ export function DecorStudio() {
         toast.success(`Generated 5 decor concepts using ${AI_MODEL_NAME}`);
       }
     } catch (err) {
-      console.error('[DecorStudio] Error generating decor ideas:', err);
+      logger.error('[DecorStudio] Error generating decor ideas:', err);
       toast.error('Could not generate decor concepts: ' + (err as Error).message);
     } finally {
       setIsGenerating(false);

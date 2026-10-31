@@ -2,8 +2,6 @@ import { describe, it, expect } from 'vitest';
 import {
   validatePhone,
   validateEmail,
-  validateGuestName,
-  validatePartySize,
   validateGuestForm,
   validateEventForm,
 } from '../utils/validation';

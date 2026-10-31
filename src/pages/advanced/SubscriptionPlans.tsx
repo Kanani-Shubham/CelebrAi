@@ -1,6 +1,6 @@
 import { AI_MODEL_NAME } from '../../config/ai';
-import React, { useState } from 'react';
-import { Check, Sparkles, Info, X } from 'lucide-react';
+import { useState } from 'react';
+import { Check, Info, X } from 'lucide-react';
 import './SubscriptionPlans.css';
 
 export function SubscriptionPlans() {

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -7,14 +7,10 @@ import {
   Users,
   User,
   Bell,
-  Menu,
   ChevronDown,
   LogOut,
   Settings,
   Plus,
-  CheckCircle2,
-  Wallet,
-  Store,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useEvent } from '../../contexts/EventContext';

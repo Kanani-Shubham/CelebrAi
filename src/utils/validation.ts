@@ -36,7 +36,7 @@ export function validatePhone(input: string, optional = true): ValidationResult<
   }
 
   // Strip spaces, dashes, parentheses for numerical analysis
-  const digitsOnly = trimmed.replace(/[\s\-\(\)]/g, '');
+  const digitsOnly = trimmed.replace(/[\s\-()]/g, '');
 
   // Must match valid phone character set (+ at start, followed by digits)
   if (!/^\+?[0-9]{7,15}$/.test(digitsOnly)) {

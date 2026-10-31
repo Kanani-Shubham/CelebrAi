@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { logger } from '../../utils/logger';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Wallet,
@@ -47,7 +48,6 @@ export function HomeDashboard() {
   const { activeEvent, loading: eventLoading } = useEvent();
 
   const [tasks, setTasks] = useState<DashboardTask[]>([]);
-  const [tasksDone, setTasksDone] = useState(0);
   const [tasksTotal, setTasksTotal] = useState(0);
   const [totalSpent, setTotalSpent] = useState(0);
   const [guestCount, setGuestCount] = useState(0);
@@ -65,7 +65,6 @@ export function HomeDashboard() {
         { id: 't-4', title: 'Schedule wedding catering food tasting', dueDate: '2026-11-20', priority: 'High', completed: false },
       ];
       setTasks(demoTasks);
-      setTasksDone(14);
       setTasksTotal(24);
       setTotalSpent(330000);
       setGuestCount(250);
@@ -78,7 +77,6 @@ export function HomeDashboard() {
       // 1. Tasks
       const taskDocs = (await getEventTasks(eventId)) as unknown as DashboardTask[];
       setTasks(taskDocs);
-      setTasksDone(taskDocs.filter(t => t.completed).length);
       setTasksTotal(taskDocs.length);
 
       // Trigger smart notification audit check for tasks & deadlines
@@ -87,7 +85,7 @@ export function HomeDashboard() {
           userId: user.uid,
           event: activeEvent,
           tasks: taskDocs,
-        }).catch(err => console.warn('[HomeDashboard] Audit check skipped:', err));
+        }).catch(err => logger.warn('[HomeDashboard] Audit check skipped:', err));
       }
 
       // 2. Expenses
@@ -105,11 +103,11 @@ export function HomeDashboard() {
       setGuestCount(totalGuests > 0 ? totalGuests : Number(activeEvent?.guestCount) || 0);
       setRsvpCount(confirmedRsvps);
     } catch (err) {
-      console.warn('[HomeDashboard] Error loading dashboard records from Firestore:', err);
+      logger.warn('[HomeDashboard] Error loading dashboard records from Firestore:', err);
     } finally {
       setLoadingData(false);
     }
-  }, [eventId, activeEvent?.tasksDone, activeEvent?.tasksTotal, activeEvent?.guestCount]);
+  }, [eventId, activeEvent?.tasksTotal, activeEvent?.guestCount]);
 
   useEffect(() => {
     loadDashboardData();
@@ -120,17 +118,15 @@ export function HomeDashboard() {
     setTasks(prev =>
       prev.map(t => (t.id === task.id ? { ...t, completed: newCompleted } : t))
     );
-    setTasksDone(prev => (newCompleted ? prev + 1 : Math.max(0, prev - 1)));
 
     try {
       await updateTask(task.id, { completed: newCompleted });
     } catch (err) {
-      console.error('[HomeDashboard] Failed to toggle task:', err);
+      logger.error('[HomeDashboard] Failed to toggle task:', err);
       // Revert
       setTasks(prev =>
         prev.map(t => (t.id === task.id ? { ...t, completed: task.completed } : t))
       );
-      setTasksDone(prev => (task.completed ? prev + 1 : Math.max(0, prev - 1)));
     }
   };
 

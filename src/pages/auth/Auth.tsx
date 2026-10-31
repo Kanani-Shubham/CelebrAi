@@ -1,3 +1,4 @@
+import { logger } from '../../utils/logger';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
@@ -82,7 +83,7 @@ export function Auth() {
       navigate('/dashboard');
     } catch (err: unknown) {
       const code = (err as { code?: string }).code ?? '';
-      console.warn('[Auth] Google sign-in failed with code:', code, err);
+      logger.warn('[Auth] Google sign-in failed with code:', code, err);
       if (code === 'auth/popup-blocked') {
         setPopupBlocked(true);
       }

@@ -1,3 +1,4 @@
+import { logger } from '../../utils/logger';
 /**
  * CelebrAI Smart Notification Engine
  * 
@@ -126,7 +127,7 @@ async function hasNotificationBeenSent(
     const snap = await getDocs(q);
     return !snap.empty;
   } catch (err) {
-    console.warn('[NotificationEngine] Deduplication lookup error:', err);
+    logger.warn('[NotificationEngine] Deduplication lookup error:', err);
     return false;
   }
 }
@@ -163,7 +164,7 @@ async function dispatchNotification(data: {
       createdAt: serverTimestamp(),
     });
   } catch (err) {
-    console.warn('[NotificationEngine] Failed to save notification to Firestore:', err);
+    logger.warn('[NotificationEngine] Failed to save notification to Firestore:', err);
   }
 
   // 2. Dispatch browser notification if granted

@@ -53,7 +53,7 @@ export function sanitizeGuestName(input: string, maxLength = 80): string {
   if (typeof input !== 'string') return '';
   return input
     .replace(/<[^>]*>/g, '')
-    .replace(/[^\p{L}\p{M}\s\.'\-]/gu, '')
+    .replace(/[^\p{L}\p{M}\s.'-]/gu, '')
     .slice(0, maxLength)
     .trim();
 }
@@ -107,7 +107,7 @@ export function validateFileMetadata(filename: string, mimeType: string, sizeByt
  */
 export function sanitizePhone(input: string): string {
   if (typeof input !== 'string') return '';
-  return input.replace(/[^0-9\s\+\-\(\)]/g, '').slice(0, 20);
+  return input.replace(/[^0-9\s+\-()]/g, '').slice(0, 20);
 }
 
 /**

@@ -1,3 +1,4 @@
+import { logger } from '../../utils/logger';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -64,7 +65,7 @@ export function Settings() {
       await refreshProfile();
       toast.success('Preferences saved successfully');
     } catch (err) {
-      console.error('[Settings] Failed to save profile:', err);
+      logger.error('[Settings] Failed to save profile:', err);
       toast.error('Failed to update settings: ' + (err as Error).message);
     } finally {
       setSaving(false);
@@ -81,7 +82,7 @@ export function Settings() {
       await resetPassword(user.email);
       toast.success(`Password reset email sent to ${user.email}`);
     } catch (err) {
-      console.error('[Settings] Password reset error:', err);
+      logger.error('[Settings] Password reset error:', err);
       toast.error('Failed to send reset email: ' + (err as Error).message);
     } finally {
       setSendingReset(false);

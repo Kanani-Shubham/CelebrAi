@@ -1,3 +1,4 @@
+import { logger } from '../../utils/logger';
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -13,7 +14,6 @@ import {
   ShieldCheck,
   ShieldAlert,
   Loader2,
-  Check,
   X,
   HardDrive,
   Save,
@@ -27,7 +27,7 @@ import './Profile.css';
 
 export function Profile() {
   const navigate = useNavigate();
-  const { user, profile, refreshProfile, avatarUrl, updateAvatar } = useAuth();
+  const { user, profile, avatarUrl, updateAvatar } = useAuth();
   const { events } = useEvent();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -100,7 +100,7 @@ export function Profile() {
       toast.success(`Photo optimized (${origMB}MB → ${compKB}KB) and saved to this device!`);
       handleCancelPreview();
     } catch (err) {
-      console.error('[Profile] Avatar update failed:', err);
+      logger.error('[Profile] Avatar update failed:', err);
       const msg = (err as Error).message || 'Failed to save avatar';
       setUploadError(msg);
       toast.error(msg);

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '../../utils/logger';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Wallet,
@@ -8,7 +9,6 @@ import {
   Sparkles,
   Camera,
   Package,
-  Plus,
   Loader2,
   AlertCircle,
   ArrowRight,
@@ -127,7 +127,7 @@ export function BudgetDashboard() {
       const data = await getEventExpenses(eventId);
       setExpenses((data || []) as unknown as { amount: number; category: string; status: string }[]);
     } catch (err) {
-      console.warn('[BudgetDashboard] Error loading expenses:', err);
+      logger.warn('[BudgetDashboard] Error loading expenses:', err);
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '../../utils/logger';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Clock, Plus, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Clock, Loader2 } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { getEventTasks } from '../../services/firebase/firestore';
 import { formatDisplayDate } from '../../utils/dateUtils';
@@ -69,7 +70,7 @@ export function TimelineCalendar() {
 
       setTimelineItems(items);
     } catch (err) {
-      console.warn('[TimelineCalendar] Error loading items:', err);
+      logger.warn('[TimelineCalendar] Error loading items:', err);
     } finally {
       setLoading(false);
     }

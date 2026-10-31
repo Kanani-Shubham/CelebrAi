@@ -102,7 +102,7 @@ export async function callGroq(apiKey, messages, options = {}) {
           const fallbackRes = await callGroqWithModel(apiKey, FALLBACK_MODEL, messages, temperature, maxTokens, controller.signal);
           clearTimeout(timer);
           return fallbackRes;
-        } catch (fbErr) {
+        } catch {
           console.warn(`[callGroq] Secondary fallback "${FALLBACK_MODEL}" failed, trying "${LEGACY_FALLBACK_MODEL}"`);
           const legacyRes = await callGroqWithModel(apiKey, LEGACY_FALLBACK_MODEL, messages, temperature, maxTokens, controller.signal);
           clearTimeout(timer);

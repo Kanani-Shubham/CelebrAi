@@ -176,7 +176,7 @@ CRITICAL BEHAVIOR INSTRUCTIONS:
           headers,
           body: JSON.stringify({ reply: groqRes.content, model: groqRes.model }),
         };
-      } catch (err) {
+      } catch {
         return {
           statusCode: 200,
           headers,
@@ -256,7 +256,7 @@ Requirements: 8-12 tasks, 5-7 budget items summing close to ${safeBudget}, 4-5 m
           body: JSON.stringify({ ...plan, _model: groqRes.model }),
         };
       } catch (err) {
-        console.warn('[netlify/api] Groq failed, generating fallback plan:', err.message);
+        console.warn('[netlify/api] Groq failed, generating fallback plan:', err instanceof Error ? err.message : String(err));
         const fallback = generateFallbackPlan({
           safeName, safeType, safeDate, safeLocation, safeGuests, safeBudget, safeCurrency, safeTheme,
         });

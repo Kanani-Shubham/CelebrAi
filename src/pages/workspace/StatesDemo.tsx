@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Store, WifiOff, Sparkles, RefreshCw } from 'lucide-react';
+import { Store, WifiOff, RefreshCw } from 'lucide-react';
 import './StatesDemo.css';
 
 export function StatesDemo() {

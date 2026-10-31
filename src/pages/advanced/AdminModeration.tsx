@@ -1,12 +1,11 @@
 import { AI_PRIMARY_MODEL } from '../../config/ai';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Users,
   Calendar,
   Flag,
   CheckCircle,
-  ShieldAlert,
   Lock,
   ArrowLeft,
   ShieldCheck,

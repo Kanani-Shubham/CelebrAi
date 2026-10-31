@@ -1,0 +1,54 @@
+# CELEBRAI - CODE QUALITY BASELINE REPORT
+Date: 2026-10-31
+Branch: quality-pass
+Target Hack2Skill Score: 100/100 (Code Quality 86 -> 98+)
+
+## 1. Static Analysis & Linting
+- Linter: Oxlint v1.88.0
+- Oxlint Errors: 0
+- Oxlint Informational Warnings: 98 (78 files scanned)
+- TypeScript Compilation (tsc -b): Clean (0 errors)
+
+## 2. Testing
+- Test Runner: Vitest v2.1.9
+- Test Suites: 14 passed (14 total)
+- Test Cases: 134 passed (134 total, 0 failing)
+- Component Tests: 0 (all 14 test files are unit/service/utility tests)
+- Coverage Configured: No (@vitest/coverage-v8 not installed)
+
+## 3. Production Bundle Sizes (vite build)
+- Build Duration: 362ms (2310 modules)
+- dist/index.html: 2.24 kB (gzip: 0.82 kB)
+- dist/assets/index-B2IEjwoI.css: 161.67 kB (gzip: 24.03 kB)
+- dist/assets/rolldown-runtime-XKyaHtl9.js: 0.72 kB (gzip: 0.42 kB)
+- dist/assets/vendor-icons-Ckz54iR9.js: 33.72 kB (gzip: 11.85 kB)
+- dist/assets/index-yfFtE40Z.js: 361.15 kB (gzip: 88.83 kB)
+- dist/assets/vendor-react-CFyf3Nuw.js: 368.54 kB (gzip: 114.95 kB)
+- dist/assets/vendor-firebase-D4FnO4s2.js: 601.33 kB (gzip: 181.20 kB)
+- Total Uncompressed JS+CSS: ~1.52 MB
+- Lazy Chunks: 0 (all 36 pages eagerly bundled into main index chunk)
+
+## 4. Code Quality Metrics
+- 'any' Type Count in src: 6 occurrences
+  - src/pages/advanced/NotificationsCenter.tsx: 3
+  - src/pages/planning/TodoList.tsx: 1
+  - src/__tests__/e2eUserJourneys.test.ts: 1
+  - src/__tests__/taskAndNotificationEngine.test.ts: 1
+- Console Calls (console.log/warn/error/info) in src, server, netlify: 81
+- Inline style={{...}} Usages in src: 421 occurrences
+- Top 10 Largest Files:
+  1. src/pages/onboarding/AIPlanPreview.tsx (1,352 lines)
+  2. src/pages/planning/ExpenseManager.tsx (784 lines)
+  3. src/pages/dashboard/AIAssistant.tsx (783 lines)
+  4. src/pages/planning/TodoList.tsx (578 lines)
+  5. src/services/firebase/firestore.ts (566 lines)
+  6. src/pages/planning/GuestManagement.tsx (548 lines)
+  7. server/api.js (476 lines)
+  8. src/data/mockData.ts (431 lines)
+  9. netlify/functions/api.js (424 lines)
+  10. src/pages/dashboard/HomeDashboard.tsx (394 lines)
+
+## 5. Repository Size
+- Total Size (excluding node_modules, .git, dist): 9.72 MB (10,190,600 bytes)
+- Under 10 MB Ceiling: Yes (margin: 0.28 MB)
+

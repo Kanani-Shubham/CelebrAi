@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { logger } from '../../utils/logger';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Users, DollarSign, ChevronRight, ChevronLeft, Sparkles, Loader2, AlertCircle } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
 import { useEvent } from '../../contexts/EventContext';
 import { toast } from '../../components/ui';
 import './CreateEvent.css';
@@ -41,7 +41,6 @@ type EventForm = {
 };
 
 export function CreateEvent() {
-  const { user } = useAuth();
   const { addEvent, refresh } = useEvent();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -136,7 +135,7 @@ export function CreateEvent() {
       toast.success('Celebration created successfully!');
       navigate(`/ai-plan-preview?eventId=${created.id}`);
     } catch (err) {
-      console.error('[CreateEvent] Error creating event:', err);
+      logger.error('[CreateEvent] Error creating event:', err);
       toast.error('Failed to create event: ' + (err as Error).message);
     } finally {
       setSaving(false);

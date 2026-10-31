@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { getUserEvents, createEvent, updateEvent, deleteEvent } from '../services/firebase/firestore';
 import { useAuth } from './AuthContext';
@@ -67,7 +68,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('celebrai_active_event', match.id);
       }
     } catch (err) {
-      console.warn('[EventContext] Error loading user events from Firestore:', err);
+      logger.warn('[EventContext] Error loading user events from Firestore:', err);
       const saved = localStorage.getItem('celebrai_events');
       if (saved) {
         try {
@@ -148,7 +149,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
       try {
         await updateEvent(id, patch as Record<string, unknown>);
       } catch (err) {
-        console.error('[EventContext] updateEvent failed:', err);
+        logger.error('[EventContext] updateEvent failed:', err);
       }
     }
   }, [activeEvent, user]);
@@ -173,7 +174,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
       try {
         await deleteEvent(id);
       } catch (err) {
-        console.error('[EventContext] deleteEvent failed:', err);
+        logger.error('[EventContext] deleteEvent failed:', err);
       }
     }
   }, [activeEvent, user, handleSetActiveEvent]);

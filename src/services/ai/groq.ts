@@ -1,3 +1,4 @@
+import { logger } from '../../utils/logger';
 // Groq AI service — runs requests through our server-side API proxy with client-side graceful resilience
 // The GROQ_API_KEY is NEVER exposed to the browser
 
@@ -220,7 +221,7 @@ export async function generateEventPlan(
   try {
     return await callAI<AIPlanResult>('/ai/generate-plan', request, token);
   } catch (err) {
-    console.warn('[groq.ts] generateEventPlan proxy failed, using client fallback:', err);
+    logger.warn('[groq.ts] generateEventPlan proxy failed, using client fallback:', err);
     return generateClientSidePlan(request);
   }
 }
@@ -242,7 +243,7 @@ export async function sendChatMessage(
     }
     return generateClientSideAIResponse(lastMsg, eventContext);
   } catch (err) {
-    console.warn('[groq.ts] sendChatMessage proxy failed, using client-side resilient engine:', err);
+    logger.warn('[groq.ts] sendChatMessage proxy failed, using client-side resilient engine:', err);
     return generateClientSideAIResponse(lastMsg, eventContext);
   }
 }
@@ -289,52 +290,69 @@ export async function generateDecorIdeas(
   }
 }
 
+function isRecord(val: unknown): val is Record<string, unknown> {
+  return typeof val === 'object' && val !== null;
+}
+
+function readString(obj: unknown, key: string, fallback = ''): string {
+  if (isRecord(obj) && typeof obj[key] === 'string') {
+    return obj[key];
+  }
+  return fallback;
+}
+
+function readNumber(obj: unknown, key: string, fallback = 0): number {
+  if (isRecord(obj)) {
+    const val = Number(obj[key]);
+    if (!Number.isNaN(val)) return val;
+  }
+  return fallback;
+}
+
+function readEnum<T extends string>(obj: unknown, key: string, allowed: readonly T[], fallback: T): T {
+  if (isRecord(obj) && typeof obj[key] === 'string' && (allowed as readonly string[]).includes(obj[key])) {
+    return obj[key] as T;
+  }
+  return fallback;
+}
+
 // Validate a raw AI plan response into our typed schema
 export function validateAIPlan(raw: unknown): AIPlanResult {
-  if (!raw || typeof raw !== 'object') {
+  if (!isRecord(raw)) {
     throw new Error('Invalid AI response: expected object');
   }
-  const r = raw as Record<string, unknown>;
+
   return {
-    eventSummary: String(r.eventSummary ?? ''),
-    themeSuggestions: Array.isArray(r.themeSuggestions)
-      ? r.themeSuggestions.map(String)
+    eventSummary: readString(raw, 'eventSummary'),
+    themeSuggestions: Array.isArray(raw.themeSuggestions)
+      ? raw.themeSuggestions.map(String)
       : [],
-    tasks: Array.isArray(r.tasks)
-      ? r.tasks.map(t => ({
-          title: String((t as Record<string, unknown>).title ?? ''),
-          category: String((t as Record<string, unknown>).category ?? ''),
-          priority: (['high', 'medium', 'low'].includes(
-            String((t as Record<string, unknown>).priority)
-          )
-            ? String((t as Record<string, unknown>).priority)
-            : 'medium') as 'high' | 'medium' | 'low',
-          suggestedDueDate:
-            typeof (t as Record<string, unknown>).suggestedDueDate === 'string'
-              ? String((t as Record<string, unknown>).suggestedDueDate)
-              : null,
+    tasks: Array.isArray(raw.tasks)
+      ? raw.tasks.filter(isRecord).map(t => ({
+          title: readString(t, 'title'),
+          category: readString(t, 'category', 'Other'),
+          priority: readEnum(t, 'priority', ['high', 'medium', 'low'] as const, 'medium'),
+          suggestedDueDate: typeof t.suggestedDueDate === 'string' ? t.suggestedDueDate : null,
         }))
       : [],
-    budgetBreakdown: Array.isArray(r.budgetBreakdown)
-      ? r.budgetBreakdown.map(b => ({
-          category: String((b as Record<string, unknown>).category ?? ''),
-          estimatedAmount: Number((b as Record<string, unknown>).estimatedAmount ?? 0),
-          currency: String((b as Record<string, unknown>).currency ?? 'INR'),
-          notes: String((b as Record<string, unknown>).notes ?? ''),
+    budgetBreakdown: Array.isArray(raw.budgetBreakdown)
+      ? raw.budgetBreakdown.filter(isRecord).map(b => ({
+          category: readString(b, 'category', 'General'),
+          estimatedAmount: readNumber(b, 'estimatedAmount'),
+          currency: readString(b, 'currency', 'INR'),
+          notes: readString(b, 'notes'),
         }))
       : [],
-    milestones: Array.isArray(r.milestones)
-      ? r.milestones.map(m => ({
-          title: String((m as Record<string, unknown>).title ?? ''),
-          targetDate:
-            typeof (m as Record<string, unknown>).targetDate === 'string'
-              ? String((m as Record<string, unknown>).targetDate)
-              : null,
-          description: String((m as Record<string, unknown>).description ?? ''),
+    milestones: Array.isArray(raw.milestones)
+      ? raw.milestones.filter(isRecord).map(m => ({
+          title: readString(m, 'title'),
+          targetDate: typeof m.targetDate === 'string' ? m.targetDate : null,
+          description: readString(m, 'description'),
         }))
       : [],
-    recommendations: Array.isArray(r.recommendations)
-      ? r.recommendations.map(String)
+    recommendations: Array.isArray(raw.recommendations)
+      ? raw.recommendations.map(String)
       : [],
+    _model: typeof raw._model === 'string' ? raw._model : undefined,
   };
 }

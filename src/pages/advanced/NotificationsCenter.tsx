@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '../../utils/logger';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Calendar,
@@ -18,6 +19,7 @@ import {
   getEventTasks,
   getEventGuests,
 } from '../../services/firebase/firestore';
+import type { TaskItem, Guest } from '../../types';
 import { toast } from '../../components/ui';
 import './NotificationsCenter.css';
 
@@ -70,7 +72,7 @@ export function NotificationsCenter() {
       try {
         const stored = await getUserNotifications(user.uid);
         if (Array.isArray(stored)) {
-          stored.forEach((s: any) => {
+          (stored as Array<{ id: string; type?: NotifItem['type']; title?: string; body?: string; desc?: string; read?: boolean; createdAt?: { toDate?: () => Date } }>).forEach((s) => {
             liveItems.push({
               id: s.id,
               type: s.type || 'system',
@@ -82,7 +84,7 @@ export function NotificationsCenter() {
           });
         }
       } catch (notifErr) {
-        console.warn('[NotificationsCenter] User notifications load skipped:', notifErr);
+        logger.warn('[NotificationsCenter] User notifications load skipped:', notifErr);
       }
 
       // 2. Fetch event status tasks & guests if real event
@@ -94,13 +96,13 @@ export function NotificationsCenter() {
           ]);
 
           if (tasksRes.status === 'fulfilled' && Array.isArray(tasksRes.value)) {
-            const pendingTasks = tasksRes.value.filter((t: any) => !t.completed);
+            const pendingTasks = (tasksRes.value as unknown as TaskItem[]).filter((t) => !t.completed);
             if (pendingTasks.length > 0) {
               liveItems.push({
                 id: 'dyn-task-due',
                 type: 'task',
                 title: `${pendingTasks.length} Pending Tasks`,
-                desc: `"${pendingTasks[0].title}" and ${pendingTasks.length - 1} other tasks need attention for ${activeEventName}.`,
+                desc: `"${pendingTasks[0]?.title ?? 'Task'}" and ${pendingTasks.length - 1} other tasks need attention for ${activeEventName}.`,
                 time: 'Today',
                 unread: true,
               });
@@ -108,7 +110,7 @@ export function NotificationsCenter() {
           }
 
           if (guestsRes.status === 'fulfilled' && Array.isArray(guestsRes.value)) {
-            const pendingGuests = guestsRes.value.filter((g: any) => g.status === 'Pending');
+            const pendingGuests = (guestsRes.value as unknown as Guest[]).filter((g) => g.status === 'Pending');
             if (pendingGuests.length > 0) {
               liveItems.push({
                 id: 'dyn-rsvp-pending',
@@ -121,13 +123,13 @@ export function NotificationsCenter() {
             }
           }
         } catch (evErr) {
-          console.warn('[NotificationsCenter] Event notifications load skipped:', evErr);
+          logger.warn('[NotificationsCenter] Event notifications load skipped:', evErr);
         }
       }
 
       setItems(liveItems);
     } catch (err) {
-      console.warn('[NotificationsCenter] Error loading notifications:', err);
+      logger.warn('[NotificationsCenter] Error loading notifications:', err);
     } finally {
       clearTimeout(timer);
       setLoading(false);

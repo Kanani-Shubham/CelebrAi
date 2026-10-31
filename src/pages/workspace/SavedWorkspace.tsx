@@ -1,6 +1,7 @@
+import { logger } from '../../utils/logger';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, MoreVertical, Plus, Loader2, Store, BookOpen, Trash2 } from 'lucide-react';
+import { Plus, Loader2, Store, BookOpen, Trash2 } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { getSavedVendors, deleteVendor } from '../../services/firebase/firestore';
 import { toast } from '../../components/ui';
@@ -37,9 +38,9 @@ export function SavedWorkspace() {
     setLoading(true);
     try {
       const data = await getSavedVendors(eventId);
-      setSavedVendors((data || []) as SavedVendorItem[]);
+      setSavedVendors(((data || []) as unknown) as SavedVendorItem[]);
     } catch (err) {
-      console.warn('[SavedWorkspace] Error loading vendors:', err);
+      logger.warn('[SavedWorkspace] Error loading vendors:', err);
     } finally {
       setLoading(false);
     }

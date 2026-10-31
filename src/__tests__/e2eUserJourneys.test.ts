@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import {
   calculateTaskStatus,
-  validateTaskDueDate,
   aggregateTaskMetrics,
   calculateEventLifecycle,
 } from '../utils/taskCalculations';
 import { groupConversations } from '../pages/dashboard/AIAssistant';
+import type { ConversationRecord } from '../types';
 
 describe('CelebrAI End-to-End User Journey Workflows', () => {
   const REF_DATE = new Date(2026, 9, 30, 12, 0, 0); // Reference Date: Oct 30, 2026
@@ -99,13 +99,13 @@ describe('CelebrAI End-to-End User Journey Workflows', () => {
       const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
       const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-      const conversations = [
-        { id: 'c1', title: 'Decor Theme Ideas', updatedAt: now.toISOString() },
-        { id: 'c2', title: 'Catering Menu Review', updatedAt: yesterday.toISOString() },
-        { id: 'c3', title: 'Initial Budget Planning', updatedAt: lastWeek.toISOString() },
+      const conversations: ConversationRecord[] = [
+        { id: 'c1', userId: 'u1', title: 'Decor Theme Ideas', createdAt: now.toISOString(), updatedAt: now.toISOString() },
+        { id: 'c2', userId: 'u1', title: 'Catering Menu Review', createdAt: yesterday.toISOString(), updatedAt: yesterday.toISOString() },
+        { id: 'c3', userId: 'u1', title: 'Initial Budget Planning', createdAt: lastWeek.toISOString(), updatedAt: lastWeek.toISOString() },
       ];
 
-      const grouped = groupConversations(conversations as any);
+      const grouped = groupConversations(conversations);
       expect(grouped.today).toHaveLength(1);
       expect(grouped.yesterday).toHaveLength(1);
       expect(grouped.lastWeek).toHaveLength(1);

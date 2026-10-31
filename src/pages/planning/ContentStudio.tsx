@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { logger } from '../../utils/logger';
+import { useState } from 'react';
 import { Sparkles, Copy, Bookmark, RefreshCw, Check, Edit3 } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -42,7 +43,7 @@ export function ContentStudio() {
         setGeneratedText(res);
       }
     } catch (err) {
-      console.error('[ContentStudio] Generation failed:', err);
+      logger.error('[ContentStudio] Generation failed:', err);
       toast.error('Failed to generate copy: ' + (err as Error).message);
     } finally {
       setIsGenerating(false);

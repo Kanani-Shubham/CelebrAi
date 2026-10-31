@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronRight, Plus, Trash2, X, Loader2, UserCheck, Shield } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Plus, Trash2, X, Loader2 } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
 import { queryCollection, createDoc, deleteDocById } from '../../services/firebase/firestore';
-import { where, orderBy } from 'firebase/firestore';
+import { where } from 'firebase/firestore';
 import { toast } from '../../components/ui';
 import './TeamResponsibilities.css';
 

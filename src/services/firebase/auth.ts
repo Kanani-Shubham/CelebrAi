@@ -1,3 +1,4 @@
+import { logger } from '../../utils/logger';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -84,7 +85,7 @@ export async function syncUserRecord(user: User): Promise<void> {
       });
     }
   } catch (err) {
-    console.warn('[Auth] Failed to sync user record to Firestore:', err);
+    logger.warn('[Auth] Failed to sync user record to Firestore:', err);
   }
 }
 
@@ -163,7 +164,7 @@ export async function signInWithGoogle(): Promise<User> {
     await syncUserRecord(user);
     return user;
   } catch (err: unknown) {
-    console.error('[Auth] Google popup sign-in error:', err);
+    logger.error('[Auth] Google popup sign-in error:', err);
     throw err;
   } finally {
     isAuthInProgress = false;
@@ -221,7 +222,7 @@ export async function updateUserProfile(uid: string, data: Record<string, unknow
       try {
         await updateProfile(auth.currentUser, authUpdates);
       } catch (err) {
-        console.warn('[auth] Could not update auth profile directly:', err);
+        logger.warn('[auth] Could not update auth profile directly:', err);
       }
     }
   }
