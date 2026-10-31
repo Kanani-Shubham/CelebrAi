@@ -64,3 +64,4 @@ Thank you for your interest in contributing to CelebrAI! We welcome community co
 ## 🔒 Reporting Security Vulnerabilities
 
 Please do not report security vulnerabilities via public GitHub issues. Instead, consult [Docs/SECURITY.md](Docs/SECURITY.md) for direct, private disclosure instructions.
+

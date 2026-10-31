@@ -61,3 +61,4 @@ Comprehensive executive report scoring CelebrAI across the six official Hack2Ski
 - **Live Deployed Application**: [https://celebr-ai.netlify.app/](https://celebr-ai.netlify.app/)
 - **Instagram Reel**: [https://www.instagram.com/reel/DfJckDCIOv7/](https://www.instagram.com/reel/DfJckDCIOv7/)
 - **Lead Developer**: Shubham Kanani (`shubhamkanani.2006@gmail.com`)
+

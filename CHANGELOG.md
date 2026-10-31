@@ -31,3 +31,4 @@ All notable changes to CelebrAI are documented in this file. The format is based
 - Refactored `App.tsx` with production error boundaries, route grouping, and a universal 36-page quick directory drawer.
 - Isolated all AI API key requests to server-side endpoints (`server/api.js` and Netlify function `netlify/functions/api.js`).
 - Enforced strict repository hygiene by untracking and gitignoring `.env.example` and all credential templates.
+

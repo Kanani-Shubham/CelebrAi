@@ -4,7 +4,7 @@
 **Auditor:** Senior Full-Stack, Security & QA Engineering Evaluation  
 **Product:** CelebrAI — Next-Generation AI Event Planning Platform  
 **Target Submission:** Hack2Skill AI Hackathon (Challenge 5)  
-**Overall Readiness Status:** **Ready for Submission (Pending Demo Video & LinkedIn Placeholders)**  
+**Overall Readiness Status:** **Ready for Submission (Pending LinkedIn Post Placeholder)**  
 
 ---
 
@@ -57,18 +57,13 @@ The six official Hack2Skill evaluation criteria have been audited against actual
 
 ## 4. Outstanding Items Before Submission
 
-1. **Demo Video URL**: Record a 3-5 minute unlisted YouTube or Google Drive walkthrough demonstrating:
-   - Event creation wizard & AI plan generation.
-   - AI Mentor conversational planning.
-   - Budget allocation & task management.
-   - Public RSVP submission.
-   *Replace `[ADD_UNLISTED_YOUTUBE_OR_ACCESSIBLE_GOOGLE_DRIVE_URL]` in `README.md`, `BRIEF.md`, and `Docs/HACK2SKILL_SUBMISSION.md`.*
+1. **Demo Video & Walkthrough**: Confirmed and live at [`https://www.instagram.com/reel/DfJckDCIOv7/`](https://www.instagram.com/reel/DfJckDCIOv7/).
 2. **Public LinkedIn Post**: Publish a project update on LinkedIn highlighting CelebrAI with the demo link (`https://celebr-ai.netlify.app/`) and tag Hack2Skill.
    *Replace `[ADD_PUBLIC_LINKEDIN_POST_URL]` in documentation files.*
-3. **Instagram Reel**: URL already confirmed and documented: `https://www.instagram.com/reel/DfJckDCIOv7/`.
+3. **Instagram Reels Challenge**: URL confirmed and documented: `https://www.instagram.com/reel/DfJckDCIOv7/`.
 
 ---
 
 ## 5. Submission Readiness Conclusion
 
-CelebrAI's documentation and codebase are **Fully Ready for Hack2Skill Evaluation**, subject only to attaching the final demo video and LinkedIn post URLs. The codebase represents a genuine, high-quality, verified software system that demonstrates substantial engineering depth across all 6 evaluation criteria.
+CelebrAI's documentation and codebase are **Fully Ready for Hack2Skill Evaluation**, subject only to attaching the final LinkedIn post URL upon publishing. The codebase represents a genuine, high-quality, verified software system that demonstrates substantial engineering depth across all 6 evaluation criteria.

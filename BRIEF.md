@@ -71,6 +71,6 @@ CelebrAI includes all 36 feature screens accessible via direct routes or the per
 - **Live Netlify Demo**: [https://celebr-ai.netlify.app/](https://celebr-ai.netlify.app/)
 - **GitHub Repository**: [https://github.com/Kanani-Shubham/CelebrAi](https://github.com/Kanani-Shubham/CelebrAi)
 - **Instagram Reel**: [https://www.instagram.com/reel/DfJckDCIOv7/](https://www.instagram.com/reel/DfJckDCIOv7/)
-- **Demo Video**: `[ADD_UNLISTED_YOUTUBE_OR_ACCESSIBLE_GOOGLE_DRIVE_URL]`
+- **Demo Video**: [https://www.instagram.com/reel/DfJckDCIOv7/](https://www.instagram.com/reel/DfJckDCIOv7/)
 - **LinkedIn Post**: `[ADD_PUBLIC_LINKEDIN_POST_URL]`
 - **Lead Developer**: Shubham Kanani (`shubhamkanani.2006@gmail.com`)
