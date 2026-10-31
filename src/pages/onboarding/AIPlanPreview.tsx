@@ -1,3 +1,4 @@
+import type { EventItem } from '../../types';
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -50,7 +51,7 @@ export function AIPlanPreview() {
   const { user, idToken } = useAuth();
 
   const queryEventId = searchParams.get('eventId');
-  const [targetEvent, setTargetEvent] = useState<Record<string, unknown> | null>(null);
+  const [targetEvent, setTargetEvent] = useState<EventItem | Record<string, unknown> | null>(null);
 
   const [activeTab, setActiveTab] = useState<'overview' | 'tasks' | 'budget' | 'timeline'>('overview');
   const [plan, setPlan] = useState<AIPlanResult | null>(null);
@@ -96,7 +97,7 @@ export function AIPlanPreview() {
       }
 
       if (activeEvent) {
-        setTargetEvent(activeEvent as unknown as Record<string, unknown>);
+        setTargetEvent(activeEvent);
         return;
       }
 

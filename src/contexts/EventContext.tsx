@@ -44,7 +44,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
       try {
         const data = await getUserEvents(currentUid);
         if (ignore) return;
-        const evts = (data || []) as unknown as Event[];
+        const evts = data || [];
         setEvents(evts);
         localStorage.setItem('celebrai_events', JSON.stringify(evts));
 
@@ -91,7 +91,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const data = await getUserEvents(user.uid);
-      const evts = (data || []) as unknown as Event[];
+      const evts = data || [];
       setEvents(evts);
       localStorage.setItem('celebrai_events', JSON.stringify(evts));
 
@@ -122,7 +122,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
         status: 'active',
         tasksDone: 0,
         tasksTotal: 0,
-      } as unknown as Record<string, unknown>);
+      });
       finalId = docId;
     }
 

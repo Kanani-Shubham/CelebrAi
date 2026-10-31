@@ -1,3 +1,4 @@
+import type { Expense } from '../../../types';
 import React from 'react';
 import {
   Building2,
@@ -11,17 +12,7 @@ import {
   Package,
 } from 'lucide-react';
 
-export interface FirestoreExpense {
-  id: string;
-  vendorName: string;
-  title: string;
-  amount: number;
-  status: 'Paid' | 'Pending' | 'Overdue';
-  category: string;
-  date?: string;
-  notes?: string;
-  eventId: string;
-}
+export type FirestoreExpense = Expense;
 
 export const DEMO_EXPENSES: FirestoreExpense[] = [
   { id: 'exp-1', vendorName: 'Grand Palace Banquet', title: 'Venue booking advance', amount: 150000, status: 'Paid', category: 'Venue', eventId: 'evt-1' },

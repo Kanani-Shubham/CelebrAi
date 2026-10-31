@@ -25,7 +25,7 @@ export function AdminModeration() {
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'reports' | 'settings'>('overview');
 
   // Strict server-side authorization check: user must have verified admin role
-  const isAdmin = (profile as unknown as { role?: string })?.role === 'admin' ||
+  const isAdmin = profile?.role === 'admin' ||
     user?.email?.endsWith('@celebrai.internal') ||
     user?.email === 'admin@celebrai.com';
 

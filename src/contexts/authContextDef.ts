@@ -1,17 +1,8 @@
 import { createContext } from 'react';
 import type { User } from 'firebase/auth';
+import type { UserProfile } from '../types';
 
-export type UserProfile = {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
-  photoURL?: string | null;
-  subscription?: string;
-  currency?: string;
-  language?: string;
-  planningStyle?: string;
-  avatarUrl?: string;
-};
+export type { UserProfile };
 
 export type AuthContextType = {
   user: User | null;

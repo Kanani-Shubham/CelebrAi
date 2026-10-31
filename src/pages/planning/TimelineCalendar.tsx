@@ -38,7 +38,7 @@ export function TimelineCalendar() {
       }
       try {
         const items: TimelineItem[] = [];
-        const taskDocs = (await getEventTasks(eventId)) as unknown as { id: string; title?: string; dueDate?: string; priority?: string }[];
+        const taskDocs = await getEventTasks(eventId);
         if (ignore) return;
         taskDocs.forEach(t => {
           if (t.dueDate) {
@@ -50,7 +50,7 @@ export function TimelineCalendar() {
             });
           }
         });
-        const milestones = (activeEvent as { milestones?: { targetDate?: string; title: string }[] }).milestones;
+        const milestones = activeEvent.milestones;
         if (Array.isArray(milestones)) {
           milestones.forEach((m, idx) => {
             items.push({

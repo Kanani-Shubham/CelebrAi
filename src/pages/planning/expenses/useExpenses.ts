@@ -34,7 +34,7 @@ export function useExpenses(eventId?: string) {
         const data = await getEventExpenses(eventId);
         if (ignore) return;
         if (data && data.length > 0) {
-          setExpenses(data as unknown as FirestoreExpense[]);
+          setExpenses(data);
         } else {
           setExpenses(DEMO_EXPENSES);
         }
@@ -53,7 +53,7 @@ export function useExpenses(eventId?: string) {
     if (!eventId) return;
     try {
       const data = await getEventExpenses(eventId);
-      setExpenses(data && data.length > 0 ? (data as unknown as FirestoreExpense[]) : DEMO_EXPENSES);
+      setExpenses(data && data.length > 0 ? data : DEMO_EXPENSES);
     } catch (err) {
       logger.error('[ExpenseManager] Reload failed:', err);
     }

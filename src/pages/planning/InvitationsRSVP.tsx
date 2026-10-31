@@ -30,7 +30,7 @@ export function InvitationsRSVP() {
         return;
       }
       try {
-        const guestDocs = (await getEventGuests(eventId)) as unknown as { status?: string; partySize?: number }[];
+        const guestDocs = await getEventGuests(eventId);
         if (ignore) return;
         let acc = 0;
         let pen = 0;

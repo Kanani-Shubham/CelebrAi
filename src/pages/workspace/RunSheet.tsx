@@ -55,7 +55,7 @@ export function RunSheet() {
         ]);
         if (ignore) return;
         if (data && data.length > 0) {
-          setItems(data as unknown as RunSheetItem[]);
+          setItems(data.map(d => ({ id: d.id, time: String(d.time || ''), title: String(d.title || ''), location: String(d.location || ''), duration: String(d.duration || ''), date: String(d.date || 'Event Day') })));
         } else {
           setItems(DEFAULT_ITEMS);
         }

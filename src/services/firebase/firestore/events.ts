@@ -7,16 +7,18 @@ import {
 } from 'firebase/firestore';
 import { db, auth } from '../config';
 import { queryCollection, updateDocById, deleteDocById, toMillis } from './base';
+import { fromFirestoreEvent, type EventItem } from '../../../types';
 import type { AIPlanResult } from '../../ai/groq';
 
-export async function getUserEvents(uid: string) {
+export async function getUserEvents(uid: string): Promise<EventItem[]> {
   const docs = await queryCollection('events', [
     where('ownerId', '==', uid),
   ]);
-  return docs.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
+  const sorted = docs.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
+  return sorted.map((d) => fromFirestoreEvent(d.id, d));
 }
 
-export async function createEvent(ownerId: string, data: Record<string, unknown>) {
+export async function createEvent(ownerId: string, data: Record<string, unknown> | Partial<EventItem>) {
   const eventCol = collection(db, 'events');
   const docRef = doc(eventCol);
   const now = serverTimestamp();
@@ -44,7 +46,7 @@ export async function deleteEvent(eventId: string) {
 
 export async function saveApprovedEventPlan(
   userId: string,
-  eventData: Record<string, unknown>,
+  eventData: Record<string, unknown> | EventItem,
   plan: AIPlanResult
 ): Promise<string> {
   const batch = writeBatch(db);

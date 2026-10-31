@@ -1,3 +1,4 @@
+import type { EventItem } from '../../../types';
 import React, { useState } from 'react';
 import type { AIPlanResult } from '../../../services/ai/groq';
 import type { TaskItem, BudgetItem, MilestoneItem } from './types';
@@ -6,8 +7,8 @@ import { toast } from '../../../components/ui/toast';
 interface UsePlanModalsStateProps {
   plan: AIPlanResult | null;
   setPlan: React.Dispatch<React.SetStateAction<AIPlanResult | null>>;
-  targetEvent: Record<string, unknown> | null;
-  setTargetEvent: React.Dispatch<React.SetStateAction<Record<string, unknown> | null>>;
+  targetEvent: EventItem | Record<string, unknown> | null;
+  setTargetEvent: React.Dispatch<React.SetStateAction<EventItem | Record<string, unknown> | null>>;
 }
 
 export function usePlanModalsState({

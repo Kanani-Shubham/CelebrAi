@@ -27,7 +27,7 @@ export function useGuests(eventId?: string, user?: { uid: string } | null) {
       try {
         const data = await getEventGuests(eventId);
         if (!ignore) {
-          setGuests(((data || []) as unknown) as FirestoreGuest[]);
+          setGuests(data || []);
         }
       } catch (err) {
         _setError((err as Error).message);
@@ -44,7 +44,7 @@ export function useGuests(eventId?: string, user?: { uid: string } | null) {
     if (!eventId) return;
     try {
       const data = await getEventGuests(eventId);
-      setGuests(((data || []) as unknown) as FirestoreGuest[]);
+      setGuests(data || []);
     } catch (err) {
       logger.error('[GuestManagement] Reload failed:', err);
     }

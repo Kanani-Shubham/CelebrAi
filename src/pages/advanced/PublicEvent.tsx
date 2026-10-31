@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { MapPin, Heart } from 'lucide-react';
 import { useEvent } from '../../contexts/useEvent';
 import { getDocById } from '../../services/firebase/firestore';
+import { fromFirestoreEvent, type EventItem } from '../../types';
 import { formatDisplayDate, calculateDaysCountdown } from '../../utils/dateUtils';
 import './PublicEvent.css';
 
@@ -12,7 +13,7 @@ export function PublicEvent() {
   const { activeEvent } = useEvent();
 
   const queryEventId = searchParams.get('eventId');
-  const [eventData, setEventData] = useState<Record<string, unknown> | null>(null);
+  const [eventData, setEventData] = useState<EventItem | null>(null);
   const [activeTab, setActiveTab] = useState<'about' | 'schedule' | 'gallery' | 'travel'>('about');
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export function PublicEvent() {
         try {
           const doc = await getDocById('events', queryEventId);
           if (doc) {
-            setEventData(doc);
+            setEventData(fromFirestoreEvent(queryEventId, doc));
             return;
           }
         } catch {
@@ -29,7 +30,7 @@ export function PublicEvent() {
         }
       }
       if (activeEvent) {
-        setEventData(activeEvent as unknown as Record<string, unknown>);
+        setEventData(activeEvent);
       }
     }
     resolveEvent();

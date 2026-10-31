@@ -34,7 +34,8 @@ export function TaskModal({
     if (editingTask) {
       setTitle(editingTask.title || '');
       setCategory(editingTask.category || 'Venue');
-      setPriority(editingTask.priority || 'Medium');
+      const rawP = (editingTask.priority || 'Medium').toLowerCase();
+      setPriority(rawP === 'high' ? 'High' : rawP === 'low' ? 'Low' : 'Medium');
       setDueDate(editingTask.dueDate || '');
     } else {
       setTitle('');

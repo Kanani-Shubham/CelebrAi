@@ -39,7 +39,7 @@ export function useTasks(
       try {
         const data = await getEventTasks(eventId);
         if (ignore) return;
-        const loadedTasks = data as unknown as FirestoreTask[];
+        const loadedTasks = data;
         setTasks(loadedTasks);
         if (user && activeEvent && !activeEvent.id.startsWith('evt-')) {
           runTaskAndEventAudit({
@@ -62,7 +62,7 @@ export function useTasks(
     if (!eventId) return;
     try {
       const data = await getEventTasks(eventId);
-      setTasks(data as unknown as FirestoreTask[]);
+      setTasks(data);
     } catch (err) {
       setError((err as Error).message || 'Failed to load tasks');
     }

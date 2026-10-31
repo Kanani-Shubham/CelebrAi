@@ -1,22 +1,11 @@
-import { logger } from '../../utils/logger';
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Wallet,
-  CheckCircle2,
-  Users,
-  MailCheck,
   Store,
   Palette,
   PieChart,
   UserCheck,
-  Check,
-  Plus,
-  Sparkles,
-  Calendar,
   Loader2,
-  AlertTriangle,
-  Clock,
 } from 'lucide-react';
 import { useEvent } from '../../contexts/useEvent';
 import { useAuth } from '../../contexts/useAuth';
@@ -26,28 +15,28 @@ import {
   getEventExpenses,
   getEventGuests,
 } from '../../services/firebase/firestore';
-import { calculateDaysCountdown, formatDisplayDate } from '../../utils/dateUtils';
+import type { TaskItem } from '../../types';
+import { calculateDaysCountdown } from '../../utils/dateUtils';
 import {
   calculateTaskStatus,
   aggregateTaskMetrics,
 } from '../../utils/taskCalculations';
 import { runTaskAndEventAudit } from '../../services/notifications/notificationEngine';
-import './HomeDashboard.css';
+import { logger } from '../../utils/logger';
 
-interface DashboardTask {
-  id: string;
-  title: string;
-  dueDate?: string;
-  priority?: string;
-  completed: boolean;
-}
+import { DashboardEmptyState } from './components/DashboardEmptyState';
+import { DashboardCountdownHero } from './components/DashboardCountdownHero';
+import { DashboardMetricsGrid } from './components/DashboardMetricsGrid';
+import { DashboardFocusTasks } from './components/DashboardFocusTasks';
+
+import './HomeDashboard.css';
 
 export function HomeDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { activeEvent, loading: eventLoading } = useEvent();
 
-  const [tasks, setTasks] = useState<DashboardTask[]>([]);
+  const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [tasksTotal, setTasksTotal] = useState(0);
   const [totalSpent, setTotalSpent] = useState(0);
   const [guestCount, setGuestCount] = useState(0);
@@ -71,7 +60,7 @@ export function HomeDashboard() {
       }
 
       try {
-        const taskDocs = (await getEventTasks(eventId)) as unknown as DashboardTask[];
+        const taskDocs = await getEventTasks(eventId);
         if (ignore) return;
         setTasks(taskDocs);
         setTasksTotal(taskDocs.length);
@@ -84,12 +73,12 @@ export function HomeDashboard() {
           }).catch(err => logger.warn('[HomeDashboard] Audit check skipped:', err));
         }
 
-        const expenseDocs = (await getEventExpenses(eventId)) as unknown as { amount?: number; status?: string }[];
+        const expenseDocs = await getEventExpenses(eventId);
         if (ignore) return;
         const spent = expenseDocs.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
         setTotalSpent(spent);
 
-        const guestDocs = (await getEventGuests(eventId)) as unknown as { status?: string; partySize?: number }[];
+        const guestDocs = await getEventGuests(eventId);
         if (ignore) return;
         const totalGuests = guestDocs.reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
         const confirmedRsvps = guestDocs
@@ -111,43 +100,38 @@ export function HomeDashboard() {
     };
   }, [eventId, user, activeEvent]);
 
-  const toggleTask = async (task: DashboardTask) => {
+  const toggleTask = async (task: TaskItem) => {
     const newCompleted = !task.completed;
     setTasks(prev =>
       prev.map(t => (t.id === task.id ? { ...t, completed: newCompleted } : t))
     );
 
     try {
-      await updateTask(task.id, { completed: newCompleted });
+      if (eventId && !eventId.startsWith('evt-demo') && !eventId.startsWith('demo-')) {
+        await updateTask(task.id, { completed: newCompleted });
+      }
     } catch (err) {
-      logger.error('[HomeDashboard] Failed to toggle task:', err);
-      // Revert
+      logger.error('[HomeDashboard] Error toggling task:', err);
       setTasks(prev =>
         prev.map(t => (t.id === task.id ? { ...t, completed: task.completed } : t))
       );
     }
   };
 
-  // Accurate countdown calculation
   const countdown = useMemo(() => {
     return calculateDaysCountdown(activeEvent?.eventDate || activeEvent?.date);
   }, [activeEvent?.eventDate, activeEvent?.date]);
 
-  // Dynamic task metrics and intelligent focus list
   const taskMetrics = useMemo(() => aggregateTaskMetrics(tasks), [tasks]);
 
   const focusTasks = useMemo(() => {
     return [...tasks].sort((a, b) => {
-      // 1. Incomplete before completed
       if (a.completed !== b.completed) return a.completed ? 1 : -1;
-
-      // 2. Overdue first, then Due Today, then Pending
       const statusA = calculateTaskStatus(a);
       const statusB = calculateTaskStatus(b);
       const score = (s: string) => (s === 'Overdue' ? 0 : s === 'Due Today' ? 1 : 2);
       if (score(statusA) !== score(statusB)) return score(statusA) - score(statusB);
 
-      // 3. Earliest due date first
       if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate);
       if (a.dueDate) return -1;
       if (b.dueDate) return 1;
@@ -166,130 +150,24 @@ export function HomeDashboard() {
     );
   }
 
-  // Genuine Empty State when user has no active event
   if (!activeEvent) {
-    return (
-      <div className="home-dashboard">
-        <div className="hero-countdown-card hd-hero-card">
-          <div>
-            <span className="hd-hero-subtitle">
-              Welcome to CelebrAI{user?.displayName ? `, ${user.displayName}` : ''}
-            </span>
-            <h1 className="font-serif hd-hero-title">
-              Let’s Plan Your Next Celebration
-            </h1>
-            <p className="hd-hero-desc">
-              You don’t have an active celebration yet. Create an event manually or let our AI assistant build a tailored master plan, budget breakdown, and checklist in seconds.
-            </p>
-          </div>
-
-          <div className="hd-hero-actions">
-            <button className="btn btn-primary hd-hero-btn"
-              onClick={() => navigate('/create-event')}
-            >
-              <Plus size={18} />
-              <span>Create Your First Event</span>
-            </button>
-            <button className="btn btn-secondary hd-hero-btn"
-              onClick={() => navigate('/create-event')}
-            >
-              <Sparkles size={18} className="text-violet" />
-              <span>AI Wizard Planning</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Quick access tiles */}
-        <div className="quick-action-tiles mt-4">
-          <button className="action-tile" onClick={() => navigate('/events')}>
-            <div className="tile-icon-bg"><Calendar size={20} /></div>
-            <span>All Events</span>
-          </button>
-          <button className="action-tile" onClick={() => navigate('/ai')}>
-            <div className="tile-icon-bg"><Sparkles size={20} /></div>
-            <span>AI Assistant</span>
-          </button>
-          <button className="action-tile" onClick={() => navigate('/vendors')}>
-            <div className="tile-icon-bg"><Store size={20} /></div>
-            <span>Vendors</span>
-          </button>
-          <button className="action-tile" onClick={() => navigate('/decor')}>
-            <div className="tile-icon-bg"><Palette size={20} /></div>
-            <span>Decor Ideas</span>
-          </button>
-        </div>
-      </div>
-    );
+    return <DashboardEmptyState displayName={user?.displayName} />;
   }
 
   return (
     <div className="home-dashboard">
       {/* Hero Banner with real active event */}
-      <div className="hero-countdown-card">
-        <div className="countdown-content">
-          <span className="days-number">
-            {countdown.days !== null ? Math.abs(countdown.days) : '--'}
-          </span>
-          <span className="days-label">
-            {countdown.isToday ? (
-              <>It's Celebration Day!<br />{activeEvent.eventName}</>
-            ) : countdown.isPast ? (
-              <>Days Since<br />{activeEvent.eventName}</>
-            ) : (
-              <>Days Until<br />{activeEvent.eventName}</>
-            )}
-          </span>
-        </div>
-        <div className="countdown-img-wrap">
-          <img
-            src={activeEvent.coverImage || 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80'}
-            alt={activeEvent.eventName}
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80';
-            }}
-          />
-        </div>
-      </div>
+      <DashboardCountdownHero event={activeEvent} countdown={countdown} />
 
       {/* 4 Stat Badges computed from real records */}
-      <div className="stats-badges-grid">
-        <div className="stat-badge-item" onClick={() => navigate('/budget')}>
-          <div className="stat-icon-wrap icon-budget">
-            <Wallet size={16} />
-          </div>
-          <span className="stat-val">₹{budgetLeft.toLocaleString('en-IN')}</span>
-          <span className="stat-sub">Budget Left</span>
-        </div>
-
-        <div className="stat-badge-item" onClick={() => navigate('/tasks')}>
-          <div className="stat-icon-wrap icon-tasks">
-            <CheckCircle2 size={16} />
-          </div>
-          <span className="stat-val">{taskMetrics.completed}/{tasks.length || tasksTotal}</span>
-          <span className="stat-sub">Tasks Done</span>
-          {taskMetrics.overdue > 0 && (
-            <span className="stat-overdue-alert">
-              <AlertTriangle size={10} /> {taskMetrics.overdue} overdue
-            </span>
-          )}
-        </div>
-
-        <div className="stat-badge-item" onClick={() => navigate('/guests')}>
-          <div className="stat-icon-wrap icon-guests">
-            <Users size={16} />
-          </div>
-          <span className="stat-val">{guestCount}</span>
-          <span className="stat-sub">Guests</span>
-        </div>
-
-        <div className="stat-badge-item" onClick={() => navigate('/guests')}>
-          <div className="stat-icon-wrap icon-rsvp">
-            <MailCheck size={16} />
-          </div>
-          <span className="stat-val">{rsvpCount}</span>
-          <span className="stat-sub">RSVP</span>
-        </div>
-      </div>
+      <DashboardMetricsGrid
+        budgetLeft={budgetLeft}
+        completedTasks={taskMetrics.completed}
+        totalTasks={tasks.length || tasksTotal}
+        overdueTasks={taskMetrics.overdue}
+        guestCount={guestCount}
+        rsvpCount={rsvpCount}
+      />
 
       {/* 4 Quick Action Square Tiles */}
       <div className="quick-action-tiles">
@@ -323,59 +201,11 @@ export function HomeDashboard() {
       </div>
 
       {/* Urgent Tasks Section */}
-      <div className="dashboard-section">
-        <div className="section-head-row">
-          <h2 className="section-title font-serif">Tasks to Focus On</h2>
-          <button className="section-link" onClick={() => navigate('/tasks')}>
-            View All ({tasks.length || tasksTotal})
-          </button>
-        </div>
-
-        <div className="urgent-tasks-card">
-          {focusTasks.length === 0 ? (
-            <div className="hd-empty-box">
-              <p className="text-sm mb-3">No pending tasks recorded for this celebration.</p>
-              <button className="btn btn-secondary btn-sm rounded-full"
-                onClick={() => navigate('/tasks')}
-              >
-                <Plus size={14} /> Add First Task
-              </button>
-            </div>
-          ) : (
-            focusTasks.slice(0, 3).map(task => {
-              const status = calculateTaskStatus(task);
-              return (
-                <div
-                  key={task.id}
-                  className={`urgent-task-item ${task.completed ? 'completed' : ''} status-${status.toLowerCase().replace(/\s+/g, '-')}`}
-                  onClick={() => toggleTask(task)}
-                >
-                  <div className={`task-check-circle ${task.completed ? 'checked' : ''}`}>
-                    {task.completed && <Check size={12} strokeWidth={3} />}
-                  </div>
-                  <div className="task-info">
-                    <span className="task-title-text">{task.title}</span>
-                    <div className="task-meta">
-                      <span className={`task-status-pill pill-${status.toLowerCase().replace(/\s+/g, '-')}`}>
-                        {status === 'Overdue' && <AlertTriangle size={10} />}
-                        {status === 'Due Today' && <Clock size={10} />}
-                        {status === 'Completed' && <Check size={10} />}
-                        <span>{status}</span>
-                      </span>
-                      {task.dueDate && <span>Due: {formatDisplayDate(task.dueDate)}</span>}
-                      {task.priority && (
-                        <span className={`task-priority-tag priority-${task.priority.toLowerCase()}`}>
-                          {task.priority}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-      </div>
+      <DashboardFocusTasks
+        tasks={focusTasks}
+        totalTasksCount={tasks.length || tasksTotal}
+        onToggleTask={toggleTask}
+      />
     </div>
   );
 }

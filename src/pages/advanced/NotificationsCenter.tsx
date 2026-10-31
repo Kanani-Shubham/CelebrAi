@@ -19,7 +19,6 @@ import {
   getEventTasks,
   getEventGuests,
 } from '../../services/firebase/firestore';
-import type { TaskItem, Guest } from '../../types';
 import { toast } from '../../components/ui/toast';
 import './NotificationsCenter.css';
 
@@ -84,7 +83,7 @@ export function NotificationsCenter() {
             ]);
 
             if (tasksRes.status === 'fulfilled' && Array.isArray(tasksRes.value)) {
-              const pendingTasks = (tasksRes.value as unknown as TaskItem[]).filter((t) => !t.completed);
+              const pendingTasks = tasksRes.value.filter((t) => !t.completed);
               if (pendingTasks.length > 0) {
                 liveItems.push({
                   id: 'dyn-task-due',
@@ -98,7 +97,7 @@ export function NotificationsCenter() {
             }
 
             if (guestsRes.status === 'fulfilled' && Array.isArray(guestsRes.value)) {
-              const pendingGuests = (guestsRes.value as unknown as Guest[]).filter((g) => g.status === 'Pending');
+              const pendingGuests = guestsRes.value.filter((g) => g.status === 'Pending');
               if (pendingGuests.length > 0) {
                 liveItems.push({
                   id: 'dyn-rsvp-pending',

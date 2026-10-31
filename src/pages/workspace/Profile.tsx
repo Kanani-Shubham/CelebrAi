@@ -41,7 +41,7 @@ export function Profile() {
   const name = user?.displayName || profile?.displayName || 'Celebration Host';
   const email = user?.email || profile?.email || 'No email attached';
   const photo = avatarUrl || user?.photoURL || profile?.photoURL || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80';
-  const phone = user?.phoneNumber || (profile as unknown as { phone?: string })?.phone || 'Not provided';
+  const phone = user?.phoneNumber || profile?.phone || 'Not provided';
   const isVerified = user?.emailVerified;
 
   const handleCameraClick = (e: React.MouseEvent) => {

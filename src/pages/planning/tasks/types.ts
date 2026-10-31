@@ -1,15 +1,8 @@
-export interface FirestoreTask {
-  id: string;
-  title: string;
-  dueDate?: string | null;
-  category: string;
-  priority: 'High' | 'Medium' | 'Low';
-  completed: boolean;
+import type { TaskItem } from '../../../types';
+
+export type FirestoreTask = TaskItem & {
   completedAt?: unknown;
-  eventId: string;
-  createdBy?: string;
-  createdAt?: unknown;
-}
+};
 
 export const CATEGORIES = [
   'Venue',

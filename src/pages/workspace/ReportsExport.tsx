@@ -49,7 +49,7 @@ export function ReportsExport() {
       const safeName = (activeEvent?.eventName || 'Celebration').replace(/[^a-zA-Z0-9]/g, '_');
 
       if (repId === 'rep-tasks') {
-        const tasks = (await getEventTasks(eventId)) as { title?: string; category?: string; priority?: string; dueDate?: string; completed?: boolean }[];
+        const tasks = await getEventTasks(eventId);
         const rows = [
           ['Title', 'Category', 'Priority', 'Due Date', 'Status'],
           ...tasks.map(t => [
@@ -64,7 +64,7 @@ export function ReportsExport() {
         downloadFile(csv, `${safeName}_Tasks.csv`, 'text/csv');
         toast.success(`Exported ${tasks.length} task records`);
       } else if (repId === 'rep-budget') {
-        const expenses = (await getEventExpenses(eventId)) as { title?: string; vendorName?: string; category?: string; amount?: number; status?: string; date?: string }[];
+        const expenses = await getEventExpenses(eventId);
         const rows = [
           ['Item', 'Vendor', 'Category', 'Amount (INR)', 'Status', 'Date'],
           ...expenses.map(e => [
@@ -80,7 +80,7 @@ export function ReportsExport() {
         downloadFile(csv, `${safeName}_Budget_Expenses.csv`, 'text/csv');
         toast.success(`Exported ${expenses.length} expense records`);
       } else if (repId === 'rep-guests') {
-        const guests = (await getEventGuests(eventId)) as { name?: string; partySize?: number; dietary?: string; status?: string; phone?: string; email?: string }[];
+        const guests = await getEventGuests(eventId);
         const rows = [
           ['Guest Name', 'Party Size', 'Dietary', 'RSVP Status', 'Phone', 'Email'],
           ...guests.map(g => [

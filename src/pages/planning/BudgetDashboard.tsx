@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useEvent } from '../../contexts/useEvent';
 import { getEventExpenses } from '../../services/firebase/firestore';
+import type { Expense } from '../../types';
 import './BudgetDashboard.css';
 
 interface CategoryTheme {
@@ -111,7 +112,7 @@ export function BudgetDashboard() {
   const navigate = useNavigate();
   const { activeEvent } = useEvent();
 
-  const [expenses, setExpenses] = useState<{ amount: number; category: string; status: string }[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
 
   const eventId = activeEvent?.id;
@@ -129,7 +130,7 @@ export function BudgetDashboard() {
       try {
         const data = await getEventExpenses(eventId);
         if (!ignore) {
-          setExpenses((data || []) as unknown as { amount: number; category: string; status: string }[]);
+          setExpenses(data || []);
         }
       } catch (err) {
         logger.warn('[BudgetDashboard] Error loading expenses:', err);

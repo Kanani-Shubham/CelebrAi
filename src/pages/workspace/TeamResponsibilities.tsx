@@ -51,7 +51,7 @@ export function TeamResponsibilities() {
         ]);
         if (ignore) return;
         if (data && data.length > 0) {
-          setTeam(data as unknown as TeamMember[]);
+          setTeam(data.map(d => ({ id: d.id, name: String(d.name || ''), role: String(d.role || ''), tasksCount: Number(d.tasksCount) || 0, avatar: String(d.avatar || ''), permission: (d.permission as TeamMember['permission']) || 'View only' })));
         } else {
           setTeam(DEFAULT_TEAM);
         }
