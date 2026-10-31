@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { toast } from '../../../components/ui';
+import { toast } from '../../../components/ui/toast';
 import { validateTaskDueDate } from '../../../utils/taskCalculations';
 import { CATEGORIES, type FirestoreTask } from './types';
 
@@ -28,7 +28,9 @@ export function TaskModal({
   const [dueDate, setDueDate] = useState('');
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
+  const [prevTask, setPrevTask] = useState(editingTask);
+  if (editingTask !== prevTask) {
+    setPrevTask(editingTask);
     if (editingTask) {
       setTitle(editingTask.title || '');
       setCategory(editingTask.category || 'Venue');
@@ -40,7 +42,7 @@ export function TaskModal({
       setPriority('Medium');
       setDueDate('');
     }
-  }, [editingTask, isOpen]);
+  }
 
   if (!isOpen) return null;
 

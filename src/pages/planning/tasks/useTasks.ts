@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { logger } from '../../../utils/logger';
-import { toast } from '../../../components/ui';
+import { toast } from '../../../components/ui/toast';
 import {
   getEventTasks,
   createTask,
@@ -13,51 +13,60 @@ import {
   type TaskStatus,
 } from '../../../utils/taskCalculations';
 import { runTaskAndEventAudit } from '../../../services/notifications/notificationEngine';
-import type { EventData } from '../../../data/mockData';
+import type { EventItem } from '../../../types';
 import type { FirestoreTask } from './types';
 
 export function useTasks(
   eventId?: string,
   user?: { uid: string } | null,
-  activeEvent?: EventData | null
+  activeEvent?: EventItem | null
 ) {
   const [tasks, setTasks] = useState<FirestoreTask[]>([]);
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const loadTasks = useCallback(async () => {
-    if (!eventId) {
-      setTasks([]);
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await getEventTasks(eventId);
-      const loadedTasks = data as unknown as FirestoreTask[];
-      setTasks(loadedTasks);
-
-      if (user && activeEvent && !activeEvent.id.startsWith('evt-')) {
-        runTaskAndEventAudit({
-          userId: user.uid,
-          event: activeEvent,
-          tasks: loadedTasks,
-        }).catch(err => logger.warn('[TodoList] Audit trigger skipped:', err));
+  useEffect(() => {
+    let ignore = false;
+    async function fetchTasks() {
+      if (!eventId) {
+        if (!ignore) {
+          setTasks([]);
+          setLoading(false);
+        }
+        return;
       }
-    } catch (err) {
-      const msg = (err as Error).message || 'Failed to load tasks';
-      setError(msg);
-      logger.error('[TodoList] Error loading tasks:', err);
-    } finally {
-      setLoading(false);
+      try {
+        const data = await getEventTasks(eventId);
+        if (ignore) return;
+        const loadedTasks = data as unknown as FirestoreTask[];
+        setTasks(loadedTasks);
+        if (user && activeEvent && !activeEvent.id.startsWith('evt-')) {
+          runTaskAndEventAudit({
+            userId: user.uid,
+            event: activeEvent,
+            tasks: loadedTasks,
+          }).catch(err => logger.warn('[TodoList] Audit trigger skipped:', err));
+        }
+      } catch (err) {
+        if (!ignore) setError((err as Error).message || 'Failed to load tasks');
+      } finally {
+        if (!ignore) setLoading(false);
+      }
     }
+    void fetchTasks();
+    return () => { ignore = true; };
   }, [eventId, user, activeEvent]);
 
-  useEffect(() => {
-    loadTasks();
-  }, [loadTasks]);
+  const loadTasks = useCallback(async () => {
+    if (!eventId) return;
+    try {
+      const data = await getEventTasks(eventId);
+      setTasks(data as unknown as FirestoreTask[]);
+    } catch (err) {
+      setError((err as Error).message || 'Failed to load tasks');
+    }
+  }, [eventId]);
 
   const metrics = useMemo(() => aggregateTaskMetrics(tasks), [tasks]);
 

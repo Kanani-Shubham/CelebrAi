@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { MapPin, Heart } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
 import { getDocById } from '../../services/firebase/firestore';
 import { formatDisplayDate, calculateDaysCountdown } from '../../utils/dateUtils';
 import './PublicEvent.css';

@@ -1,11 +1,11 @@
 import { logger } from '../../utils/logger';
 import { useState } from 'react';
 import { Sparkles, Copy, Bookmark, RefreshCw, Check, Edit3 } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
-import { useAuth } from '../../contexts/AuthContext';
+import { useEvent } from '../../contexts/useEvent';
+import { useAuth } from '../../contexts/useAuth';
 import { generateInvitationText } from '../../services/ai/groq';
 import { updateEvent } from '../../services/firebase/firestore';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './ContentStudio.css';
 
 export function ContentStudio() {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { logger } from '../../../utils/logger';
-import { toast } from '../../../components/ui';
+import { toast } from '../../../components/ui/toast';
 import {
   getEventExpenses,
   createExpense,
@@ -16,37 +16,48 @@ import {
 export function useExpenses(eventId?: string) {
   const [expenses, setExpenses] = useState<FirestoreExpense[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, _setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<'All' | 'Paid' | 'Pending' | 'Overdue'>('All');
 
-  const loadExpenses = useCallback(async () => {
-    if (!eventId) {
-      setExpenses([]);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await getEventExpenses(eventId);
-      if (data && data.length > 0) {
-        setExpenses(data as unknown as FirestoreExpense[]);
-      } else {
-        setExpenses(DEMO_EXPENSES);
+  useEffect(() => {
+    let ignore = false;
+    async function fetchExpenses() {
+      if (!eventId) {
+        if (!ignore) {
+          setExpenses([]);
+          setLoading(false);
+        }
+        return;
       }
-    } catch (err) {
-      logger.error('[ExpenseManager] Error loading expenses:', err);
-      setExpenses(DEMO_EXPENSES);
-    } finally {
-      setLoading(false);
+      try {
+        const data = await getEventExpenses(eventId);
+        if (ignore) return;
+        if (data && data.length > 0) {
+          setExpenses(data as unknown as FirestoreExpense[]);
+        } else {
+          setExpenses(DEMO_EXPENSES);
+        }
+      } catch (err) {
+        logger.error('[ExpenseManager] Error loading expenses:', err);
+        if (!ignore) setExpenses(DEMO_EXPENSES);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
     }
+    void fetchExpenses();
+    return () => { ignore = true; };
   }, [eventId]);
 
-  useEffect(() => {
-    loadExpenses();
-  }, [loadExpenses]);
+  const loadExpenses = useCallback(async () => {
+    if (!eventId) return;
+    try {
+      const data = await getEventExpenses(eventId);
+      setExpenses(data && data.length > 0 ? (data as unknown as FirestoreExpense[]) : DEMO_EXPENSES);
+    } catch (err) {
+      logger.error('[ExpenseManager] Reload failed:', err);
+    }
+  }, [eventId]);
 
   const summary = useMemo(() => calculateExpenseSummary(expenses), [expenses]);
 

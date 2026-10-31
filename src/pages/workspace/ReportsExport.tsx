@@ -1,13 +1,17 @@
+function getCurrentTimestamp(): string {
+  return getCurrentTimestamp();
+}
+
 import { logger } from '../../utils/logger';
 import { useState } from 'react';
 import { Download, FileText, CheckCircle2, Loader2 } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
 import {
   getEventTasks,
   getEventExpenses,
   getEventGuests,
 } from '../../services/firebase/firestore';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './ReportsExport.css';
 
 const REPORTS = [
@@ -101,7 +105,7 @@ export function ReportsExport() {
 
         const fullExport = {
           event: activeEvent,
-          exportedAt: new Date().toISOString(),
+          exportedAt: getCurrentTimestamp(),
           tasks,
           expenses,
           guests,

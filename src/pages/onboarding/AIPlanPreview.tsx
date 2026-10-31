@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ChevronLeft,
@@ -7,8 +7,9 @@ import {
   AlertCircle,
   CheckCircle2,
 } from 'lucide-react';
-import { useEvent, type Event } from '../../contexts/EventContext';
-import { useAuth } from '../../contexts/AuthContext';
+import { type Event } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
+import { useAuth } from '../../contexts/useAuth';
 import {
   generateEventPlan,
   validateAIPlan,
@@ -24,7 +25,7 @@ import {
   saveApprovedEventPlan,
 } from '../../services/firebase/firestore';
 import { signInWithGoogle } from '../../services/firebase/auth';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import { logger } from '../../utils/logger';
 
 import type { TaskItem, BudgetItem, MilestoneItem } from './plan/types';
@@ -163,64 +164,71 @@ export function AIPlanPreview() {
   }, [queryEventId, activeEvent]);
 
   // 2. Fetch or Generate AI Plan
-  const fetchOrGeneratePlan = useCallback(async () => {
-    if (!targetEvent) return;
+  useEffect(() => {
+    let ignore = false;
+    const evt = targetEvent;
+    if (!evt || evt.savedPlan) return;
 
-    if (targetEvent.savedPlan) {
-      setPlan(validateAIPlan(targetEvent.savedPlan));
-      setLoading(false);
+    async function generate(e: Record<string, unknown>) {
+      const eventName = String(e.eventName || 'Our Celebration');
+      const eventType = String(e.eventType || 'Celebration');
+      const eventDate = String(e.eventDate || e.date || 'TBD');
+      const location = String(e.location || 'India');
+      const guestCount = Number(e.guestCount) || 100;
+      const budget = Number(e.budget) || 0;
+      const currency = String(e.currency || '₹');
+      const theme = String(e.theme || 'Classic Elegance');
+      const requirements = String(e.requirements || '');
+
+      try {
+        const result = await generateEventPlan(
+          { eventName, eventType, eventDate, location, guestCount, budget, currency, theme, requirements },
+          idToken || ''
+        );
+        if (ignore) return;
+        const validated = validateAIPlan(result);
+        setPlan(validated);
+      } catch (err) {
+        if (!ignore) setError((err as Error).message || 'Failed to generate AI plan.');
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+    void generate(evt);
+    return () => { ignore = true; };
+  }, [targetEvent, idToken]);
+
+  const fetchOrGeneratePlan = useCallback(async () => {
+    const evt = targetEvent;
+    if (!evt) return;
+    if (evt.savedPlan) {
+      setPlan(validateAIPlan(evt.savedPlan));
       return;
     }
-
-    setLoading(true);
-    setError(null);
-
-    const eventName = String(targetEvent.eventName || 'Our Celebration');
-    const eventType = String(targetEvent.eventType || 'Celebration');
-    const eventDate = String(targetEvent.eventDate || targetEvent.date || 'TBD');
-    const location = String(targetEvent.location || 'India');
-    const guestCount = Number(targetEvent.guestCount) || 100;
-    const budget = Number(targetEvent.budget) || 0;
-    const currency = String(targetEvent.currency || '₹');
-    const theme = String(targetEvent.theme || 'Classic Elegance');
-    const requirements = String(targetEvent.requirements || '');
-
     try {
       const result = await generateEventPlan(
         {
-          eventName,
-          eventType,
-          eventDate,
-          location,
-          guestCount,
-          budget,
-          currency,
-          theme,
-          requirements,
+          eventName: String(evt.eventName || 'Our Celebration'),
+          eventType: String(evt.eventType || 'Celebration'),
+          eventDate: String(evt.eventDate || evt.date || 'TBD'),
+          location: String(evt.location || 'India'),
+          guestCount: Number(evt.guestCount) || 100,
+          budget: Number(evt.budget) || 0,
+          currency: String(evt.currency || '₹'),
+          theme: String(evt.theme || 'Classic Elegance'),
+          requirements: String(evt.requirements || ''),
         },
         idToken || ''
       );
-
-      const validated = validateAIPlan(result);
-      setPlan(validated);
+      setPlan(validateAIPlan(result));
     } catch (err) {
-      logger.error('[AIPlanPreview] Generation failed:', err);
-      setError((err as Error).message || 'Failed to generate AI plan. Please check your connection and retry.');
-    } finally {
-      setLoading(false);
+      setError((err as Error).message || 'Failed to generate plan.');
     }
   }, [targetEvent, idToken]);
 
-  useEffect(() => {
-    if (targetEvent) {
-      fetchOrGeneratePlan();
-    }
-  }, [targetEvent, fetchOrGeneratePlan]);
-
-  const totalAllocatedBudget = useMemo(() => {
-    if (!plan?.budgetBreakdown) return 0;
-    return plan.budgetBreakdown.reduce((sum, b) => sum + (Number(b.estimatedAmount) || 0), 0);
-  }, [plan?.budgetBreakdown]);
+  const totalAllocatedBudget = plan?.budgetBreakdown
+    ? plan.budgetBreakdown.reduce((sum, b) => sum + (Number(b.estimatedAmount) || 0), 0)
+    : 0;
 
   const targetBudget = Number(targetEvent?.budget) || 0;
   const budgetDifference = targetBudget - totalAllocatedBudget;

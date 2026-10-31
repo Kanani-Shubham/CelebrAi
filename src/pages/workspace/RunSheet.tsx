@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, X, Loader2 } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
 import { queryCollection, createDoc, deleteDocById } from '../../services/firebase/firestore';
 import { where, orderBy } from 'firebase/firestore';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './RunSheet.css';
 
 interface RunSheetItem {
@@ -38,35 +38,38 @@ export function RunSheet() {
   const [location, setLocation] = useState('');
   const [duration, setDuration] = useState('1 hour');
 
-  const loadRunSheet = useCallback(async () => {
-    if (!eventId) {
-      setItems(DEFAULT_ITEMS);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const data = await queryCollection('runsheets', [
-        where('eventId', '==', eventId),
-        orderBy('createdAt', 'asc'),
-      ]);
-
-      if (data && data.length > 0) {
-        setItems(data as unknown as RunSheetItem[]);
-      } else {
-        setItems(DEFAULT_ITEMS);
-      }
-    } catch {
-      setItems(DEFAULT_ITEMS);
-    } finally {
-      setLoading(false);
-    }
-  }, [eventId]);
-
   useEffect(() => {
-    loadRunSheet();
-  }, [loadRunSheet]);
+    let ignore = false;
+    async function fetchRunSheet() {
+      if (!eventId) {
+        if (!ignore) {
+          setItems(DEFAULT_ITEMS);
+          setLoading(false);
+        }
+        return;
+      }
+      try {
+        const data = await queryCollection('runsheets', [
+          where('eventId', '==', eventId),
+          orderBy('createdAt', 'asc'),
+        ]);
+        if (ignore) return;
+        if (data && data.length > 0) {
+          setItems(data as unknown as RunSheetItem[]);
+        } else {
+          setItems(DEFAULT_ITEMS);
+        }
+      } catch {
+        if (!ignore) setItems(DEFAULT_ITEMS);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+    void fetchRunSheet();
+    return () => {
+      ignore = true;
+    };
+  }, [eventId]);
 
   const handleAddItem = async (e: React.FormEvent) => {
     e.preventDefault();

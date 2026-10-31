@@ -10,7 +10,7 @@ import {
   ArrowLeft,
   ShieldCheck,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import './AdminModeration.css';
 
 const RECENT_ACTIVITIES = [

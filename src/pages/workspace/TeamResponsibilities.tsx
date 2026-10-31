@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Trash2, X, Loader2 } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
 import { queryCollection, createDoc, deleteDocById } from '../../services/firebase/firestore';
 import { where } from 'firebase/firestore';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './TeamResponsibilities.css';
 
 interface TeamMember {
@@ -35,34 +35,35 @@ export function TeamResponsibilities() {
   const [newRole, setNewRole] = useState('Logistics');
   const [newPermission, setNewPermission] = useState('Editor');
 
-  const loadTeam = useCallback(async () => {
-    if (!eventId) {
-      setTeam(DEFAULT_TEAM);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const data = await queryCollection('team', [
-        where('eventId', '==', eventId),
-      ]);
-
-      if (data && data.length > 0) {
-        setTeam(data as unknown as TeamMember[]);
-      } else {
-        setTeam(DEFAULT_TEAM);
-      }
-    } catch {
-      setTeam(DEFAULT_TEAM);
-    } finally {
-      setLoading(false);
-    }
-  }, [eventId]);
-
   useEffect(() => {
-    loadTeam();
-  }, [loadTeam]);
+    let ignore = false;
+    async function fetchTeam() {
+      if (!eventId) {
+        if (!ignore) {
+          setTeam(DEFAULT_TEAM);
+          setLoading(false);
+        }
+        return;
+      }
+      try {
+        const data = await queryCollection('team', [
+          where('eventId', '==', eventId),
+        ]);
+        if (ignore) return;
+        if (data && data.length > 0) {
+          setTeam(data as unknown as TeamMember[]);
+        } else {
+          setTeam(DEFAULT_TEAM);
+        }
+      } catch {
+        if (!ignore) setTeam(DEFAULT_TEAM);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+    void fetchTeam();
+    return () => { ignore = true; };
+  }, [eventId]);
 
   const handleAddMember = async (e: React.FormEvent) => {
     e.preventDefault();

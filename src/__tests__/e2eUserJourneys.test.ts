@@ -4,7 +4,7 @@ import {
   aggregateTaskMetrics,
   calculateEventLifecycle,
 } from '../utils/taskCalculations';
-import { groupConversations } from '../pages/dashboard/AIAssistant';
+import { groupConversations } from '../pages/dashboard/chat/types';
 import type { ConversationRecord } from '../types';
 
 describe('CelebrAI End-to-End User Journey Workflows', () => {

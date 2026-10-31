@@ -13,8 +13,8 @@ import {
   Wallet,
   CalendarCheck,
 } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
-import { toast } from '../../components/ui';
+import { useEvent } from '../../contexts/useEvent';
+import { toast } from '../../components/ui/toast';
 import { formatDisplayDate } from '../../utils/dateUtils';
 import './EventOverview.css';
 

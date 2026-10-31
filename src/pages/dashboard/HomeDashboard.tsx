@@ -1,5 +1,5 @@
 import { logger } from '../../utils/logger';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Wallet,
@@ -18,8 +18,8 @@ import {
   AlertTriangle,
   Clock,
 } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
-import { useAuth } from '../../contexts/AuthContext';
+import { useEvent } from '../../contexts/useEvent';
+import { useAuth } from '../../contexts/useAuth';
 import {
   getEventTasks,
   updateTask,
@@ -56,62 +56,60 @@ export function HomeDashboard() {
 
   const eventId = activeEvent?.id;
 
-  const loadDashboardData = useCallback(async () => {
-    if (!eventId || eventId.startsWith('evt-')) {
-      const demoTasks = [
-        { id: 't-1', title: 'Book Grand Palace Banquet Hall', dueDate: '2026-11-15', priority: 'High', completed: true },
-        { id: 't-2', title: 'Finalize Royal Florals stage theme', dueDate: '2026-10-28', priority: 'High', completed: false },
-        { id: 't-3', title: 'Confirm DJ sound & acoustic equipment', dueDate: '2026-10-25', priority: 'Medium', completed: false },
-        { id: 't-4', title: 'Schedule wedding catering food tasting', dueDate: '2026-11-20', priority: 'High', completed: false },
-      ];
-      setTasks(demoTasks);
-      setTasksTotal(24);
-      setTotalSpent(330000);
-      setGuestCount(250);
-      setRsvpCount(180);
-      return;
-    }
-
-    setLoadingData(true);
-    try {
-      // 1. Tasks
-      const taskDocs = (await getEventTasks(eventId)) as unknown as DashboardTask[];
-      setTasks(taskDocs);
-      setTasksTotal(taskDocs.length);
-
-      // Trigger smart notification audit check for tasks & deadlines
-      if (user && activeEvent && !activeEvent.id.startsWith('evt-')) {
-        runTaskAndEventAudit({
-          userId: user.uid,
-          event: activeEvent,
-          tasks: taskDocs,
-        }).catch(err => logger.warn('[HomeDashboard] Audit check skipped:', err));
+  useEffect(() => {
+    let ignore = false;
+    async function loadDashboard() {
+      if (!eventId || eventId.startsWith('demo-') || eventId.startsWith('evt-sample')) {
+        if (!ignore) {
+          setTasksTotal(12);
+          setTotalSpent(285000);
+          setGuestCount(250);
+          setRsvpCount(180);
+          setLoadingData(false);
+        }
+        return;
       }
 
-      // 2. Expenses
-      const expenseDocs = (await getEventExpenses(eventId)) as unknown as { amount?: number; status?: string }[];
-      const spent = expenseDocs.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
-      setTotalSpent(spent);
+      try {
+        const taskDocs = (await getEventTasks(eventId)) as unknown as DashboardTask[];
+        if (ignore) return;
+        setTasks(taskDocs);
+        setTasksTotal(taskDocs.length);
 
-      // 3. Guests & RSVPs
-      const guestDocs = (await getEventGuests(eventId)) as unknown as { status?: string; partySize?: number }[];
-      const totalGuests = guestDocs.reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
-      const confirmedRsvps = guestDocs
-        .filter(g => g.status === 'Accepted')
-        .reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
+        if (user && activeEvent && !activeEvent.id.startsWith('evt-')) {
+          runTaskAndEventAudit({
+            userId: user.uid,
+            event: activeEvent,
+            tasks: taskDocs,
+          }).catch(err => logger.warn('[HomeDashboard] Audit check skipped:', err));
+        }
 
-      setGuestCount(totalGuests > 0 ? totalGuests : Number(activeEvent?.guestCount) || 0);
-      setRsvpCount(confirmedRsvps);
-    } catch (err) {
-      logger.warn('[HomeDashboard] Error loading dashboard records from Firestore:', err);
-    } finally {
-      setLoadingData(false);
+        const expenseDocs = (await getEventExpenses(eventId)) as unknown as { amount?: number; status?: string }[];
+        if (ignore) return;
+        const spent = expenseDocs.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+        setTotalSpent(spent);
+
+        const guestDocs = (await getEventGuests(eventId)) as unknown as { status?: string; partySize?: number }[];
+        if (ignore) return;
+        const totalGuests = guestDocs.reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
+        const confirmedRsvps = guestDocs
+          .filter(g => g.status === 'Accepted')
+          .reduce((sum, g) => sum + (Number(g.partySize) || 1), 0);
+
+        setGuestCount(totalGuests > 0 ? totalGuests : Number(activeEvent?.guestCount) || 0);
+        setRsvpCount(confirmedRsvps);
+      } catch (err) {
+        logger.warn('[HomeDashboard] Error loading dashboard records from Firestore:', err);
+      } finally {
+        if (!ignore) setLoadingData(false);
+      }
     }
-  }, [eventId, activeEvent?.tasksTotal, activeEvent?.guestCount]);
 
-  useEffect(() => {
-    loadDashboardData();
-  }, [loadDashboardData]);
+    void loadDashboard();
+    return () => {
+      ignore = true;
+    };
+  }, [eventId, user, activeEvent]);
 
   const toggleTask = async (task: DashboardTask) => {
     const newCompleted = !task.completed;

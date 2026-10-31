@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Camera, ChevronRight } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { updateUserProfile } from '../../services/firebase/auth';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './Onboarding.css';
 
 const COUNTRIES = ['India', 'United States', 'United Kingdom', 'Canada', 'Australia', 'UAE', 'Singapore', 'Other'];

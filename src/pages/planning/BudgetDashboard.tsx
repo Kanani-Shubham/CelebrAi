@@ -1,5 +1,5 @@
 import { logger } from '../../utils/logger';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Wallet,
@@ -14,7 +14,7 @@ import {
   ArrowRight,
   Music,
 } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
 import { getEventExpenses } from '../../services/firebase/firestore';
 import './BudgetDashboard.css';
 
@@ -116,26 +116,30 @@ export function BudgetDashboard() {
 
   const eventId = activeEvent?.id;
 
-  const loadData = useCallback(async () => {
-    if (!eventId) {
-      setExpenses([]);
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    try {
-      const data = await getEventExpenses(eventId);
-      setExpenses((data || []) as unknown as { amount: number; category: string; status: string }[]);
-    } catch (err) {
-      logger.warn('[BudgetDashboard] Error loading expenses:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [eventId]);
-
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    let ignore = false;
+    async function fetchExpenses() {
+      if (!eventId) {
+        if (!ignore) {
+          setExpenses([]);
+          setLoading(false);
+        }
+        return;
+      }
+      try {
+        const data = await getEventExpenses(eventId);
+        if (!ignore) {
+          setExpenses((data || []) as unknown as { amount: number; category: string; status: string }[]);
+        }
+      } catch (err) {
+        logger.warn('[BudgetDashboard] Error loading expenses:', err);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+    void fetchExpenses();
+    return () => { ignore = true; };
+  }, [eventId]);
 
   const totalBudget = Number(activeEvent?.budget) || 0;
   const totalSpent = expenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);

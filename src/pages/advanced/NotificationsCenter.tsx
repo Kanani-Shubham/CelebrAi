@@ -1,5 +1,5 @@
 import { logger } from '../../utils/logger';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Calendar,
@@ -12,15 +12,15 @@ import {
   CheckCircle2,
   ArrowLeft,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useEvent } from '../../contexts/EventContext';
+import { useAuth } from '../../contexts/useAuth';
+import { useEvent } from '../../contexts/useEvent';
 import {
   getUserNotifications,
   getEventTasks,
   getEventGuests,
 } from '../../services/firebase/firestore';
 import type { TaskItem, Guest } from '../../types';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './NotificationsCenter.css';
 
 interface NotifItem {
@@ -38,7 +38,7 @@ export function NotificationsCenter() {
   const { activeEvent } = useEvent();
   const [filter, setFilter] = useState<'All' | 'Tasks' | 'RSVP' | 'System'>('All');
   const [items, setItems] = useState<NotifItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(user));
 
   const activeEventId = activeEvent?.id;
   const activeEventName = activeEvent?.eventName || 'your celebration';
@@ -51,94 +51,83 @@ export function NotificationsCenter() {
     }
   };
 
-  const loadNotifications = useCallback(async () => {
-    if (!user) {
-      setItems([]);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-
-    // Timeout safety fallback ensures loading state never hangs
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3500);
-
-    try {
-      const liveItems: NotifItem[] = [];
-
-      // 1. Fetch Firestore stored user notifications with safe error handling
-      try {
-        const stored = await getUserNotifications(user.uid);
-        if (Array.isArray(stored)) {
-          (stored as Array<{ id: string; type?: NotifItem['type']; title?: string; body?: string; desc?: string; read?: boolean; createdAt?: { toDate?: () => Date } }>).forEach((s) => {
-            liveItems.push({
-              id: s.id,
-              type: s.type || 'system',
-              title: s.title || 'Notification',
-              desc: s.body || s.desc || '',
-              time: s.createdAt?.toDate ? s.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent',
-              unread: !s.read,
-            });
-          });
-        }
-      } catch (notifErr) {
-        logger.warn('[NotificationsCenter] User notifications load skipped:', notifErr);
-      }
-
-      // 2. Fetch event status tasks & guests if real event
-      if (activeEventId && !activeEventId.startsWith('evt-')) {
-        try {
-          const [tasksRes, guestsRes] = await Promise.allSettled([
-            getEventTasks(activeEventId),
-            getEventGuests(activeEventId),
-          ]);
-
-          if (tasksRes.status === 'fulfilled' && Array.isArray(tasksRes.value)) {
-            const pendingTasks = (tasksRes.value as unknown as TaskItem[]).filter((t) => !t.completed);
-            if (pendingTasks.length > 0) {
-              liveItems.push({
-                id: 'dyn-task-due',
-                type: 'task',
-                title: `${pendingTasks.length} Pending Tasks`,
-                desc: `"${pendingTasks[0]?.title ?? 'Task'}" and ${pendingTasks.length - 1} other tasks need attention for ${activeEventName}.`,
-                time: 'Today',
-                unread: true,
-              });
-            }
-          }
-
-          if (guestsRes.status === 'fulfilled' && Array.isArray(guestsRes.value)) {
-            const pendingGuests = (guestsRes.value as unknown as Guest[]).filter((g) => g.status === 'Pending');
-            if (pendingGuests.length > 0) {
-              liveItems.push({
-                id: 'dyn-rsvp-pending',
-                type: 'rsvp',
-                title: `${pendingGuests.length} Pending RSVPs`,
-                desc: `${pendingGuests.length} guests have not responded yet for ${activeEventName}.`,
-                time: 'Today',
-                unread: false,
-              });
-            }
-          }
-        } catch (evErr) {
-          logger.warn('[NotificationsCenter] Event notifications load skipped:', evErr);
-        }
-      }
-
-      setItems(liveItems);
-    } catch (err) {
-      logger.warn('[NotificationsCenter] Error loading notifications:', err);
-    } finally {
-      clearTimeout(timer);
-      setLoading(false);
-    }
-  }, [user?.uid, activeEventId, activeEventName]);
-
   useEffect(() => {
-    loadNotifications();
-  }, [loadNotifications]);
+    let ignore = false;
+    if (!user) return;
+
+    async function fetchNotifs() {
+      try {
+        const liveItems: NotifItem[] = [];
+        try {
+          const stored = await getUserNotifications(user!.uid);
+          if (Array.isArray(stored)) {
+            (stored as Array<{ id: string; type?: NotifItem['type']; title?: string; body?: string; desc?: string; read?: boolean; createdAt?: { toDate?: () => Date } }>).forEach((s) => {
+              liveItems.push({
+                id: s.id,
+                type: s.type || 'system',
+                title: s.title || 'Notification',
+                desc: s.body || s.desc || '',
+                time: s.createdAt?.toDate ? s.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent',
+                unread: !s.read,
+              });
+            });
+          }
+        } catch (notifErr) {
+          logger.warn('[NotificationsCenter] User notifications load skipped:', notifErr);
+        }
+
+        if (activeEventId && !activeEventId.startsWith('evt-')) {
+          try {
+            const [tasksRes, guestsRes] = await Promise.allSettled([
+              getEventTasks(activeEventId),
+              getEventGuests(activeEventId),
+            ]);
+
+            if (tasksRes.status === 'fulfilled' && Array.isArray(tasksRes.value)) {
+              const pendingTasks = (tasksRes.value as unknown as TaskItem[]).filter((t) => !t.completed);
+              if (pendingTasks.length > 0) {
+                liveItems.push({
+                  id: 'dyn-task-due',
+                  type: 'task',
+                  title: `${pendingTasks.length} Pending Tasks`,
+                  desc: `"${pendingTasks[0]?.title ?? 'Task'}" and ${pendingTasks.length - 1} other tasks need attention for ${activeEventName}.`,
+                  time: 'Today',
+                  unread: true,
+                });
+              }
+            }
+
+            if (guestsRes.status === 'fulfilled' && Array.isArray(guestsRes.value)) {
+              const pendingGuests = (guestsRes.value as unknown as Guest[]).filter((g) => g.status === 'Pending');
+              if (pendingGuests.length > 0) {
+                liveItems.push({
+                  id: 'dyn-rsvp-pending',
+                  type: 'rsvp',
+                  title: `${pendingGuests.length} Pending RSVPs`,
+                  desc: `${pendingGuests.length} guests have not responded yet for ${activeEventName}.`,
+                  time: 'Today',
+                  unread: false,
+                });
+              }
+            }
+          } catch (evErr) {
+            logger.warn('[NotificationsCenter] Event notifications load skipped:', evErr);
+          }
+        }
+
+        if (!ignore) setItems(liveItems);
+      } catch (err) {
+        logger.warn('[NotificationsCenter] Error loading notifications:', err);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+
+    void fetchNotifs();
+    return () => {
+      ignore = true;
+    };
+  }, [user, activeEventId, activeEventName]);
 
   const markAllRead = () => {
     setItems(prev => prev.map(i => ({ ...i, unread: false })));

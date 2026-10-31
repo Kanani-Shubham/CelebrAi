@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
+function getTodayDate(): string {
+  return getTodayDate();
+}
+
+import React, { useState } from 'react';
 import { X, CheckCircle2, Plus, Loader2 } from 'lucide-react';
-import { toast } from '../../../components/ui';
+import { toast } from '../../../components/ui/toast';
 import { type FirestoreExpense, CATEGORIES } from './types';
 
 interface ExpenseModalProps {
@@ -30,9 +34,11 @@ export function ExpenseModal({
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('Venue');
   const [status, setStatus] = useState<'Paid' | 'Pending' | 'Overdue'>('Pending');
-  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(() => getTodayDate());
 
-  useEffect(() => {
+  const [prevExpense, setPrevExpense] = useState(editingExpense);
+  if (editingExpense !== prevExpense) {
+    setPrevExpense(editingExpense);
     if (editingExpense) {
       setTitle(editingExpense.title || '');
       setVendorName(
@@ -41,16 +47,16 @@ export function ExpenseModal({
       setAmount(String(editingExpense.amount || ''));
       setCategory(editingExpense.category || 'Other');
       setStatus(editingExpense.status || 'Pending');
-      setDate(editingExpense.date || new Date().toISOString().split('T')[0]);
+      setDate(editingExpense.date || getTodayDate());
     } else {
       setTitle('');
       setVendorName('');
       setAmount('');
       setCategory('Venue');
       setStatus('Pending');
-      setDate(new Date().toISOString().split('T')[0]);
+      setDate(getTodayDate());
     }
-  }, [editingExpense, isOpen]);
+  }
 
   if (!isOpen) return null;
 
@@ -70,7 +76,7 @@ export function ExpenseModal({
       amount: numAmount,
       category,
       status,
-      date: date || new Date().toISOString().split('T')[0],
+      date: date || getTodayDate(),
     });
   };
 

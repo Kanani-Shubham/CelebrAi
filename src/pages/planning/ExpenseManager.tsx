@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Plus, Loader2, AlertCircle, Package } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
 import { useExpenses } from './expenses/useExpenses';
 import { ExpenseMetrics } from './expenses/ExpenseMetrics';
 import { ExpenseCard } from './expenses/ExpenseCard';
@@ -10,7 +10,7 @@ import type { FirestoreExpense } from './expenses/types';
 
 // Re-exports for consumers and unit tests
 export type { FirestoreExpense } from './expenses/types';
-export { DEMO_EXPENSES, getCategoryTheme, calculateExpenseSummary } from './expenses/types';
+
 
 import './ExpenseManager.css';
 

@@ -13,9 +13,9 @@ import {
   Loader2,
 } from 'lucide-react';
 import { INITIAL_VENDORS } from '../../data/mockData';
-import { useEvent } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
 import { saveVendor } from '../../services/firebase/firestore';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './VendorDetails.css';
 
 export function VendorDetails() {

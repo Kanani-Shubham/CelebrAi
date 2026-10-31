@@ -1,11 +1,11 @@
 import { logger } from '../../utils/logger';
 import { AI_MODEL_NAME } from '../../config/ai';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Check, CheckCircle2, Clock, XCircle, Share2, Sparkles } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
 import { getEventGuests } from '../../services/firebase/firestore';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import { formatDisplayDate } from '../../utils/dateUtils';
 import './InvitationsRSVP.css';
 
@@ -22,42 +22,39 @@ export function InvitationsRSVP() {
 
   const eventId = activeEvent?.id;
 
-  const loadGuestStats = useCallback(async () => {
-    if (!eventId) {
-      setAcceptedCount(0);
-      setPendingCount(0);
-      setDeclinedCount(0);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const guestDocs = (await getEventGuests(eventId)) as { status?: string; partySize?: number }[];
-      let acc = 0;
-      let pen = 0;
-      let dec = 0;
-
-      guestDocs.forEach(g => {
-        const size = g.partySize || 1;
-        if (g.status === 'Accepted') acc += size;
-        else if (g.status === 'Declined') dec += size;
-        else pen += size;
-      });
-
-      setAcceptedCount(acc);
-      setPendingCount(pen);
-      setDeclinedCount(dec);
-    } catch (err) {
-      logger.warn('[InvitationsRSVP] Error loading RSVP counts:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [eventId]);
-
   useEffect(() => {
-    loadGuestStats();
-  }, [loadGuestStats]);
+    let ignore = false;
+    async function fetchGuestStats() {
+      if (!eventId) {
+        if (!ignore) setLoading(false);
+        return;
+      }
+      try {
+        const guestDocs = (await getEventGuests(eventId)) as unknown as { status?: string; partySize?: number }[];
+        if (ignore) return;
+        let acc = 0;
+        let pen = 0;
+        let dec = 0;
+        guestDocs.forEach(g => {
+          const size = g.partySize || 1;
+          if (g.status === 'Accepted') acc += size;
+          else if (g.status === 'Declined') dec += size;
+          else pen += size;
+        });
+        if (!ignore) {
+          setAcceptedCount(acc);
+          setPendingCount(pen);
+          setDeclinedCount(dec);
+        }
+      } catch (err) {
+        logger.warn('[InvitationsRSVP] Error loading RSVP counts:', err);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+    void fetchGuestStats();
+    return () => { ignore = true; };
+  }, [eventId]);
 
   const eventName = activeEvent?.eventName || 'Our Special Celebration';
   const eventDate = formatDisplayDate(activeEvent?.eventDate || activeEvent?.date);

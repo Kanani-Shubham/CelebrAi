@@ -1,8 +1,8 @@
 import { logger } from '../../utils/logger';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Clock, Loader2 } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
 import { getEventTasks } from '../../services/firebase/firestore';
 import { formatDisplayDate } from '../../utils/dateUtils';
 import './TimelineCalendar.css';
@@ -29,56 +29,48 @@ export function TimelineCalendar() {
 
   const eventId = activeEvent?.id;
 
-  const loadTimeline = useCallback(async () => {
-    if (!eventId) {
-      setTimelineItems([]);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const taskDocs = (await getEventTasks(eventId)) as { id: string; title: string; dueDate?: string; priority?: string; completed?: boolean }[];
-
-      const items: TimelineItem[] = [];
-
-      // 1. Add tasks that have due dates
-      taskDocs.forEach(t => {
-        if (t.dueDate) {
-          items.push({
-            id: t.id,
-            date: t.dueDate,
-            title: t.title,
-            priority: t.priority || 'Medium',
-            completed: t.completed,
+  useEffect(() => {
+    let ignore = false;
+    async function fetchTimeline() {
+      if (!eventId || !activeEvent) {
+        if (!ignore) setLoading(false);
+        return;
+      }
+      try {
+        const items: TimelineItem[] = [];
+        const taskDocs = (await getEventTasks(eventId)) as unknown as { id: string; title?: string; dueDate?: string; priority?: string }[];
+        if (ignore) return;
+        taskDocs.forEach(t => {
+          if (t.dueDate) {
+            items.push({
+              id: t.id,
+              date: t.dueDate,
+              title: t.title || 'Task Due',
+              priority: (t.priority as 'High' | 'Medium' | 'Low') || 'Medium',
+            });
+          }
+        });
+        const milestones = (activeEvent as { milestones?: { targetDate?: string; title: string }[] }).milestones;
+        if (Array.isArray(milestones)) {
+          milestones.forEach((m, idx) => {
+            items.push({
+              id: `ms-${idx}`,
+              date: m.targetDate || activeEvent.eventDate || 'Scheduled',
+              title: m.title,
+              priority: 'High',
+            });
           });
         }
-      });
-
-      // 2. Add event's AI milestones if any
-      const milestones = (activeEvent as unknown as { milestones?: { targetDate?: string; title: string }[] })?.milestones;
-      if (Array.isArray(milestones)) {
-        milestones.forEach((m, idx) => {
-          items.push({
-            id: `ms-${idx}`,
-            date: m.targetDate || activeEvent.eventDate || 'Scheduled',
-            title: m.title,
-            priority: 'High',
-          });
-        });
+        if (!ignore) setTimelineItems(items);
+      } catch (err) {
+        logger.warn('[TimelineCalendar] Error loading items:', err);
+      } finally {
+        if (!ignore) setLoading(false);
       }
-
-      setTimelineItems(items);
-    } catch (err) {
-      logger.warn('[TimelineCalendar] Error loading items:', err);
-    } finally {
-      setLoading(false);
     }
+    void fetchTimeline();
+    return () => { ignore = true; };
   }, [eventId, activeEvent]);
-
-  useEffect(() => {
-    loadTimeline();
-  }, [loadTimeline]);
 
   // Calendar math
   const year = currentDate.getFullYear();

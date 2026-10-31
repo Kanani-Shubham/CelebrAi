@@ -12,8 +12,8 @@ import {
   Settings,
   Plus,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useEvent } from '../../contexts/EventContext';
+import { useAuth } from '../../contexts/useAuth';
+import { useEvent } from '../../contexts/useEvent';
 import { signOut } from '../../services/firebase/auth';
 import { formatDisplayDate } from '../../utils/dateUtils';
 import './AppHeader.css';

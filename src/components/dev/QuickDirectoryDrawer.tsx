@@ -1,109 +1,92 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Layers, X } from 'lucide-react';
-
-export const ALL_PAGES = [
-  { id: '01', name: 'Landing Page', path: '/' },
-  { id: '02', name: 'Explore Event Types', path: '/explore-events' },
-  { id: '03', name: 'Sign Up / Sign In', path: '/signin' },
-  { id: '04', name: 'Onboarding Preferences', path: '/onboarding' },
-  { id: '05', name: 'Create Event Wizard', path: '/create-event' },
-  { id: '06', name: 'AI Plan Preview', path: '/ai-plan-preview' },
-  { id: '07', name: 'Home Dashboard', path: '/dashboard' },
-  { id: '08', name: 'All Events', path: '/events' },
-  { id: '09', name: 'Event Overview', path: '/event-overview' },
-  { id: '10', name: 'AI Assistant', path: '/ai' },
-  { id: '11', name: 'To-do List', path: '/tasks' },
-  { id: '12', name: 'Timeline & Calendar', path: '/timeline' },
-  { id: '13', name: 'Budget Dashboard', path: '/budget' },
-  { id: '14', name: 'Expense Manager', path: '/expenses' },
-  { id: '15', name: 'Guest Management', path: '/guests' },
-  { id: '16', name: 'Invitations & RSVP', path: '/invitations' },
-  { id: '17', name: 'Vendor Discovery', path: '/vendors' },
-  { id: '18', name: 'Vendor Details', path: '/vendors/v-1' },
-  { id: '19', name: 'Decor & Theme Studio', path: '/decor' },
-  { id: '20', name: 'Invitation & Content Studio', path: '/content-studio' },
-  { id: '21', name: 'Saved Workspace', path: '/saved' },
-  { id: '22', name: 'Event Run Sheet', path: '/run-sheet' },
-  { id: '23', name: 'Team & Responsibilities', path: '/team' },
-  { id: '24', name: 'Reports & Export', path: '/reports' },
-  { id: '25', name: 'My Profile', path: '/profile' },
-  { id: '26', name: 'Settings', path: '/settings' },
-  { id: '27', name: 'Help & Feedback', path: '/help' },
-  { id: '28', name: 'Privacy & Consent', path: '/privacy' },
-  { id: '29', name: '404 & Error Pages', path: '/404' },
-  { id: '30', name: 'Loading, Empty & Offline', path: '/demo-states' },
-  { id: '31', name: 'Public Event Page', path: '/public-event' },
-  { id: '32', name: 'Guest RSVP Page', path: '/guest-rsvp' },
-  { id: '33', name: 'Collaboration Workspace', path: '/collaboration' },
-  { id: '34', name: 'Notifications Center', path: '/notifications' },
-  { id: '35', name: 'Subscription & Usage', path: '/subscription' },
-  { id: '36', name: 'Admin & Moderation', path: '/admin' },
-];
+import { ALL_PAGES } from '../../config/pages';
 
 export function QuickDirectoryDrawer() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
 
-  const isDevMode =
-    new URLSearchParams(location.search).get('dev') === 'true' ||
-    localStorage.getItem('celebrai_dev_mode') === 'true';
-
-  if (!isDevMode) return null;
-
   return (
     <>
       <button
         type="button"
-        className="floating-directory-trigger"
         onClick={() => setOpen(true)}
-        title="View All 36 Pages"
         aria-label="Open 36 Pages Directory"
+        className="fixed bottom-20 right-4 z-40 flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-full shadow-lg transition-transform hover:scale-105"
+        style={{
+          backgroundColor: 'var(--color-gold, #cda764)',
+          color: 'var(--color-tuxedo-black, #171f20)',
+          border: '1px solid rgba(255,255,255,0.4)',
+        }}
       >
-        <Layers size={16} aria-hidden="true" />
+        <Layers size={14} />
         <span>36 Pages</span>
       </button>
 
       {open && (
         <div
-          className="directory-modal-overlay"
-          onClick={() => setOpen(false)}
           role="dialog"
           aria-modal="true"
-          aria-label="36 Pages Directory"
+          aria-label="36 Pages Navigation Directory"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-end bg-black/60 backdrop-blur-sm p-0 sm:p-4 animate-in fade-in"
+          onClick={() => setOpen(false)}
         >
-          <div className="directory-modal-sheet" onClick={(e) => e.stopPropagation()}>
-            <div className="dir-modal-header">
-              <div>
-                <h3 className="dir-modal-title">CelebrAI — 36 Pages Directory</h3>
-                <span className="dir-modal-sub">Jump to any screen from the specification</span>
+          <div
+            className="w-full sm:max-w-md max-h-[85vh] bg-[var(--color-card,#202628)] text-[var(--color-bridal-white,#fff)] rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-white/10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-4 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <Layers size={18} className="text-[var(--color-gold,#cda764)]" />
+                <h3 className="font-semibold text-sm">36-Page Route Directory</h3>
               </div>
               <button
                 type="button"
-                className="dir-close-btn"
                 onClick={() => setOpen(false)}
                 aria-label="Close directory"
+                className="p-1 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
               >
-                <X size={20} aria-hidden="true" />
+                <X size={16} />
               </button>
             </div>
 
-            <div className="dir-links-scroll">
-              {ALL_PAGES.map((p) => {
-                const isCurrent = location.pathname === p.path;
+            <div className="p-3 text-xs text-white/60 bg-white/5 border-b border-white/5">
+              Instant one-click access to all 36 evaluation screens across onboarding, planning, and advanced features.
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-2 space-y-1 divide-y divide-white/5">
+              {ALL_PAGES.map((page) => {
+                const isActive = location.pathname === page.path;
                 return (
                   <Link
-                    key={p.id}
-                    to={p.path}
-                    className={`dir-link-item ${isCurrent ? 'active' : ''}`}
+                    key={page.id}
+                    to={page.path}
                     onClick={() => setOpen(false)}
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors ${
+                      isActive
+                        ? 'bg-[var(--color-gold,#cda764)] text-[var(--color-tuxedo-black,#171f20)] font-semibold'
+                        : 'text-white/80 hover:bg-white/10 hover:text-white'
+                    }`}
                   >
-                    <span className="dir-num">{p.id}</span>
-                    <span className="dir-name">{p.name}</span>
-                    <span className="dir-path">{p.path}</span>
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="font-mono text-[10px] opacity-60">#{page.id}</span>
+                      <span className="truncate">{page.name}</span>
+                    </div>
+                    <span className="font-mono text-[10px] opacity-50 shrink-0 ml-2">{page.path}</span>
                   </Link>
                 );
               })}
+            </div>
+
+            <div className="p-3 border-t border-white/10 text-center">
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="w-full py-1.5 text-xs text-center font-medium text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+              >
+                Close Directory
+              </button>
             </div>
           </div>
         </div>

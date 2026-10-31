@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, MoreVertical, Calendar, Trash2, Archive, Loader2 } from 'lucide-react';
-import { useEvent, type Event } from '../../contexts/EventContext';
-import { toast } from '../../components/ui';
+import { type Event } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
+import { toast } from '../../components/ui/toast';
 import { formatDisplayDate } from '../../utils/dateUtils';
 import './AllEvents.css';
 

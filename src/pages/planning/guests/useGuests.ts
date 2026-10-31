@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { logger } from '../../../utils/logger';
-import { toast } from '../../../components/ui';
+import { toast } from '../../../components/ui/toast';
 import {
   getEventGuests,
   createGuest,
@@ -12,33 +12,43 @@ import type { FirestoreGuest } from './types';
 export function useGuests(eventId?: string, user?: { uid: string } | null) {
   const [guests, setGuests] = useState<FirestoreGuest[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const loadGuests = useCallback(async () => {
-    if (!eventId || eventId.startsWith('evt-') || !user) {
-      setGuests([]);
-      setLoading(false);
-      setError(null);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await getEventGuests(eventId);
-      setGuests(data as unknown as FirestoreGuest[]);
-    } catch (err) {
-      const msg = (err as Error).message || 'Failed to load guests';
-      setError(msg);
-      logger.error('[GuestManagement]', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [eventId, user]);
+  const [error, _setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadGuests();
-  }, [loadGuests]);
+    let ignore = false;
+    async function fetchGuests() {
+      if (!eventId) {
+        if (!ignore) {
+          setGuests([]);
+          setLoading(false);
+        }
+        return;
+      }
+      try {
+        const data = await getEventGuests(eventId);
+        if (!ignore) {
+          setGuests(((data || []) as unknown) as FirestoreGuest[]);
+        }
+      } catch (err) {
+        _setError((err as Error).message);
+        logger.error('[GuestManagement] Error loading guests:', err);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+    void fetchGuests();
+    return () => { ignore = true; };
+  }, [eventId]);
+
+  const loadGuests = useCallback(async () => {
+    if (!eventId) return;
+    try {
+      const data = await getEventGuests(eventId);
+      setGuests(((data || []) as unknown) as FirestoreGuest[]);
+    } catch (err) {
+      logger.error('[GuestManagement] Reload failed:', err);
+    }
+  }, [eventId]);
 
   const stats = useMemo(() => {
     let accepted = 0;

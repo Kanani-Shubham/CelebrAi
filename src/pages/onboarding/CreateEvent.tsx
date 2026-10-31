@@ -2,8 +2,8 @@ import { logger } from '../../utils/logger';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Users, DollarSign, ChevronRight, ChevronLeft, Sparkles, Loader2, AlertCircle } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
-import { toast } from '../../components/ui';
+import { useEvent } from '../../contexts/useEvent';
+import { toast } from '../../components/ui/toast';
 import './CreateEvent.css';
 
 const EVENT_TYPES = [

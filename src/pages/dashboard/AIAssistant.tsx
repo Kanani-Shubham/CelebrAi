@@ -10,8 +10,8 @@ import {
   History,
   Plus,
 } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
-import { useAuth } from '../../contexts/AuthContext';
+import { useEvent } from '../../contexts/useEvent';
+import { useAuth } from '../../contexts/useAuth';
 import { sendChatMessage, type AIChatMessage } from '../../services/ai/groq';
 import {
   getUserConversations,
@@ -32,7 +32,7 @@ import { ChatMessageList } from './chat/ChatMessageList';
 import { ChatInputBar } from './chat/ChatInputBar';
 
 // Re-export for unit tests
-export { groupConversations } from './chat/types';
+
 export type { MessageItem } from './chat/types';
 
 import './AIAssistant.css';
@@ -54,7 +54,7 @@ export function AIAssistant() {
 
   const [conversations, setConversations] = useState<ConversationRecord[]>([]);
   const [showHistory, setShowHistory] = useState(false);
-  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyLoading, _setHistoryLoading] = useState(false);
 
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [inputVal, setInputVal] = useState('');
@@ -82,67 +82,66 @@ export function AIAssistant() {
     timestamp: 'Just now',
   }), [activeEvent?.eventName]);
 
-  const fetchConversations = useCallback(async () => {
-    if (!user) {
-      setConversations([]);
-      return;
+  useEffect(() => {
+    let ignore = false;
+    if (!user) return;
+    const currentUid = user.uid;
+    async function initConvs() {
+      try {
+        const list = await getUserConversations(currentUid);
+        if (!ignore) setConversations(list);
+      } catch (err) {
+        logger.warn('[AIAssistant] Error loading user conversations:', err);
+      }
     }
-    setHistoryLoading(true);
+    void initConvs();
+    return () => { ignore = true; };
+  }, [user]);
+
+  const fetchConversations = useCallback(async () => {
+    if (!user) return;
     try {
       const list = await getUserConversations(user.uid);
       setConversations(list);
     } catch (err) {
-      logger.warn('[AIAssistant] Error loading user conversations:', err);
-    } finally {
-      setHistoryLoading(false);
+      logger.warn('[AIAssistant] Error reloading conversations:', err);
     }
   }, [user]);
 
   useEffect(() => {
-    fetchConversations();
-  }, [fetchConversations]);
-
-  const loadConversationMessages = useCallback(async (convId: string) => {
-    setMessagesLoading(true);
-    try {
-      const msgs = await getConversationMessages(convId);
-      if (activeConvIdRef.current !== convId) return;
-
-      if (msgs.length > 0) {
-        const restored: MessageItem[] = msgs.map((m) => ({
-          id: m.id,
-          sender: m.role === 'assistant' ? 'ai' : 'user',
-          text: m.content || '',
-          timestamp: formatHistoryTime(m.createdAt),
-        }));
-        setMessages(restored);
-      } else {
-        setMessages([welcomeMessage]);
-      }
-    } catch (err) {
-      logger.warn('[AIAssistant] Error loading conversation messages:', err);
-      if (activeConvIdRef.current === convId) {
-        setMessages([welcomeMessage]);
-      }
-    } finally {
-      if (activeConvIdRef.current === convId) {
-        setMessagesLoading(false);
-      }
-    }
-  }, [welcomeMessage]);
-
-  useEffect(() => {
+    let ignore = false;
     if (isCreatingConvRef.current) {
       isCreatingConvRef.current = false;
       return;
     }
+    if (!activeConvId) return;
 
-    if (activeConvId) {
-      loadConversationMessages(activeConvId);
-    } else {
-      setMessages([welcomeMessage]);
+    async function fetchMsgs() {
+      try {
+        const msgs = await getConversationMessages(activeConvId!);
+        if (ignore || activeConvIdRef.current !== activeConvId) return;
+        if (msgs.length > 0) {
+          const restored: MessageItem[] = msgs.map((m) => ({
+            id: m.id,
+            sender: m.role === 'assistant' ? 'ai' : 'user',
+            text: m.content || '',
+            timestamp: formatHistoryTime(m.createdAt),
+          }));
+          setMessages(restored);
+        }
+      } catch (err) {
+        logger.warn('[AIAssistant] Error loading messages:', err);
+      } finally {
+        if (!ignore && activeConvIdRef.current === activeConvId) {
+          setMessagesLoading(false);
+        }
+      }
     }
-  }, [activeConvId, loadConversationMessages, welcomeMessage]);
+    void fetchMsgs();
+    return () => { ignore = true; };
+  }, [activeConvId]);
+
+
 
   const handleNewChat = useCallback(() => {
     isCreatingConvRef.current = false;

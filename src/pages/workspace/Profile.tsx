@@ -18,11 +18,11 @@ import {
   HardDrive,
   Save,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useEvent } from '../../contexts/EventContext';
+import { useAuth } from '../../contexts/useAuth';
+import { useEvent } from '../../contexts/useEvent';
 import { signOut } from '../../services/firebase/auth';
 import { validateAvatarFile } from '../../utils/imageCompressor';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './Profile.css';
 
 export function Profile() {

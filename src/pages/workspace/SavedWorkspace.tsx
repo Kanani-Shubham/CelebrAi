@@ -1,10 +1,10 @@
 import { logger } from '../../utils/logger';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Loader2, Store, BookOpen, Trash2 } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
+import { useEvent } from '../../contexts/useEvent';
 import { getSavedVendors, deleteVendor } from '../../services/firebase/firestore';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './SavedWorkspace.css';
 
 interface SavedVendorItem {
@@ -28,27 +28,30 @@ export function SavedWorkspace() {
 
   const eventId = activeEvent?.id;
 
-  const loadSaved = useCallback(async () => {
-    if (!eventId) {
-      setSavedVendors([]);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const data = await getSavedVendors(eventId);
-      setSavedVendors(((data || []) as unknown) as SavedVendorItem[]);
-    } catch (err) {
-      logger.warn('[SavedWorkspace] Error loading vendors:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [eventId]);
-
   useEffect(() => {
-    loadSaved();
-  }, [loadSaved]);
+    let ignore = false;
+    async function fetchSaved() {
+      if (!eventId) {
+        if (!ignore) {
+          setSavedVendors([]);
+          setLoading(false);
+        }
+        return;
+      }
+      try {
+        const data = await getSavedVendors(eventId);
+        if (!ignore) {
+          setSavedVendors(((data || []) as unknown) as SavedVendorItem[]);
+        }
+      } catch (err) {
+        logger.warn('[SavedWorkspace] Error loading vendors:', err);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+    void fetchSaved();
+    return () => { ignore = true; };
+  }, [eventId]);
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();

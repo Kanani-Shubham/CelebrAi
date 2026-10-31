@@ -10,7 +10,7 @@ import {
   resetPassword,
   getAuthErrorMessage,
 } from '../../services/firebase/auth';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './Auth.css';
 
 type Mode = 'signin' | 'signup' | 'reset';

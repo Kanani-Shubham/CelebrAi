@@ -7,8 +7,8 @@ import {
   AlertCircle,
   ChevronLeft,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useEvent } from '../../contexts/EventContext';
+import { useAuth } from '../../contexts/useAuth';
+import { useEvent } from '../../contexts/useEvent';
 import { useTasks } from './tasks/useTasks';
 import { TaskCard } from './tasks/TaskCard';
 import { TaskModal } from './tasks/TaskModal';

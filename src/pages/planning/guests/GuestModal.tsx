@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { toast } from '../../../components/ui';
+import { toast } from '../../../components/ui/toast';
 import { validateGuestForm } from '../../../utils/validation';
 import { DIETARY_OPTIONS, type FirestoreGuest } from './types';
 

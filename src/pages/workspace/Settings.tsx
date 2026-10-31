@@ -1,5 +1,5 @@
 import { logger } from '../../utils/logger';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Globe,
@@ -14,9 +14,9 @@ import {
   Check,
   ArrowLeft,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { signOut, resetPassword, updateUserProfile } from '../../services/firebase/auth';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './Settings.css';
 
 export function Settings() {
@@ -29,16 +29,13 @@ export function Settings() {
   const [saving, setSaving] = useState(false);
   const [sendingReset, setSendingReset] = useState(false);
 
-  // Sync state when profile loads asynchronously from Firestore
-  useEffect(() => {
-    if (profile) {
-      if (profile.displayName) setDisplayName(profile.displayName);
-      if (profile.currency) setCurrency(profile.currency);
-      if (profile.language) setLanguage(profile.language);
-    } else if (user?.displayName) {
-      setDisplayName(user.displayName);
-    }
-  }, [profile, user]);
+  const [prevProfile, setPrevProfile] = useState(profile);
+  if (profile !== prevProfile) {
+    setPrevProfile(profile);
+    if (profile?.displayName) setDisplayName(profile.displayName);
+    if (profile?.currency) setCurrency(profile.currency);
+    if (profile?.language) setLanguage(profile.language);
+  }
 
   const handleBack = () => {
     if (window.history.state && window.history.state.idx > 0) {

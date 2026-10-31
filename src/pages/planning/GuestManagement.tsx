@@ -7,8 +7,8 @@ import {
   AlertCircle,
   Calendar,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useEvent } from '../../contexts/EventContext';
+import { useAuth } from '../../contexts/useAuth';
+import { useEvent } from '../../contexts/useEvent';
 import { useGuests } from './guests/useGuests';
 import { GuestStatsRow } from './guests/GuestStatsRow';
 import { GuestRowCard } from './guests/GuestRowCard';

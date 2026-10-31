@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getCategoryTheme, calculateExpenseSummary } from '../pages/planning/ExpenseManager';
+import { getCategoryTheme, calculateExpenseSummary } from '../pages/planning/expenses/types';
 
 interface TestExpense {
   id: string;

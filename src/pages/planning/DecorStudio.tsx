@@ -2,10 +2,10 @@ import { logger } from '../../utils/logger';
 import { AI_MODEL_NAME } from '../../config/ai';
 import { useState } from 'react';
 import { Sparkles, Heart, RefreshCw, Loader2, Bookmark } from 'lucide-react';
-import { useEvent } from '../../contexts/EventContext';
-import { useAuth } from '../../contexts/AuthContext';
+import { useEvent } from '../../contexts/useEvent';
+import { useAuth } from '../../contexts/useAuth';
 import { generateDecorIdeas } from '../../services/ai/groq';
-import { toast } from '../../components/ui';
+import { toast } from '../../components/ui/toast';
 import './DecorStudio.css';
 
 const PRESET_THEMES = [
