@@ -8,19 +8,20 @@ Welcome to the central technical documentation portal for **CelebrAI**. This dir
 
 ```
 Docs/
-├── README.md                 # Master Documentation Portal (This File)
-├── ARCHITECTURE.md           # System Architecture, Subsystems & Mermaid Diagrams
-├── DATABASE_SCHEMA.md        # Firestore Multi-Tenant Schema & IndexedDB Models
-├── SECURITY.md               # Security Governance, Firestore Rules & Sanitization
-├── TESTING_REPORT.md         # Vitest Verification Suite (14 Suites, 134 Tests)
-├── PERFORMANCE.md            # Measured Production Build & Bundle Performance
-├── ACCESSIBILITY.md          # WCAG 2.1 AA Compliance, Color Contrast & a11y Audit
-├── SCREENSHOT_INDEX.md       # Verified Visual Catalog (39 Authentic Captures)
-├── HACK2SKILL_SUBMISSION.md  # Official Challenge Submission Data & Copy-Paste Text
-├── HACK2SKILL_FINAL_AUDIT.md # Comprehensive 6-Factor Evaluator Final Report
-├── DOCUMENTATION_AUDIT.md    # Pre-Audit Claim Verification & Inventory
-├── IMPLEMENTATION_AUDIT.md   # Greenfield to 36-Page Verification Audit
-└── IMPLEMENTATION_REPORT.md  # Detailed Specification & Feature Matrix
+├── README.md                    # Master Documentation Portal (This File)
+├── ARCHITECTURE.md              # System Architecture, Subsystems & Mermaid Diagrams
+├── DATABASE_SCHEMA.md           # Firestore Multi-Tenant Schema & IndexedDB Models
+├── SECURITY.md                  # Security Governance, Firestore Rules & Sanitization
+├── SECURITY_REMEDIATION_REPORT.md # GitHub Secret Scanning Alerts Investigation & Fix
+├── TESTING_REPORT.md            # Vitest Verification Suite (14 Suites, 134 Tests)
+├── PERFORMANCE.md               # Measured Production Build & Bundle Performance
+├── ACCESSIBILITY.md             # WCAG 2.1 AA Compliance, Color Contrast & a11y Audit
+├── SCREENSHOT_INDEX.md          # Verified Visual Catalog (39 Authentic Captures)
+├── HACK2SKILL_SUBMISSION.md     # Official Challenge Submission Data & Copy-Paste Text
+├── HACK2SKILL_FINAL_AUDIT.md    # Comprehensive 6-Factor Evaluator Final Report
+├── DOCUMENTATION_AUDIT.md       # Pre-Audit Claim Verification & Inventory
+├── IMPLEMENTATION_AUDIT.md      # Greenfield to 36-Page Verification Audit
+└── IMPLEMENTATION_REPORT.md     # Detailed Specification & Feature Matrix
 ```
 
 ---
@@ -36,7 +37,10 @@ Exhaustive specification of Cloud Firestore collections (`users`, `events`, `tas
 ### 3. [Application Security & Credential Governance](SECURITY.md)
 Detailed security review covering zero client-side secret exposure, isolated server-side Groq API proxies, multi-tenant row-level Firestore rules, public RSVP write-only permissions, multi-pass XSS input sanitization, safe Markdown rendering, and GDPR-aligned data privacy controls.
 
-### 4. [Testing & Quality Verification Suite](TESTING_REPORT.md)
+### 4. [Security Remediation Report (GitHub Secret Scanning)](SECURITY_REMEDIATION_REPORT.md)
+Detailed technical audit of the two GitHub Google API Key secret scanning alerts in `config.ts`, classifying Alert #1 as a public Firebase Web Client identifier and Alert #2 as a synthetic placeholder, complete with Google Cloud restriction guidance.
+
+### 5. [Testing & Quality Verification Suite](TESTING_REPORT.md)
 Detailed verification evidence from the **14 automated Vitest test suites** running **134 unit and integration tests** with a 100% pass rate. Includes commands for reproduction, mock strategies, and coverage breakdowns across business logic, security, and user journeys.
 
 ### 5. [Performance & Bundle Analysis](PERFORMANCE.md)

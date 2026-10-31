@@ -529,6 +529,7 @@ Generates the optimized chunk-split production bundle inside `dist/`.
 - **[System Architecture & Data Flow](Docs/ARCHITECTURE.md)**: Deep architectural flow and Mermaid diagrams.
 - **[Database Schema & Models](Docs/DATABASE_SCHEMA.md)**: Complete Firestore collection specifications.
 - **[Security Architecture & Governance](Docs/SECURITY.md)**: Security rules, XSS sanitization, and secret protection.
+- **[Security Remediation Report](Docs/SECURITY_REMEDIATION_REPORT.md)**: Audit and resolution of GitHub Secret Scanning alerts.
 - **[Testing & QA Verification Report](Docs/TESTING_REPORT.md)**: Evidence from 14 test suites and 134 passed tests.
 - **[Performance & Bundle Analysis](Docs/PERFORMANCE.md)**: Measured build times, chunk sizes, and caching.
 - **[Accessibility & Design Review](Docs/ACCESSIBILITY.md)**: WCAG 2.1 AA checklist and contrast calculations.
