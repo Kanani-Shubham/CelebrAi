@@ -5,7 +5,7 @@ import { getStorage } from 'firebase/storage';
 import { getAnalytics } from 'firebase/analytics';
 
 const DEFAULT_FIREBASE_CONFIG = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'mock-api-key-for-testing-only',
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'celebrai-62487.firebaseapp.com',
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'celebrai-62487',
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'celebrai-62487.firebasestorage.app',
@@ -28,6 +28,7 @@ export const isFirebaseConfigured = Boolean(
   rawApiKey.length > 10 &&
   !rawApiKey.includes('undefined') &&
   !rawApiKey.includes('placeholder') &&
+  !rawApiKey.includes('mock') &&
   !rawApiKey.includes('your_')
 );
 
