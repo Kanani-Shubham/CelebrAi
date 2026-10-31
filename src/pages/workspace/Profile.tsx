@@ -131,7 +131,7 @@ export function Profile() {
         ref={fileInputRef}
         type="file"
         accept="image/jpeg,image/png,image/webp"
-        style={{ display: 'none' }}
+        className="hidden"
         onChange={handleFileChange}
       />
 
@@ -150,7 +150,7 @@ export function Profile() {
           </button>
         </div>
         {avatarUrl && (
-          <span style={{ fontSize: '11.5px', color: 'var(--text-secondary)', marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+          <span className="text-xs text-muted inline-flex items-center gap-1 mt-2">
             <HardDrive size={12} /> Saved on this device
           </span>
         )}
@@ -174,14 +174,14 @@ export function Profile() {
             <Mail size={16} />
             <div>
               <span className="pi-label">Email Address</span>
-              <strong className="pi-val" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <strong className="pi-val inline-flex items-center gap-2">
                 {email}
                 {isVerified ? (
-                  <span title="Verified Email" style={{ display: 'inline-flex', alignItems: 'center' }}>
-                    <ShieldCheck size={14} style={{ color: '#16a34a' }} />
+                  <span title="Verified Email" className="inline-flex items-center">
+                    <ShieldCheck size={14} className="text-success" />
                   </span>
                 ) : (
-                  <span title="Unverified Email" style={{ display: 'inline-flex', alignItems: 'center', color: '#ea580c' }}>
+                  <span title="Unverified Email" className="inline-flex items-center text-warning">
                     <ShieldAlert size={14} />
                   </span>
                 )}
@@ -228,7 +228,7 @@ export function Profile() {
               </div>
             </div>
             <div className="pi-right-meta">
-              <span className="meta-text" style={{ textTransform: 'capitalize' }}>
+              <span className="meta-text capitalize">
                 {profile?.subscription || 'Standard Free'}
               </span>
               <ChevronRight size={16} className="pi-arrow" />
@@ -248,24 +248,10 @@ export function Profile() {
       </div>
 
       {/* Sign Out Button */}
-      <div style={{ marginTop: '20px', padding: '0 4px' }}>
+      <div className="mt-4 p-2">
         <button
           onClick={handleSignOut}
-          style={{
-            width: '100%',
-            padding: '12px',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid #fee2e2',
-            background: '#fef2f2',
-            color: '#dc2626',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            fontSize: '14px',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
+          className="ui-danger-btn"
         >
           <LogOut size={16} />
           <span>Sign Out</span>
@@ -275,72 +261,51 @@ export function Profile() {
       {/* Photo Preview & Confirmation Modal */}
       {showPreviewModal && previewUrl && (
         <div className="modal-backdrop" onClick={handleCancelPreview}>
-          <div className="modal-sheet" onClick={e => e.stopPropagation()} style={{ maxWidth: 400, margin: 'auto', background: 'white', borderRadius: 'var(--radius-2xl)', padding: 24 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 18, color: 'var(--color-tuxedo-black)', margin: 0 }}>
+          <div className="modal-sheet ui-modal-card-sm" onClick={e => e.stopPropagation()}>
+            <div className="flex-between mb-4">
+              <h3 className="ui-modal-title">
                 Update Profile Photo
               </h3>
-              <button onClick={handleCancelPreview} style={{ color: 'var(--text-secondary)' }}>
+              <button onClick={handleCancelPreview} className="text-muted">
                 <X size={20} />
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, margin: '14px 0 10px' }}>
-              <div style={{ width: 140, height: 140, borderRadius: '50%', overflow: 'hidden', border: '3px solid var(--color-morning-fog)', boxShadow: 'var(--shadow-md)' }}>
-                <img src={previewUrl} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div className="flex-col items-center gap-3 my-2">
+              <div className="profile-avatar-circle">
+                <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
               </div>
-              <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+              <span className="text-xs text-muted">
                 {selectedFile?.name} ({selectedFile ? `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB` : ''})
               </span>
             </div>
 
-            <div style={{
-              background: '#FAF7F2',
-              border: '1px solid #ECE6DE',
-              borderRadius: '8px',
-              padding: '10px 12px',
-              marginBottom: '16px',
-              display: 'flex',
-              gap: '8px',
-              alignItems: 'flex-start',
-              fontSize: '11.5px',
-              color: '#827A76',
-              lineHeight: '1.45',
-            }}>
-              <HardDrive size={15} style={{ flexShrink: 0, marginTop: '2px', color: '#171F20' }} />
+            <div className="profile-notice-box">
+              <HardDrive size={15} className="shrink-0 mt-1 text-tuxedo" />
               <span>
                 <strong>Saved on this device:</strong> Photo will be resized (512×512) and cached securely in your browser's IndexedDB. It is not synced across devices.
               </span>
             </div>
 
             {uploading && (
-              <div style={{ marginBottom: 16 }}>
-                <div style={{ height: 6, background: 'var(--color-morning-fog)', borderRadius: 4, overflow: 'hidden' }}>
+              <div className="mb-4">
+                <div className="profile-progress-track">
                   <div style={{ width: `${uploadProgress}%`, height: '100%', background: 'var(--color-tuxedo-black)', transition: 'width 0.2s ease' }} />
                 </div>
-                <span style={{ fontSize: 11, color: 'var(--text-secondary)', display: 'block', textAlign: 'center', marginTop: 4 }}>
+                <span className="text-xs text-muted block text-center mt-1">
                   Optimizing and saving to local cache... {uploadProgress}%
                 </span>
               </div>
             )}
 
             {uploadError && (
-              <div style={{
-                background: '#fef2f2',
-                border: '1px solid #fecaca',
-                borderRadius: '8px',
-                padding: '10px 12px',
-                marginBottom: '16px',
-                color: '#991b1b',
-                fontSize: '12px',
-                lineHeight: '1.4',
-              }}>
-                <strong style={{ display: 'block', marginBottom: '2px' }}>Save Issue:</strong>
+              <div className="profile-error-box">
+                <strong className="block mb-1">Save Issue:</strong>
                 {uploadError}
               </div>
             )}
 
-            <div style={{ display: 'flex', gap: 10 }}>
+            <div className="flex gap-2">
               <button
                 type="button"
                 className="btn btn-secondary w-full"
@@ -349,12 +314,10 @@ export function Profile() {
               >
                 Cancel
               </button>
-              <button
+              <button className="btn btn-primary w-full flex-center gap-2"
                 type="button"
-                className="btn btn-primary w-full"
                 onClick={handleConfirmUpload}
                 disabled={uploading}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
               >
                 {uploading ? (
                   <>

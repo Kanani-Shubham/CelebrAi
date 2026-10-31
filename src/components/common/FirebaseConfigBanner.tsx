@@ -26,39 +26,15 @@ export function FirebaseConfigBanner() {
   };
 
   return (
-    <div style={{
-      background: '#FFFBEB',
-      borderBottom: '1px solid #FDE68A',
-      padding: '10px 16px',
-      fontSize: '13px',
-      color: '#92400E',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: '12px',
-      position: 'relative',
-      zIndex: 9999,
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-        <AlertCircle size={16} color="#D97706" style={{ flexShrink: 0 }} />
+    <div className="firebase-banner-wrap">
+      <div className="firebase-banner-content">
+        <AlertCircle size={16} color="#D97706" className="shrink-0" />
         <span>
           <strong>Firebase Configuration Pending:</strong> Set your 6 <code>VITE_FIREBASE_*</code> environment variables in Netlify Site Configuration to enable live Cloud Authentication & Firestore.
         </span>
         <button
           onClick={handleCopyNames}
-          style={{
-            background: '#FEF3C7',
-            border: '1px solid #FCD34D',
-            padding: '2px 8px',
-            borderRadius: '6px',
-            fontSize: '11px',
-            fontWeight: 600,
-            cursor: 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '4px',
-            color: '#B45309',
-          }}
+          className="firebase-badge-btn"
         >
           {copied ? <Check size={12} /> : <Key size={12} />}
           <span>{copied ? 'Copied Names' : 'Copy Variable Names'}</span>
@@ -68,15 +44,7 @@ export function FirebaseConfigBanner() {
       <button
         onClick={() => setDismissed(true)}
         aria-label="Dismiss banner"
-        style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          color: '#B45309',
-          padding: '2px',
-          display: 'flex',
-          alignItems: 'center',
-        }}
+        className="firebase-close-btn"
       >
         <X size={16} />
       </button>

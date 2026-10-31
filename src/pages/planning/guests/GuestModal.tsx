@@ -97,7 +97,7 @@ export function GuestModal({ isOpen, onClose, onSave }: GuestModalProps) {
               className={`form-input ${formErrors.name ? 'input-error' : ''}`}
             />
             {formErrors.name && (
-              <span style={{ color: '#dc2626', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+              <span className="form-error-sm">
                 {formErrors.name}
               </span>
             )}
@@ -118,7 +118,7 @@ export function GuestModal({ isOpen, onClose, onSave }: GuestModalProps) {
                 className={`form-input ${formErrors.partySize ? 'input-error' : ''}`}
               />
               {formErrors.partySize && (
-                <span style={{ color: '#dc2626', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                <span className="form-error-sm">
                   {formErrors.partySize}
                 </span>
               )}
@@ -167,7 +167,7 @@ export function GuestModal({ isOpen, onClose, onSave }: GuestModalProps) {
               className={`form-input ${formErrors.phone ? 'input-error' : ''}`}
             />
             {formErrors.phone && (
-              <span style={{ color: '#dc2626', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+              <span className="form-error-sm">
                 {formErrors.phone}
               </span>
             )}
@@ -186,7 +186,7 @@ export function GuestModal({ isOpen, onClose, onSave }: GuestModalProps) {
               className={`form-input ${formErrors.email ? 'input-error' : ''}`}
             />
             {formErrors.email && (
-              <span style={{ color: '#dc2626', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+              <span className="form-error-sm">
                 {formErrors.email}
               </span>
             )}

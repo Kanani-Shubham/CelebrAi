@@ -164,16 +164,16 @@ export function BudgetDashboard() {
 
   if (!eventId) {
     return (
-      <div className="budget-dashboard-page" style={{ padding: '32px 18px', textAlign: 'center' }}>
-        <p style={{ color: 'var(--text-secondary)' }}>No active event selected. Please select or create an event to track your budget.</p>
+      <div className="budget-dashboard-page p-4 text-center">
+        <p className="text-muted">No active event selected. Please select or create an event to track your budget.</p>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="budget-dashboard-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh' }}>
-        <Loader2 size={28} className="animate-spin" style={{ color: 'var(--color-tuxedo-black)' }} />
+      <div className="budget-dashboard-page flex-center min-h-50">
+        <Loader2 className="animate-spin text-tuxedo" size={28} />
       </div>
     );
   }
@@ -187,7 +187,7 @@ export function BudgetDashboard() {
             <span className="budget-label">Total Planned Budget</span>
             <h1 className="budget-total-amt">₹{totalBudget.toLocaleString('en-IN')}</h1>
             {isOverBudget && (
-              <span style={{ color: '#dc2626', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
+              <span className="text-error text-xs font-semibold inline-flex items-center gap-1 mt-1">
                 <AlertCircle size={14} /> Over budget by ₹{(totalSpent - totalBudget).toLocaleString('en-IN')}
               </span>
             )}
@@ -237,7 +237,7 @@ export function BudgetDashboard() {
           </div>
         </div>
 
-        <div className="plan-card" onClick={() => navigate('/expenses')} style={{ cursor: 'pointer' }}>
+        <div className="plan-card cursor-pointer" onClick={() => navigate('/expenses')}>
           <div className="plan-card-icon spent">
             <TrendingUp size={16} />
           </div>
@@ -267,12 +267,10 @@ export function BudgetDashboard() {
       <div className="category-cards-grid">
         {categoryList.length === 0 ? (
           <div className="category-empty-state">
-            <p style={{ margin: '0 0 10px 0', fontSize: '14px' }}>No expense records added yet.</p>
-            <button
+            <p className="text-sm mb-2">No expense records added yet.</p>
+            <button className="btn btn-primary btn btn-secondary rounded-full text-xs"
               type="button"
-              className="btn btn-primary"
               onClick={() => navigate('/expenses')}
-              style={{ fontSize: '13px', padding: '6px 16px', borderRadius: 'var(--radius-full)' }}
             >
               + Add First Expense
             </button>

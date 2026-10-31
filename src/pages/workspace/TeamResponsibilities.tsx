@@ -135,8 +135,8 @@ export function TeamResponsibilities() {
       {/* Team Member List */}
       <div className="team-members-list">
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px' }}>
-            <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto', color: 'var(--color-tuxedo-black)' }} />
+          <div className="ui-center-empty">
+            <Loader2 className="animate-spin mx-auto text-tuxedo" size={24} />
           </div>
         ) : (
           team.map(member => (
@@ -150,11 +150,11 @@ export function TeamResponsibilities() {
                 <span className="tm-role">{member.role} · {member.permission}</span>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{member.tasksCount} tasks</span>
+              <div className="inline-flex items-center gap-2">
+                <span className="text-xs text-muted">{member.tasksCount} tasks</span>
                 <button
                   onClick={(e) => handleRemoveMember(member.id, e)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '4px' }}
+                  className="ui-icon-btn-ghost"
                   title="Remove member"
                 >
                   <Trash2 size={14} />
@@ -176,71 +176,55 @@ export function TeamResponsibilities() {
       {/* Add Modal */}
       {showAddModal && (
         <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100,
-            padding: '16px',
-          }}
+          className="ui-modal-backdrop"
           onClick={() => setShowAddModal(false)}
         >
           <div
-            style={{
-              background: '#FFFFFF',
-              borderRadius: 'var(--radius-xl)',
-              maxWidth: '420px',
-              width: '100%',
-              padding: '24px',
-              boxShadow: 'var(--shadow-xl)',
-            }}
+            className="ui-modal-card-md"
             onClick={e => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: 0 }}>
+            <div className="ui-modal-header">
+              <h3 className="ui-modal-title">
                 Invite Team Member
               </h3>
               <button
                 onClick={() => setShowAddModal(false)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}
+                className="ui-icon-btn-ghost"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleAddMember} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <form onSubmit={handleAddMember} className="flex-col gap-3">
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Full Name *</label>
+                <label className="ui-field-label">Full Name *</label>
                 <input
                   type="text"
                   placeholder="e.g. Diya Patel"
                   value={newName}
                   onChange={e => setNewName(e.target.value)}
                   required
-                  style={{ width: '100%', padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)' }}
+                  className="w-full p-2 border-default rounded-md"
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Role</label>
+                <label className="ui-field-label">Role</label>
                 <input
                   type="text"
                   placeholder="e.g. Catering Coordinator"
                   value={newRole}
                   onChange={e => setNewRole(e.target.value)}
-                  style={{ width: '100%', padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)' }}
+                  className="w-full p-2 border-default rounded-md"
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Permission Level</label>
+                <label className="ui-field-label">Permission Level</label>
                 <select
                   value={newPermission}
                   onChange={e => setNewPermission(e.target.value)}
-                  style={{ width: '100%', padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', background: '#fff' }}
+                  className="w-full p-2 border-default rounded-md bg-white"
                 >
                   <option value="Editor">Editor (Edit tasks &amp; notes)</option>
                   <option value="Viewer">Viewer (Read-only)</option>
@@ -248,20 +232,16 @@ export function TeamResponsibilities() {
                 </select>
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '10px' }}>
-                <button
+              <div className="flex-between justify-end gap-2 mt-2">
+                <button className="btn btn-secondary btn btn-secondary rounded-full"
                   type="button"
-                  className="btn btn-secondary"
                   onClick={() => setShowAddModal(false)}
-                  style={{ padding: '8px 16px', borderRadius: 'var(--radius-full)' }}
                 >
                   Cancel
                 </button>
-                <button
+                <button className="btn btn-primary btn btn-primary rounded-full"
                   type="submit"
                   disabled={saving}
-                  className="btn btn-primary"
-                  style={{ padding: '8px 20px', borderRadius: 'var(--radius-full)' }}
                 >
                   {saving ? 'Adding...' : 'Add Member'}
                 </button>

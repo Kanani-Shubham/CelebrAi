@@ -76,7 +76,7 @@ export function PublicEvent() {
         </p>
 
         {/* Countdown Box */}
-        <div className="countdown-grid" style={{ gridTemplateColumns: '1fr', maxWidth: '200px', margin: '0 auto 20px' }}>
+        <div className="countdown-grid countdown-single-col">
           <div className="countdown-box">
             <span className="c-num">{daysLeft}</span>
             <span className="c-lbl">
@@ -152,46 +152,44 @@ export function PublicEvent() {
         )}
 
         {activeTab === 'schedule' && (
-          <div style={{ background: '#FFFFFF', padding: '20px', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)', marginTop: '16px', textAlign: 'left' }}>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 12px 0' }}>Program Schedule</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <span style={{ fontWeight: 600, fontSize: '13px', width: '80px' }}>05:30 PM</span>
-                <span style={{ fontSize: '14px' }}>Welcome Drinks &amp; Foyer Reception</span>
+          <div className="ui-card-xl mt-4 text-left">
+            <h3 className="ui-section-title-sm">Program Schedule</h3>
+            <div className="flex-col gap-3">
+              <div className="flex-row items-center gap-3">
+                <span className="font-semibold text-sm w-20">05:30 PM</span>
+                <span className="text-sm">Welcome Drinks &amp; Foyer Reception</span>
               </div>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <span style={{ fontWeight: 600, fontSize: '13px', width: '80px' }}>07:00 PM</span>
-                <span style={{ fontSize: '14px' }}>Main Ceremony &amp; Toast</span>
+              <div className="flex-row items-center gap-3">
+                <span className="font-semibold text-sm w-20">07:00 PM</span>
+                <span className="text-sm">Main Ceremony &amp; Toast</span>
               </div>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <span style={{ fontWeight: 600, fontSize: '13px', width: '80px' }}>08:30 PM</span>
-                <span style={{ fontSize: '14px' }}>Dinner Buffet &amp; Celebration</span>
+              <div className="flex-row items-center gap-3">
+                <span className="font-semibold text-sm w-20">08:30 PM</span>
+                <span className="text-sm">Dinner Buffet &amp; Celebration</span>
               </div>
             </div>
           </div>
         )}
 
         {activeTab === 'gallery' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '16px' }}>
-            <img src={coverImage} alt="Gallery 1" style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: 'var(--radius-lg)' }} />
-            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=80" alt="Gallery 2" style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: 'var(--radius-lg)' }} />
+          <div className="grid-2-col gap-2 mt-4">
+            <img src={coverImage} alt="Gallery 1" className="w-full h-36 object-cover rounded-lg" />
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=80" alt="Gallery 2" className="w-full h-36 object-cover rounded-lg" />
           </div>
         )}
 
         {activeTab === 'travel' && (
-          <div style={{ background: '#FFFFFF', padding: '20px', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)', marginTop: '16px', textAlign: 'left' }}>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 12px 0' }}>Travel &amp; Parking</h3>
-            <p style={{ fontSize: '14px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
+          <div className="ui-card-xl mt-4 text-left">
+            <h3 className="ui-section-title-sm">Travel &amp; Parking</h3>
+            <p className="text-sm text-muted m-0">
               Valet parking will be available at the main entrance. For out-of-town guests arriving via airport or train station, cab services navigate directly to {location}.
             </p>
           </div>
         )}
 
         {/* Sticky RSVP Action */}
-        <div style={{ marginTop: '24px' }}>
-          <button
-            className="btn btn-primary"
-            style={{ width: '100%', padding: '14px', borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '16px' }}
+        <div className="mt-6">
+          <button className="btn btn-primary btn btn-primary rounded-full w-full py-3 flex-center gap-2 text-base"
             onClick={() => navigate(`/guest-rsvp?eventId=${eventData?.id || activeEvent?.id || ''}`)}
           >
             <Heart size={18} fill="currentColor" />

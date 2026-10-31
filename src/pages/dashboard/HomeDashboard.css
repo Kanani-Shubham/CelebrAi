@@ -423,3 +423,11 @@
     padding: 18px 24px;
   }
 }
+
+.hd-hero-card { display: flex; flex-direction: column; align-items: flex-start; padding: 36px 28px; gap: 20px; }
+.hd-hero-subtitle { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); font-weight: 600; }
+.hd-hero-title { font-size: 32px; margin: 8px 0; color: var(--color-tuxedo-black); }
+.hd-hero-desc { color: var(--text-secondary); font-size: 15px; line-height: 1.6; max-width: 540px; margin: 0; }
+.hd-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; width: 100%; }
+.hd-hero-btn { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: var(--radius-full); }
+.hd-empty-box { text-align: center; padding: 24px 16px; color: var(--text-secondary); }

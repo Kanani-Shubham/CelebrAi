@@ -156,3 +156,41 @@
   font-size: 11px;
   color: var(--text-secondary);
 }
+
+.allevents-empty-state {
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+.allevents-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: #FFFFFF;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: 20;
+  min-width: 130px;
+  padding: 4px;
+}
+.allevents-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.allevents-menu-divider {
+  margin: 4px 0;
+  border: none;
+  border-top: 1px solid var(--border-default);
+}

@@ -254,3 +254,44 @@
   font-size: 10px;
   color: var(--text-secondary);
 }
+
+.vd-tab-section { margin-top: 16px; }
+.vd-section-heading { font-family: var(--font-serif); font-size: 18px; margin: 0 0 8px 0; color: var(--color-tuxedo-black); }
+.vd-description-text { color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin: 0; }
+.vd-packages-stack { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+.vd-package-card { padding: 14px; border: 1px solid var(--border-default); border-radius: var(--radius-md); }
+.vd-package-title { display: block; font-size: 14px; font-weight: 600; }
+.vd-package-sub { font-size: 12px; color: var(--text-secondary); }
+.vd-package-price { margin-top: 6px; font-weight: 600; }
+.vd-gallery-grid { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.vd-gallery-img { width: 100%; height: 110px; object-fit: cover; border-radius: var(--radius-md); }
+.vd-reviews-stack { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+.vd-review-card { padding: 12px; background: #F7F1E8; border-radius: var(--radius-md); font-size: 13px; }
+.vd-review-author { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+.vd-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+.vd-modal-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-xl);
+  max-width: 440px;
+  width: 100%;
+  padding: 24px;
+  box-shadow: var(--shadow-xl);
+}
+.vd-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.vd-modal-title { font-family: var(--font-serif); font-size: 18px; margin: 0; color: var(--color-tuxedo-black); }
+.vd-modal-close-btn { background: none; border: none; cursor: pointer; color: var(--text-secondary); }
+.vd-form-stack { display: flex; flex-direction: column; gap: 14px; }
+.vd-form-label { font-size: 13px; font-weight: 500; color: var(--color-tuxedo-black); display: block; margin-bottom: 4px; }
+.vd-form-input { width: 100%; padding: 10px 12px; border: 1px solid var(--border-default); border-radius: var(--radius-md); }
+.vd-modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+.vd-cancel-btn { padding: 8px 16px; border-radius: var(--radius-full); }
+.vd-submit-btn { padding: 8px 20px; border-radius: var(--radius-full); display: flex; align-items: center; gap: 6px; }

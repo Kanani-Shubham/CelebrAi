@@ -155,11 +155,11 @@ export function DecorStudio() {
             </div>
 
             {/* Style Tag Filters */}
-            <div className="style-filters-row" style={{ marginTop: '16px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-tuxedo-black)', display: 'block', marginBottom: '8px' }}>
+            <div className="style-filters-row mt-4">
+              <span className="decor-filter-label">
                 Select Desired Aesthetic:
               </span>
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <div className="decor-tag-list">
                 {STYLES.map(st => (
                   <button
                     key={st}
@@ -176,47 +176,37 @@ export function DecorStudio() {
       )}
 
       {activeTab === 'ai-ideas' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div className="decor-column-stack">
           {isGenerating ? (
-            <div style={{ textAlign: 'center', padding: '40px' }}>
-              <Loader2 size={28} className="animate-spin" style={{ margin: '0 auto', color: '#7E57C2' }} />
-              <p style={{ marginTop: '12px', fontSize: '14px', color: 'var(--text-secondary)' }}>
+            <div className="decor-loading-state">
+              <Loader2 className="animate-spin decor-spinner" size={28} />
+              <p className="decor-loading-text">
                 {AI_MODEL_NAME} is generating custom {selectedStyle} decor concepts...
               </p>
             </div>
           ) : aiIdeas.length === 0 ? (
-            <div style={{
-              background: '#FFFFFF',
-              border: '1px dashed var(--border-default)',
-              borderRadius: 'var(--radius-xl)',
-              padding: '40px 20px',
-              textAlign: 'center',
-            }}>
-              <Sparkles size={32} style={{ color: '#7E57C2', margin: '0 auto 12px' }} />
-              <h3 style={{ fontFamily: 'var(--font-serif)', margin: '0 0 6px 0', color: 'var(--color-tuxedo-black)' }}>
+            <div className="decor-empty-card">
+              <Sparkles size={32} className="decor-sparkle-icon" />
+              <h3 className="decor-empty-title">
                 Generate Custom Decor Concepts
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', maxWidth: '380px', margin: '0 auto 16px' }}>
+              <p className="decor-empty-desc">
                 Let our AI tailor 5 creative decor styling ideas for your {activeEvent?.eventType || 'celebration'} in {selectedStyle} style.
               </p>
-              <button
-                className="btn btn-primary"
+              <button className="btn btn-primary btn btn-primary decor-gen-btn"
                 onClick={handleGenerateDecor}
-                style={{ padding: '10px 24px', borderRadius: 'var(--radius-full)' }}
               >
                 Generate Decor Concepts
               </button>
             </div>
           ) : (
             <>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-tuxedo-black)' }}>
+              <div className="decor-header-row">
+                <span className="decor-header-title">
                   Aesthetic: {selectedStyle}
                 </span>
-                <button
-                  className="btn btn-secondary"
+                <button className="btn btn-secondary btn btn-secondary decor-refresh-btn"
                   onClick={handleGenerateDecor}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', padding: '4px 12px', borderRadius: 'var(--radius-full)' }}
                 >
                   <RefreshCw size={12} /> Regenerate
                 </button>
@@ -253,8 +243,8 @@ export function DecorStudio() {
                       {idx + 1}
                     </div>
 
-                    <div style={{ flex: 1 }}>
-                      <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.5', color: 'var(--color-tuxedo-black)' }}>
+                    <div className="decor-item-body">
+                      <p className="decor-item-text">
                         {idea}
                       </p>
                     </div>
@@ -281,16 +271,16 @@ export function DecorStudio() {
       )}
 
       {activeTab === 'palette' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="decor-theme-stack">
           {PRESET_THEMES.map(th => (
-            <div key={th.id} style={{ background: '#FFFFFF', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-lg)', padding: '16px' }}>
-              <h4 style={{ margin: '0 0 4px 0', fontFamily: 'var(--font-serif)', fontSize: '16px' }}>{th.name}</h4>
-              <p style={{ margin: '0 0 12px 0', fontSize: '13px', color: 'var(--text-secondary)' }}>{th.desc}</p>
-              <div style={{ display: 'flex', gap: '8px' }}>
+            <div key={th.id} className="decor-theme-card">
+              <h4 className="decor-theme-title">{th.name}</h4>
+              <p className="decor-theme-desc">{th.desc}</p>
+              <div className="decor-swatch-row">
                 {th.swatches.map((color, i) => (
-                  <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                  <div key={i} className="decor-swatch-col">
                     <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-md)', background: color, border: '1px solid rgba(0,0,0,0.1)' }} />
-                    <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>{color}</span>
+                    <span className="decor-swatch-code">{color}</span>
                   </div>
                 ))}
               </div>
@@ -301,10 +291,8 @@ export function DecorStudio() {
 
       {/* Floating Action Button */}
       {activeTab !== 'ai-ideas' && (
-        <div style={{ marginTop: '20px' }}>
-          <button
-            className="btn btn-primary"
-            style={{ width: '100%', padding: '14px', borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '15px' }}
+        <div className="decor-bottom-action">
+          <button className="btn btn-primary btn btn-primary decor-submit-full"
             onClick={handleGenerateDecor}
             disabled={isGenerating}
           >

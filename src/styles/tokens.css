@@ -683,4 +683,29 @@ h1, h2, h3, h4, h5, h6 {
 .mb-2 { margin-bottom: 8px; }
 .mb-4 { margin-bottom: 16px; }
 .p-4 { padding: 16px; }
+.hidden { display: none !important; }
+.cursor-pointer { cursor: pointer; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-row { display: flex; flex-direction: row; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.inline-flex { display: inline-flex; }
+.font-serif { font-family: var(--font-serif); }
+.font-semibold { font-weight: var(--weight-semibold); }
+.font-bold { font-weight: var(--weight-bold); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-full { border-radius: var(--radius-full); }
+.border-default { border: 1px solid var(--border-default); }
+.text-tuxedo { color: var(--color-tuxedo-black); }
+.capitalize { text-transform: capitalize; }
+.m-auto { margin: auto; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.p-2 { padding: 8px; }
+.p-3 { padding: 12px; }
+.m-0 { margin: 0; }
 

@@ -24,7 +24,7 @@ export function RouteLoadingFallback() {
           animation: 'spin 0.8s linear infinite',
         }}
       />
-      <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Loading view...</span>
+      <span className="text-sm font-medium">Loading view...</span>
     </div>
   );
 }

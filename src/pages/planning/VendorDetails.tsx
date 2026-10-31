@@ -159,43 +159,43 @@ export function VendorDetails() {
 
         {/* Overview Tab Content */}
         {activeTab === 'overview' && (
-          <div style={{ marginTop: '16px' }}>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 8px 0', color: 'var(--color-tuxedo-black)' }}>
+          <div className="vd-tab-section">
+            <h3 className="vd-section-heading">
               About {vendor.name}
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+            <p className="vd-description-text">
               Specializing in premier events across {vendor.location}. Offers curated full-service packages, professional on-site staff, and flexible decor arrangements tailored to your celebration budget.
             </p>
           </div>
         )}
 
         {activeTab === 'packages' && (
-          <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div style={{ padding: '14px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)' }}>
-              <strong style={{ display: 'block', fontSize: '14px' }}>Essential Package</strong>
-              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Basic setup, staff and 6-hour coverage</span>
-              <div style={{ marginTop: '6px', fontWeight: 600 }}>{vendor.priceStart}</div>
+          <div className="vd-packages-stack">
+            <div className="vd-package-card">
+              <strong className="vd-package-title">Essential Package</strong>
+              <span className="vd-package-sub">Basic setup, staff and 6-hour coverage</span>
+              <div className="vd-package-price">{vendor.priceStart}</div>
             </div>
-            <div style={{ padding: '14px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)' }}>
-              <strong style={{ display: 'block', fontSize: '14px' }}>Signature Luxury Experience</strong>
-              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Full-day access, customized decor and dedicated event manager</span>
-              <div style={{ marginTop: '6px', fontWeight: 600 }}>Custom Quote</div>
+            <div className="vd-package-card">
+              <strong className="vd-package-title">Signature Luxury Experience</strong>
+              <span className="vd-package-sub">Full-day access, customized decor and dedicated event manager</span>
+              <div className="vd-package-price">Custom Quote</div>
             </div>
           </div>
         )}
 
         {activeTab === 'gallery' && (
-          <div style={{ marginTop: '16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-            <img src={vendor.image} alt="Gallery 1" style={{ width: '100%', height: '110px', objectFit: 'cover', borderRadius: 'var(--radius-md)' }} />
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80" alt="Gallery 2" style={{ width: '100%', height: '110px', objectFit: 'cover', borderRadius: 'var(--radius-md)' }} />
+          <div className="vd-gallery-grid">
+            <img src={vendor.image} alt="Gallery 1" className="vd-gallery-img" />
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80" alt="Gallery 2" className="vd-gallery-img" />
           </div>
         )}
 
         {activeTab === 'reviews' && (
-          <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div style={{ padding: '12px', background: '#F7F1E8', borderRadius: 'var(--radius-md)', fontSize: '13px' }}>
+          <div className="vd-packages-stack">
+            <div className="vd-review-card">
               <strong>“Outstanding service and immaculate attention to detail.”</strong>
-              <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>— Verified Client Review</div>
+              <div className="vd-review-author">— Verified Client Review</div>
             </div>
           </div>
         )}
@@ -204,50 +204,34 @@ export function VendorDetails() {
       {/* Save / Record Quotation Modal */}
       {showQuoteModal && (
         <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100,
-            padding: '16px',
-          }}
+          className="vd-modal-backdrop"
           onClick={() => setShowQuoteModal(false)}
         >
           <div
-            style={{
-              background: '#FFFFFF',
-              borderRadius: 'var(--radius-xl)',
-              maxWidth: '440px',
-              width: '100%',
-              padding: '24px',
-              boxShadow: 'var(--shadow-xl)',
-            }}
+            className="vd-modal-card"
             onClick={e => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: 0, color: 'var(--color-tuxedo-black)' }}>
+            <div className="vd-modal-header">
+              <h3 className="vd-modal-title">
                 Record Vendor for Event
               </h3>
               <button
                 onClick={() => setShowQuoteModal(false)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}
+                className="vd-modal-close-btn"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div className="vd-form-stack">
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-tuxedo-black)', display: 'block', marginBottom: '4px' }}>
+                <label className="vd-form-label">
                   Booking / Evaluation Status
                 </label>
                 <select
                   value={status}
                   onChange={e => setStatus(e.target.value as 'Shortlisted' | 'Quoted' | 'Booked')}
-                  style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', background: '#fff' }}
+                  className="vd-form-input"
                 >
                   <option value="Shortlisted">Shortlisted</option>
                   <option value="Quoted">Quotation Received</option>
@@ -256,7 +240,7 @@ export function VendorDetails() {
               </div>
 
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-tuxedo-black)', display: 'block', marginBottom: '4px' }}>
+                <label className="vd-form-label">
                   Agreed / Quoted Price (₹)
                 </label>
                 <input
@@ -264,12 +248,12 @@ export function VendorDetails() {
                   placeholder="e.g. 150000"
                   value={estimatedCost}
                   onChange={e => setEstimatedCost(e.target.value)}
-                  style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)' }}
+                  className="vd-form-input"
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-tuxedo-black)', display: 'block', marginBottom: '4px' }}>
+                <label className="vd-form-label">
                   Private Planning Notes
                 </label>
                 <textarea
@@ -277,16 +261,14 @@ export function VendorDetails() {
                   placeholder="e.g. Spoke with manager on WhatsApp. They can include complimentary welcome drinks."
                   value={quoteNotes}
                   onChange={e => setQuoteNotes(e.target.value)}
-                  style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)' }}
+                  className="vd-form-input"
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '8px' }}>
+              <div className="vd-modal-actions">
                 <button
                   type="button"
-                  className="btn btn-secondary"
-                  onClick={() => setShowQuoteModal(false)}
-                  style={{ padding: '8px 16px', borderRadius: 'var(--radius-full)' }}
+                  className="btn btn-secondary vd-cancel-btn" onClick={() => setShowQuoteModal(false)}
                 >
                   Cancel
                 </button>
@@ -294,8 +276,7 @@ export function VendorDetails() {
                   type="button"
                   onClick={handleSaveToEvent}
                   disabled={savingVendor}
-                  className="btn btn-primary"
-                  style={{ padding: '8px 20px', borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  className="btn btn-primary vd-submit-btn"
                 >
                   {savingVendor ? <Loader2 size={16} className="animate-spin" /> : null}
                   <span>Save to Event</span>

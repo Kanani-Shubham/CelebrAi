@@ -166,8 +166,8 @@ export function TimelineCalendar() {
             </div>
 
             {loading ? (
-              <div style={{ textAlign: 'center', padding: '30px' }}>
-                <Loader2 size={20} className="animate-spin" style={{ margin: '0 auto', color: 'var(--color-tuxedo-black)' }} />
+              <div className="ui-center-empty">
+                <Loader2 className="animate-spin mx-auto text-tuxedo" size={20} />
               </div>
             ) : timelineItems.length === 0 ? (
               <div style={{
@@ -178,11 +178,9 @@ export function TimelineCalendar() {
                 textAlign: 'center',
                 color: 'var(--text-secondary)',
               }}>
-                <p style={{ margin: '0 0 10px 0', fontSize: '14px' }}>No scheduled deadlines or milestones found.</p>
-                <button
-                  className="btn btn-secondary"
+                <p className="text-sm mb-2">No scheduled deadlines or milestones found.</p>
+                <button className="btn btn-secondary btn btn-secondary rounded-full text-xs"
                   onClick={() => navigate('/tasks')}
-                  style={{ fontSize: '13px', padding: '6px 14px', borderRadius: 'var(--radius-full)' }}
                 >
                   + Add Tasks with Due Dates
                 </button>
@@ -210,9 +208,9 @@ export function TimelineCalendar() {
         </>
       ) : (
         /* Agenda View */
-        <div className="agenda-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '12px' }}>
+        <div className="agenda-list flex-col gap-2 mt-3">
           {timelineItems.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '30px', color: 'var(--text-secondary)' }}>
+            <div className="ui-center-empty text-muted">
               No agenda items scheduled.
             </div>
           ) : (
@@ -230,8 +228,8 @@ export function TimelineCalendar() {
                 }}
               >
                 <div>
-                  <strong style={{ fontSize: '14px', color: 'var(--color-tuxedo-black)', display: 'block' }}>{item.title}</strong>
-                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                  <strong className="text-sm text-tuxedo block font-semibold">{item.title}</strong>
+                  <span className="text-xs text-muted inline-flex items-center gap-1 mt-1">
                     <Clock size={12} /> {formatDisplayDate(item.date)}
                   </span>
                 </div>

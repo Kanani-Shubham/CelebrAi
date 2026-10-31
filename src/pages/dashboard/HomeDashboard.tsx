@@ -160,8 +160,8 @@ export function HomeDashboard() {
 
   if (eventLoading || (eventId && loadingData && tasks.length === 0)) {
     return (
-      <div className="home-dashboard" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-        <Loader2 size={32} className="animate-spin" style={{ color: 'var(--color-tuxedo-black)' }} />
+      <div className="home-dashboard flex-center min-h-60">
+        <Loader2 className="animate-spin text-tuxedo" size={32} />
       </div>
     );
   }
@@ -170,41 +170,37 @@ export function HomeDashboard() {
   if (!activeEvent) {
     return (
       <div className="home-dashboard">
-        <div className="hero-countdown-card" style={{ flexDirection: 'column', alignItems: 'flex-start', padding: '36px 28px', gap: '20px' }}>
+        <div className="hero-countdown-card hd-hero-card">
           <div>
-            <span style={{ fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-secondary)', fontWeight: 600 }}>
+            <span className="hd-hero-subtitle">
               Welcome to CelebrAI{user?.displayName ? `, ${user.displayName}` : ''}
             </span>
-            <h1 className="font-serif" style={{ fontSize: '32px', margin: '8px 0', color: 'var(--color-tuxedo-black)' }}>
+            <h1 className="font-serif hd-hero-title">
               Let’s Plan Your Next Celebration
             </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: '1.6', maxWidth: '540px', margin: 0 }}>
+            <p className="hd-hero-desc">
               You don’t have an active celebration yet. Create an event manually or let our AI assistant build a tailored master plan, budget breakdown, and checklist in seconds.
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', width: '100%' }}>
-            <button
-              className="btn btn-primary"
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: 'var(--radius-full)' }}
+          <div className="hd-hero-actions">
+            <button className="btn btn-primary hd-hero-btn"
               onClick={() => navigate('/create-event')}
             >
               <Plus size={18} />
               <span>Create Your First Event</span>
             </button>
-            <button
-              className="btn btn-secondary"
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: 'var(--radius-full)' }}
+            <button className="btn btn-secondary hd-hero-btn"
               onClick={() => navigate('/create-event')}
             >
-              <Sparkles size={18} style={{ color: '#7E57C2' }} />
+              <Sparkles size={18} className="text-violet" />
               <span>AI Wizard Planning</span>
             </button>
           </div>
         </div>
 
         {/* Quick access tiles */}
-        <div className="quick-action-tiles" style={{ marginTop: '16px' }}>
+        <div className="quick-action-tiles mt-4">
           <button className="action-tile" onClick={() => navigate('/events')}>
             <div className="tile-icon-bg"><Calendar size={20} /></div>
             <span>All Events</span>
@@ -337,12 +333,10 @@ export function HomeDashboard() {
 
         <div className="urgent-tasks-card">
           {focusTasks.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '24px 16px', color: 'var(--text-secondary)' }}>
-              <p style={{ margin: '0 0 12px', fontSize: '14px' }}>No pending tasks recorded for this celebration.</p>
-              <button
-                className="btn btn-secondary btn-sm"
+            <div className="hd-empty-box">
+              <p className="text-sm mb-3">No pending tasks recorded for this celebration.</p>
+              <button className="btn btn-secondary btn-sm rounded-full"
                 onClick={() => navigate('/tasks')}
-                style={{ borderRadius: 'var(--radius-full)' }}
               >
                 <Plus size={14} /> Add First Task
               </button>

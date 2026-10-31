@@ -90,32 +90,23 @@ export function AllEvents() {
 
       <div className="events-list">
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px' }}>
-            <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto', color: 'var(--color-tuxedo-black)' }} />
+          <div className="ui-center-empty">
+            <Loader2 className="animate-spin mx-auto text-tuxedo" size={24} />
           </div>
         ) : filteredEvents.length === 0 ? (
-          <div style={{
-            background: 'var(--bg-surface)',
-            border: '1px dashed var(--border-default)',
-            borderRadius: 'var(--radius-xl)',
-            padding: '48px 24px',
-            textAlign: 'center',
-            color: 'var(--text-secondary)',
-          }}>
-            <Calendar size={36} style={{ margin: '0 auto 12px', opacity: 0.5 }} />
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 6px 0', color: 'var(--color-tuxedo-black)' }}>
+          <div className="allevents-empty-state">
+            <Calendar size={36} className="mx-auto mb-2 opacity-50" />
+            <h3 className="ui-section-title-sm mb-1 text-center">
               No {filter} celebrations
             </h3>
-            <p style={{ fontSize: '14px', margin: '0 0 16px 0' }}>
+            <p className="text-sm mb-4 text-center">
               {filter === 'active'
                 ? 'Create your first event to start planning tasks, guests, and budgets.'
                 : `You don't have any ${filter} celebrations.`}
             </p>
             {filter === 'active' && (
-              <button
-                className="btn btn-primary"
+              <button className="btn btn-primary btn btn-primary rounded-full"
                 onClick={() => navigate('/create-event')}
-                style={{ padding: '8px 20px', borderRadius: 'var(--radius-full)' }}
               >
                 + Create Event
               </button>
@@ -127,11 +118,9 @@ export function AllEvents() {
             const isSelected = activeEvent?.id === ev.id;
 
             return (
-              <div
+              <div className={`event-list-card ${isSelected ? 'active-event' : ''} relative`}
                 key={ev.id}
-                className={`event-list-card ${isSelected ? 'active-event' : ''}`}
                 onClick={() => handleSelectEvent(ev)}
-                style={{ position: 'relative' }}
               >
                 <div className="event-thumb">
                   <img
@@ -143,7 +132,7 @@ export function AllEvents() {
                 <div className="event-body">
                   <div className="event-head-row">
                     <h3 className="event-card-name">{ev.eventName}</h3>
-                    <div style={{ position: 'relative' }}>
+                    <div className="relative">
                       <button
                         className="event-more-btn"
                         onClick={(e) => {
@@ -156,31 +145,20 @@ export function AllEvents() {
 
                       {menuOpenId === ev.id && (
                         <div
-                          style={{
-                            position: 'absolute',
-                            right: 0,
-                            top: '100%',
-                            background: '#FFFFFF',
-                            border: '1px solid var(--border-default)',
-                            borderRadius: 'var(--radius-md)',
-                            boxShadow: 'var(--shadow-md)',
-                            zIndex: 20,
-                            minWidth: '130px',
-                            padding: '4px',
-                          }}
+                          className="allevents-dropdown-menu"
                           onClick={e => e.stopPropagation()}
                         >
                           <button
                             onClick={(e) => handleToggleArchive(e, ev)}
-                            style={{ display: 'flex', alignItems: 'center', gap: '6px', width: '100%', padding: '6px 10px', fontSize: '12px', border: 'none', background: 'none', cursor: 'pointer', borderRadius: 'var(--radius-sm)' }}
+                            className="allevents-menu-item"
                           >
                             <Archive size={12} />
                             {ev.status === 'archived' ? 'Unarchive' : 'Archive'}
                           </button>
-                          <hr style={{ margin: '4px 0', border: 'none', borderTop: '1px solid var(--border-default)' }} />
+                          <hr className="allevents-menu-divider" />
                           <button
                             onClick={(e) => handleDeleteEvent(e, ev.id)}
-                            style={{ display: 'flex', alignItems: 'center', gap: '6px', width: '100%', padding: '6px 10px', fontSize: '12px', color: '#dc2626', border: 'none', background: 'none', cursor: 'pointer', borderRadius: 'var(--radius-sm)' }}
+                            className="allevents-menu-item text-error"
                           >
                             <Trash2 size={12} />
                             Delete

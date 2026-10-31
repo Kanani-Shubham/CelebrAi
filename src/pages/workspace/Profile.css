@@ -182,3 +182,8 @@
     max-width: 760px;
   }
 }
+
+.profile-avatar-circle { width: 140px; height: 140px; border-radius: 50%; overflow: hidden; border: 3px solid var(--color-morning-fog); box-shadow: var(--shadow-md); }
+.profile-notice-box { background: #FAF7F2; border: 1px solid #ECE6DE; border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; display: flex; gap: 8px; align-items: flex-start; font-size: 11.5px; color: #827A76; line-height: 1.45; }
+.profile-progress-track { height: 6px; background: var(--color-morning-fog); border-radius: 4px; overflow: hidden; }
+.profile-error-box { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; color: #991b1b; font-size: 12px; line-height: 1.4; }

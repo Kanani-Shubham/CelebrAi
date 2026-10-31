@@ -118,15 +118,13 @@ export function RunSheet() {
 
   return (
     <div className="run-sheet-page">
-      <div className="rs-title-section" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div className="rs-title-section flex-between items-start">
         <div>
           <h1 className="rs-title">Event Run Sheet</h1>
           <p className="rs-sub">Detailed hour-by-hour schedule for {activeEvent?.eventName || 'your celebration'}</p>
         </div>
-        <button
-          className="btn btn-primary"
+        <button className="btn btn-primary ui-pill-btn btn btn-primary"
           onClick={() => setShowAddModal(true)}
-          style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: 'var(--radius-full)', fontSize: '13px' }}
         >
           <Plus size={16} />
           <span>Add Activity</span>
@@ -134,8 +132,8 @@ export function RunSheet() {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '40px' }}>
-          <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto', color: 'var(--color-tuxedo-black)' }} />
+        <div className="ui-center-empty">
+          <Loader2 className="animate-spin mx-auto text-tuxedo" size={24} />
         </div>
       ) : (
         <div className="rs-timeline-list">
@@ -148,7 +146,7 @@ export function RunSheet() {
                 <span className="rs-line" />
               </div>
 
-              <div className="rs-card-content" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="rs-card-content flex-between">
                 <div>
                   <h3 className="rs-item-title">{item.title}</h3>
                   <span className="rs-item-sub">
@@ -157,7 +155,7 @@ export function RunSheet() {
                 </div>
                 <button
                   onClick={() => handleDeleteItem(item.id)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '6px' }}
+                  className="ui-icon-btn-ghost"
                   title="Delete item"
                 >
                   <Trash2 size={14} />
@@ -170,44 +168,28 @@ export function RunSheet() {
 
       {showAddModal && (
         <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100,
-            padding: '16px',
-          }}
+          className="ui-modal-backdrop"
           onClick={() => setShowAddModal(false)}
         >
           <div
-            style={{
-              background: '#FFFFFF',
-              borderRadius: 'var(--radius-xl)',
-              maxWidth: '420px',
-              width: '100%',
-              padding: '24px',
-              boxShadow: 'var(--shadow-xl)',
-            }}
+            className="ui-modal-card-md"
             onClick={e => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: 0 }}>
+            <div className="ui-modal-header">
+              <h3 className="ui-modal-title">
                 Add Run Sheet Event
               </h3>
               <button
                 onClick={() => setShowAddModal(false)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}
+                className="ui-icon-btn-ghost"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleAddItem} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <form onSubmit={handleAddItem} className="flex-col gap-3">
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Time</label>
+                <label className="ui-field-label">Time</label>
                 <input
                   type="text"
                   placeholder="e.g. 02:00 PM"
@@ -218,7 +200,7 @@ export function RunSheet() {
               </div>
 
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Activity Title *</label>
+                <label className="ui-field-label">Activity Title *</label>
                 <input
                   type="text"
                   placeholder="e.g. Cake Cutting & Speeches"
@@ -229,9 +211,9 @@ export function RunSheet() {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div className="grid-2-col gap-2">
                 <div>
-                  <label style={{ fontSize: '13px', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Location</label>
+                  <label className="ui-field-label">Location</label>
                   <input
                     type="text"
                     placeholder="e.g. Stage Area"
@@ -241,7 +223,7 @@ export function RunSheet() {
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '13px', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Duration</label>
+                  <label className="ui-field-label">Duration</label>
                   <input
                     type="text"
                     placeholder="e.g. 45 mins"
@@ -252,20 +234,16 @@ export function RunSheet() {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '10px' }}>
-                <button
+              <div className="flex-between justify-end gap-2 mt-2">
+                <button className="btn btn-secondary btn btn-secondary rounded-full"
                   type="button"
-                  className="btn btn-secondary"
                   onClick={() => setShowAddModal(false)}
-                  style={{ padding: '8px 16px', borderRadius: 'var(--radius-full)' }}
                 >
                   Cancel
                 </button>
-                <button
+                <button className="btn btn-primary btn btn-primary rounded-full"
                   type="submit"
                   disabled={saving}
-                  className="btn btn-primary"
-                  style={{ padding: '8px 20px', borderRadius: 'var(--radius-full)' }}
                 >
                   {saving ? 'Adding...' : 'Add Activity'}
                 </button>

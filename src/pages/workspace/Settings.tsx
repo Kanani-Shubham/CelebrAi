@@ -117,9 +117,9 @@ export function Settings() {
       {/* Account Profile Form */}
       <div className="settings-group">
         <span className="group-title">Profile & Regional Preferences</span>
-        <form onSubmit={handleSaveProfile} style={{ background: '#FFFFFF', padding: '20px', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <form onSubmit={handleSaveProfile} className="ui-card-xl flex-col gap-4">
           <div>
-            <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-tuxedo-black)', display: 'flex', alignItems: 'center', gap: 6, marginBottom: '6px' }}>
+            <label className="ui-field-label">
               <User size={14} /> Full Name / Display Name
             </label>
             <input
@@ -131,9 +131,9 @@ export function Settings() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div className="grid-2-col gap-3">
             <div>
-              <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-tuxedo-black)', display: 'flex', alignItems: 'center', gap: 6, marginBottom: '6px' }}>
+              <label className="ui-field-label">
                 <Coins size={14} /> Currency
               </label>
               <select
@@ -150,7 +150,7 @@ export function Settings() {
             </div>
 
             <div>
-              <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-tuxedo-black)', display: 'flex', alignItems: 'center', gap: 6, marginBottom: '6px' }}>
+              <label className="ui-field-label">
                 <Globe size={14} /> Language
               </label>
               <select
@@ -166,11 +166,9 @@ export function Settings() {
             </div>
           </div>
 
-          <button
+          <button className="btn btn-primary btn btn-primary rounded-full items-center gap-2 p-2"
             type="submit"
             disabled={saving}
-            className="btn btn-primary"
-            style={{ alignSelf: 'flex-start', padding: '10px 24px', borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}
           >
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
             <span>Save Preferences</span>
@@ -182,12 +180,12 @@ export function Settings() {
       <div className="settings-group">
         <span className="group-title">Security & Credentials</span>
         <div className="settings-card">
-          <div className="setting-row" onClick={handlePasswordReset} style={{ cursor: 'pointer' }}>
+          <div className="setting-row cursor-pointer" onClick={handlePasswordReset}>
             <div className="st-left">
               <Lock size={16} />
               <div>
                 <span>Reset Password via Email</span>
-                <span style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                <span className="text-xs text-muted block">
                   {user?.email ? `Send reset link to ${user.email}` : 'Send reset link to registered email'}
                 </span>
               </div>
@@ -197,12 +195,12 @@ export function Settings() {
             </div>
           </div>
 
-          <div className="setting-row" onClick={() => navigate('/privacy')} style={{ cursor: 'pointer' }}>
+          <div className="setting-row cursor-pointer" onClick={() => navigate('/privacy')}>
             <div className="st-left">
               <ShieldCheck size={16} />
               <div>
                 <span>Privacy & Consent Controls</span>
-                <span style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                <span className="text-xs text-muted block">
                   Manage data retention and AI processing preferences
                 </span>
               </div>
@@ -217,18 +215,18 @@ export function Settings() {
       {/* Account Info Details */}
       <div className="settings-group">
         <span className="group-title">Account Diagnostics</span>
-        <div style={{ background: '#FFFFFF', padding: '16px 20px', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)', fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <div><strong>Account UID:</strong> <span style={{ fontFamily: 'monospace', color: 'var(--color-tuxedo-black)' }}>{user?.uid || 'Not signed in'}</span></div>
-          <div><strong>Email Address:</strong> <span style={{ color: 'var(--color-tuxedo-black)' }}>{user?.email || 'None'}</span></div>
-          <div><strong>Sign-In Provider:</strong> <span style={{ color: 'var(--color-tuxedo-black)' }}>{user?.providerData?.[0]?.providerId || 'password'}</span></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div className="ui-surface-card flex-col gap-2 text-xs text-muted">
+          <div><strong>Account UID:</strong> <span className="font-mono text-tuxedo">{user?.uid || 'Not signed in'}</span></div>
+          <div><strong>Email Address:</strong> <span className="text-tuxedo">{user?.email || 'None'}</span></div>
+          <div><strong>Sign-In Provider:</strong> <span className="text-tuxedo">{user?.providerData?.[0]?.providerId || 'password'}</span></div>
+          <div className="inline-flex items-center gap-1">
             <strong>Email Verification:</strong>
             {user?.emailVerified ? (
-              <span style={{ color: '#16a34a', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 500 }}>
+              <span className="text-success inline-flex items-center gap-1 font-medium">
                 <ShieldCheck size={14} /> Verified
               </span>
             ) : (
-              <span style={{ color: '#ea580c', display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 500 }}>
+              <span className="text-warning inline-flex items-center gap-1 font-medium">
                 <ShieldAlert size={14} /> Pending verification
               </span>
             )}
@@ -237,24 +235,10 @@ export function Settings() {
       </div>
 
       {/* Sign Out Action */}
-      <div style={{ marginTop: '16px' }}>
+      <div className="mt-4">
         <button
           onClick={handleSignOut}
-          style={{
-            width: '100%',
-            padding: '12px',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid #fee2e2',
-            background: '#fef2f2',
-            color: '#dc2626',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            fontSize: '14px',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
+          className="ui-danger-btn"
         >
           <LogOut size={16} />
           <span>Sign Out of CelebrAI</span>

@@ -56,7 +56,7 @@ export function Landing() {
               Your AI-powered planner for weddings, birthdays, corporate celebrations,
               community gatherings and more.
             </p>
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <div className="flex gap-3 flex-wrap">
               <Link to="/signup" className="btn btn-primary btn-lg hero-cta">
                 Get Started Free <ArrowRight size={18} />
               </Link>
@@ -129,7 +129,7 @@ export function Landing() {
           ))}
           <Link to="/signup" className="event-type-card custom-card">
             <div className="custom-card-inner">
-              <span style={{ fontSize: 32 }}>✨</span>
+              <span className="text-3xl">✨</span>
               <strong>Custom Event</strong>
               <span>Create your bespoke celebration</span>
             </div>
@@ -152,7 +152,7 @@ export function Landing() {
             'Coordinate event day run sheets with exact minute-by-minute schedules',
           ].map(b => (
             <div key={b} className="benefit-item">
-              <CheckCircle size={18} style={{ color: 'var(--color-success)', flexShrink: 0 }} />
+              <CheckCircle size={18} className="text-success shrink-0" />
               <span>{b}</span>
             </div>
           ))}
@@ -161,10 +161,10 @@ export function Landing() {
 
       {/* CTA */}
       <section className="landing-cta">
-        <h2 className="font-serif" style={{ fontSize: 'var(--text-3xl)', marginBottom: 12 }}>
+        <h2 className="font-serif text-3xl mb-3">
           Start Planning Your Celebration Today
         </h2>
-        <p style={{ color: 'rgba(255,255,255,0.8)', marginBottom: 24 }}>
+        <p className="text-muted mb-4">
           Free to start. No credit card required.
         </p>
         <Link to="/signup" className="btn btn-primary btn-lg">
@@ -175,10 +175,10 @@ export function Landing() {
       {/* Footer */}
       <footer className="landing-footer">
         <p>© {CURRENT_YEAR} CelebrAI. All rights reserved.</p>
-        <div style={{ display: 'flex', gap: 20, fontSize: 'var(--text-sm)' }}>
-          <Link to="/explore-events" style={{ color: 'var(--text-secondary)' }}>Event Types</Link>
-          <Link to="/privacy" style={{ color: 'var(--text-secondary)' }}>Privacy Policy</Link>
-          <Link to="/help" style={{ color: 'var(--text-secondary)' }}>Help & Support</Link>
+        <div className="flex gap-4 text-sm">
+          <Link to="/explore-events" className="text-muted">Event Types</Link>
+          <Link to="/privacy" className="text-muted">Privacy Policy</Link>
+          <Link to="/help" className="text-muted">Help & Support</Link>
         </div>
       </footer>
     </div>

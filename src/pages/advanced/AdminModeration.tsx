@@ -31,7 +31,7 @@ export function AdminModeration() {
 
   if (!isAdmin) {
     return (
-      <div className="admin-moderation-page" style={{ padding: '60px 20px', textAlign: 'center' }}>
+      <div className="admin-moderation-page p-6 text-center">
         <div style={{
           maxWidth: '460px',
           margin: '0 auto',
@@ -55,17 +55,15 @@ export function AdminModeration() {
             <Lock size={28} />
           </div>
 
-          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '0 0 8px 0', color: 'var(--color-tuxedo-black)' }}>
+          <h2 className="admin-mod-title">
             Administrator Access Required
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.5', margin: '0 0 20px 0' }}>
+          <p className="admin-mod-desc">
             This console requires verified server-side administrator credentials. Account <strong>{user?.email || 'Guest'}</strong> is not recognized as a platform moderator.
           </p>
 
-          <button
-            className="btn btn-secondary"
+          <button className="btn btn-secondary btn btn-secondary rounded-full inline-flex items-center gap-2"
             onClick={() => navigate('/dashboard')}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 20px', borderRadius: 'var(--radius-full)' }}
           >
             <ArrowLeft size={16} />
             <span>Return to Workspace</span>
@@ -78,7 +76,7 @@ export function AdminModeration() {
   return (
     <div className="admin-moderation-page">
       <div className="admin-head-info">
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#DCFCE7', color: '#15803D', padding: '4px 12px', borderRadius: 'var(--radius-full)', fontSize: '12px', fontWeight: 600, marginBottom: '8px' }}>
+        <div className="admin-status-pill">
           <ShieldCheck size={14} /> Authorized Moderator Session
         </div>
         <h1 className="admin-title">Platform Administration</h1>

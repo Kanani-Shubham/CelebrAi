@@ -122,20 +122,18 @@ export function GuestRSVP() {
           }}>
             <Check size={28} strokeWidth={2.5} />
           </div>
-          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '24px', margin: '0 0 8px 0', color: 'var(--color-tuxedo-black)' }}>
+          <h2 className="rsvp-title">
             Thank You, {guest1}!
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: '1.5', margin: '0 0 24px 0' }}>
+          <p className="rsvp-subtitle">
             {attending === 'yes'
               ? `We have confirmed your attendance for ${guestsCount} guest(s). We can't wait to celebrate together!`
               : attending === 'maybe'
               ? 'We have noted your tentative response. You can update it anytime.'
               : 'Thank you for letting us know. You will be missed!'}
           </p>
-          <button
-            className="btn btn-secondary"
+          <button className="btn btn-secondary btn btn-primary rounded-full px-6 py-2"
             onClick={() => navigate('/public-event')}
-            style={{ padding: '10px 24px', borderRadius: 'var(--radius-full)' }}
           >
             View Event Details
           </button>
@@ -197,7 +195,7 @@ export function GuestRSVP() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div className="grid-2-col gap-3">
             <div className="rsvp-question-group">
               <label className="rsvp-question-label">Email (Optional)</label>
               <input
@@ -205,7 +203,7 @@ export function GuestRSVP() {
                 placeholder="maya@example.com"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)' }}
+                className="w-full p-2 border-default rounded-md"
               />
             </div>
 
@@ -216,7 +214,7 @@ export function GuestRSVP() {
                 placeholder="+91 98765 43210"
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
-                style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)' }}
+                className="w-full p-2 border-default rounded-md"
               />
             </div>
           </div>

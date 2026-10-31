@@ -138,3 +138,6 @@
     max-width: 640px;
   }
 }
+
+.create-event-textarea { min-height: 110px; resize: vertical; }
+.form-error-msg { display: flex; align-items: center; gap: 4px; color: #dc2626; font-size: 12px; margin-top: 4px; }

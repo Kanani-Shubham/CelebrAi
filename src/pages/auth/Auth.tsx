@@ -223,7 +223,7 @@ export function Auth() {
 
           <button type="submit" className="btn btn-primary w-full" disabled={loading}>
             {loading ? (
-              <div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+              <div className="auth-btn-spinner" />
             ) : mode === 'signin' ? <>Sign In <ArrowRight size={16} /></> : mode === 'signup' ? <>Create Account <ArrowRight size={16} /></> : 'Send Reset Link'}
           </button>
 
@@ -261,11 +261,9 @@ export function Auth() {
             </div>
 
             {popupBlocked && (
-              <div style={{ marginTop: 12, textAlign: 'center' }}>
-                <button
+              <div className="mt-3 text-center">
+                <button className="btn btn-ghost btn-sm underline text-muted"
                   type="button"
-                  className="btn btn-ghost btn-sm"
-                  style={{ textDecoration: 'underline', color: 'var(--text-secondary)' }}
                   onClick={handleGoogleRedirect}
                   disabled={loading}
                 >

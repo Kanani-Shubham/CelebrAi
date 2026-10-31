@@ -210,3 +210,9 @@
 .tool-arrow {
   color: var(--text-muted);
 }
+
+.admin-mod-card { max-width: 600px; margin: 0 auto; background: #FFFFFF; border-radius: var(--radius-2xl); padding: 48px 32px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-default); }
+.admin-mod-badge { width: 64px; height: 64px; border-radius: var(--radius-full); background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.admin-mod-title { font-family: var(--font-serif); font-size: 22px; margin: 0 0 8px 0; color: var(--color-tuxedo-black); }
+.admin-mod-desc { color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin: 0 0 20px 0; }
+.admin-status-pill { display: inline-flex; align-items: center; gap: 6px; background: #DCFCE7; color: #15803D; padding: 4px 12px; border-radius: var(--radius-full); font-size: 12px; font-weight: 600; margin-bottom: 8px; }

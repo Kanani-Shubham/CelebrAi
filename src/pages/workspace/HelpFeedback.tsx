@@ -80,7 +80,7 @@ export function HelpFeedback() {
 
       {/* 4 Cards Grid */}
       <div className="help-cards-grid">
-        <div className="help-grid-item" onClick={() => setActiveFaq(0)} style={{ cursor: 'pointer' }}>
+        <div className="help-grid-item cursor-pointer" onClick={() => setActiveFaq(0)}>
           <div className="h-icon-bg purple">
             <BookOpen size={18} />
           </div>
@@ -90,7 +90,7 @@ export function HelpFeedback() {
           </div>
         </div>
 
-        <div className="help-grid-item" onClick={() => setActiveFaq(1)} style={{ cursor: 'pointer' }}>
+        <div className="help-grid-item cursor-pointer" onClick={() => setActiveFaq(1)}>
           <div className="h-icon-bg pink">
             <Compass size={18} />
           </div>
@@ -100,7 +100,7 @@ export function HelpFeedback() {
           </div>
         </div>
 
-        <div className="help-grid-item" onClick={() => setActiveFaq(2)} style={{ cursor: 'pointer' }}>
+        <div className="help-grid-item cursor-pointer" onClick={() => setActiveFaq(2)}>
           <div className="h-icon-bg violet">
             <Sparkles size={18} />
           </div>
@@ -110,7 +110,7 @@ export function HelpFeedback() {
           </div>
         </div>
 
-        <div className="help-grid-item" onClick={() => setActiveFaq(3)} style={{ cursor: 'pointer' }}>
+        <div className="help-grid-item cursor-pointer" onClick={() => setActiveFaq(3)}>
           <div className="h-icon-bg orange">
             <LifeBuoy size={18} />
           </div>
@@ -122,27 +122,21 @@ export function HelpFeedback() {
       </div>
 
       {/* FAQs Section */}
-      <div style={{ marginTop: '24px' }}>
-        <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 12px 0', color: 'var(--color-tuxedo-black)' }}>
+      <div className="mt-4">
+        <h3 className="ui-section-title-sm">
           Frequently Asked Questions
         </h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div className="flex-col gap-2">
           {filteredFaqs.map((faq, idx) => {
             const isOpen = activeFaq === idx;
             return (
               <div
                 key={idx}
-                style={{
-                  background: '#FFFFFF',
-                  border: '1px solid var(--border-default)',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: '14px 16px',
-                  cursor: 'pointer',
-                }}
+                className="ui-surface-card cursor-pointer"
                 onClick={() => setActiveFaq(isOpen ? null : idx)}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <strong style={{ fontSize: '14px', color: 'var(--color-tuxedo-black)' }}>{faq.q}</strong>
+                <div className="flex-between">
+                  <strong className="text-sm text-tuxedo font-semibold">{faq.q}</strong>
                   <ChevronRight size={16} style={{ transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s ease', color: 'var(--text-secondary)' }} />
                 </div>
                 {isOpen && (
@@ -158,7 +152,7 @@ export function HelpFeedback() {
 
       {/* List items */}
       <div className="help-list-group" style={{ marginTop: '20px' }}>
-        <div className="help-list-row" onClick={() => setShowFeedbackModal(true)} style={{ cursor: 'pointer' }}>
+        <div className="help-list-row cursor-pointer" onClick={() => setShowFeedbackModal(true)}>
           <div className="hl-left">
             <Send size={16} />
             <div>
@@ -183,44 +177,28 @@ export function HelpFeedback() {
       {/* Feedback Modal */}
       {showFeedbackModal && (
         <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100,
-            padding: '16px',
-          }}
+          className="ui-modal-backdrop"
           onClick={() => setShowFeedbackModal(false)}
         >
           <div
-            style={{
-              background: '#FFFFFF',
-              borderRadius: 'var(--radius-xl)',
-              maxWidth: '440px',
-              width: '100%',
-              padding: '24px',
-              boxShadow: 'var(--shadow-xl)',
-            }}
+            className="ui-modal-card"
             onClick={e => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: 0 }}>
+            <div className="ui-modal-header">
+              <h3 className="ui-modal-title">
                 Share Your Feedback
               </h3>
               <button
                 onClick={() => setShowFeedbackModal(false)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}
+                className="ui-icon-btn-ghost"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleSendFeedback} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <form onSubmit={handleSendFeedback} className="flex-col gap-3">
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Topic</label>
+                <label className="ui-field-label">Topic</label>
                 <select
                   value={feedbackCategory}
                   onChange={e => setFeedbackCategory(e.target.value as 'Feedback' | 'Bug' | 'Feature Request')}
@@ -233,31 +211,27 @@ export function HelpFeedback() {
               </div>
 
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 500, display: 'block', marginBottom: '4px' }}>Your Message *</label>
+                <label className="ui-field-label">Your Message *</label>
                 <textarea
                   rows={4}
                   required
                   placeholder="Tell us what you like or what we can improve..."
                   value={feedbackText}
                   onChange={e => setFeedbackText(e.target.value)}
-                  style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)' }}
+                  className="w-full p-2 border-default rounded-md"
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '8px' }}>
-                <button
+              <div className="flex-between justify-end gap-2 mt-2">
+                <button className="btn btn-secondary btn btn-secondary rounded-full"
                   type="button"
-                  className="btn btn-secondary"
                   onClick={() => setShowFeedbackModal(false)}
-                  style={{ padding: '8px 16px', borderRadius: 'var(--radius-full)' }}
                 >
                   Cancel
                 </button>
-                <button
+                <button className="btn btn-primary btn btn-primary rounded-full items-center gap-2"
                   type="submit"
                   disabled={submitting}
-                  className="btn btn-primary"
-                  style={{ padding: '8px 20px', borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', gap: '6px' }}
                 >
                   {submitting ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                   <span>{submitting ? 'Submitting...' : 'Submit'}</span>

@@ -36,7 +36,7 @@ export function ChatHistoryDrawer({
             <History size={18} />
             <h3 className="history-drawer-title font-serif">Chat History</h3>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div className="inline-flex items-center gap-1">
             <button
               type="button"
               className="history-new-chat-btn"
@@ -59,30 +59,26 @@ export function ChatHistoryDrawer({
 
         <div className="history-drawer-content">
           {historyLoading ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-              <Loader2
+            <div className="ui-center-empty">
+              <Loader2 className="animate-spin mx-auto text-tuxedo"
                 size={24}
-                className="animate-spin"
-                style={{ margin: '0 auto', color: 'var(--color-tuxedo-black)' }}
               />
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '8px' }}>
+              <p className="text-sm text-muted mt-2">
                 Loading previous chats...
               </p>
             </div>
           ) : conversations.length === 0 ? (
             <div className="history-empty-view">
-              <MessageSquare size={32} style={{ color: 'var(--border-default)', margin: '0 auto 12px' }} />
-              <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-tuxedo-black)', margin: '0 0 4px' }}>
+              <MessageSquare size={32} className="mx-auto mb-2 text-muted" />
+              <p className="text-sm font-semibold text-tuxedo mb-1">
                 No conversations yet
               </p>
-              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '0 0 16px' }}>
+              <p className="text-xs text-muted mb-4">
                 Messages you send will automatically sync to your account history.
               </p>
-              <button
+              <button className="btn btn-primary btn btn-primary rounded-full text-xs"
                 type="button"
-                className="btn btn-primary"
                 onClick={onNewChat}
-                style={{ fontSize: '12.5px', padding: '6px 16px', borderRadius: 'var(--radius-full)' }}
               >
                 Start a New Chat
               </button>

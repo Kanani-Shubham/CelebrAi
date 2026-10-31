@@ -85,8 +85,8 @@ export function ExpenseManager() {
 
   if (!eventId) {
     return (
-      <div className="expense-manager-page" style={{ padding: '32px 18px', textAlign: 'center' }}>
-        <p style={{ color: 'var(--text-secondary)' }}>No active event selected. Please select or create an event first.</p>
+      <div className="expense-manager-page p-4 text-center">
+        <p className="text-muted">No active event selected. Please select or create an event first.</p>
       </div>
     );
   }
@@ -143,16 +143,14 @@ export function ExpenseManager() {
       {/* 3. Expense Cards List */}
       <div className="expenses-list">
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px' }}>
-            <Loader2
+          <div className="ui-center-empty">
+            <Loader2 className="animate-spin mx-auto text-tuxedo"
               size={24}
-              className="animate-spin"
-              style={{ margin: '0 auto', color: 'var(--color-tuxedo-black)' }}
             />
           </div>
         ) : error ? (
-          <div style={{ textAlign: 'center', padding: '30px', color: '#dc2626' }}>
-            <AlertCircle size={24} style={{ margin: '0 auto 8px' }} />
+          <div className="ui-center-empty text-error">
+            <AlertCircle size={24} className="mx-auto mb-2" />
             <p>{error}</p>
           </div>
         ) : filteredExpenses.length === 0 ? (
@@ -169,10 +167,8 @@ export function ExpenseManager() {
                 : `You do not have any expenses categorized under "${filter}".`}
             </p>
             {filter === 'All' && (
-              <button
+              <button className="btn-add-expense mt-2"
                 type="button"
-                className="btn-add-expense"
-                style={{ marginTop: '8px' }}
                 onClick={openAddModal}
               >
                 <Plus size={16} />

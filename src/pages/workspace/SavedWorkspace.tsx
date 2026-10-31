@@ -89,18 +89,16 @@ export function SavedWorkspace() {
       {/* Saved Items List */}
       <div className="saved-items-list">
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px' }}>
-            <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto', color: 'var(--color-tuxedo-black)' }} />
+          <div className="ui-center-empty">
+            <Loader2 className="animate-spin mx-auto text-tuxedo" size={24} />
           </div>
         ) : activeTab === 'Vendors' ? (
           savedVendors.length === 0 ? (
             <div className="saved-empty-panel">
-              <Store size={32} style={{ margin: '0 auto 8px', opacity: 0.5 }} />
+              <Store size={32} className="mx-auto mb-2 opacity-50" />
               <p>No saved vendors yet for this celebration.</p>
-              <button
-                className="btn btn-secondary"
+              <button className="btn btn-secondary btn btn-secondary rounded-full text-xs mt-2"
                 onClick={() => navigate('/vendors')}
-                style={{ marginTop: '8px', fontSize: '13px', padding: '6px 14px', borderRadius: 'var(--radius-full)' }}
               >
                 Browse &amp; Shortlist Vendors
               </button>
@@ -125,7 +123,7 @@ export function SavedWorkspace() {
                     <div className="saved-card-actions">
                       <button
                         onClick={(e) => handleDelete(vendor.id, e)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#dc2626' }}
+                        className="ui-icon-btn-ghost text-error"
                         title="Delete from saved"
                       >
                         <Trash2 size={15} />
@@ -134,10 +132,10 @@ export function SavedWorkspace() {
                   </div>
 
                   <span className="saved-loc">{vendor.location || 'Location provided'}</span>
-                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginTop: '4px' }}>
+                  <div className="inline-flex items-center gap-1 mt-1">
                     <span className="saved-category-pill">{vendor.category}</span>
                     {vendor.bookingStatus && (
-                      <span style={{ fontSize: '11px', background: '#F7F1E8', padding: '2px 8px', borderRadius: 'var(--radius-full)', fontWeight: 500 }}>
+                      <span className="badge badge-subtle">
                         {vendor.bookingStatus}
                       </span>
                     )}
@@ -149,17 +147,15 @@ export function SavedWorkspace() {
         ) : activeTab === 'Schedule' ? (
           <div className="saved-empty-panel">
             <p>View your full event schedule on the Run Sheet.</p>
-            <button
-              className="btn btn-secondary"
+            <button className="btn btn-secondary btn btn-secondary rounded-full text-xs mt-2"
               onClick={() => navigate('/run-sheet')}
-              style={{ marginTop: '8px', fontSize: '13px', padding: '6px 14px', borderRadius: 'var(--radius-full)' }}
             >
               Open Event Run Sheet
             </button>
           </div>
         ) : (
           <div className="saved-empty-panel">
-            <BookOpen size={28} style={{ margin: '0 auto 8px', opacity: 0.5 }} />
+            <BookOpen size={28} className="mx-auto mb-2 opacity-50" />
             <p>Notes from AI Assistant and decor styling are saved in your event record.</p>
           </div>
         )}

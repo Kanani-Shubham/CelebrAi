@@ -157,7 +157,7 @@ export function CreateEvent() {
             <div key={i} className={`step-dot ${i + 1 <= step ? 'active' : ''}`} />
           ))}
         </div>
-        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
+        <span className="text-xs text-muted">
           Step {step} of {totalSteps}
         </span>
       </div>
@@ -210,7 +210,7 @@ export function CreateEvent() {
                   autoFocus
                 />
                 {errors.eventName && (
-                  <span className="form-error-msg" style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#dc2626', fontSize: 12, marginTop: 4 }}>
+                  <span className="form-error-msg" >
                     <AlertCircle size={12} /> {errors.eventName}
                   </span>
                 )}
@@ -218,7 +218,7 @@ export function CreateEvent() {
 
               <div className="form-group">
                 <label className="form-label">
-                  <Calendar size={14} style={{ display: 'inline', marginRight: 4 }} />
+                  <Calendar size={14} className="inline mr-1" />
                   Event date *
                 </label>
                 <input
@@ -228,7 +228,7 @@ export function CreateEvent() {
                   onChange={e => set('eventDate', e.target.value)}
                 />
                 {errors.eventDate && (
-                  <span className="form-error-msg" style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#dc2626', fontSize: 12, marginTop: 4 }}>
+                  <span className="form-error-msg" >
                     <AlertCircle size={12} /> {errors.eventDate}
                   </span>
                 )}
@@ -236,7 +236,7 @@ export function CreateEvent() {
 
               <div className="form-group">
                 <label className="form-label">
-                  <MapPin size={14} style={{ display: 'inline', marginRight: 4 }} />
+                  <MapPin size={14} className="inline mr-1" />
                   Location (City or Venue)
                 </label>
                 <input
@@ -260,7 +260,7 @@ export function CreateEvent() {
             <div className="create-form">
               <div className="form-group">
                 <label className="form-label">
-                  <Users size={14} style={{ display: 'inline', marginRight: 4 }} />
+                  <Users size={14} className="inline mr-1" />
                   Estimated guest count *
                 </label>
                 <input
@@ -272,7 +272,7 @@ export function CreateEvent() {
                   onChange={e => set('guestCount', Number(e.target.value))}
                 />
                 {errors.guestCount && (
-                  <span className="form-error-msg" style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#dc2626', fontSize: 12, marginTop: 4 }}>
+                  <span className="form-error-msg" >
                     <AlertCircle size={12} /> {errors.guestCount}
                   </span>
                 )}
@@ -295,7 +295,7 @@ export function CreateEvent() {
 
               <div className="form-group">
                 <label className="form-label">
-                  <DollarSign size={14} style={{ display: 'inline', marginRight: 4 }} />
+                  <DollarSign size={14} className="inline mr-1" />
                   Total estimated budget
                 </label>
                 <input
@@ -307,11 +307,11 @@ export function CreateEvent() {
                   onChange={e => set('budget', Number(e.target.value))}
                 />
                 {errors.budget ? (
-                  <span className="form-error-msg" style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#dc2626', fontSize: 12, marginTop: 4 }}>
+                  <span className="form-error-msg" >
                     <AlertCircle size={12} /> {errors.budget}
                   </span>
                 ) : (
-                  <span className="form-hint" style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4, display: 'block' }}>
+                  <span className="form-hint form-hint text-xs text-muted block mt-1">
                     {form.budget > 0
                       ? (form.currency === 'INR'
                         ? `₹${(form.budget / 100000).toFixed(2)} Lakhs`
@@ -341,9 +341,7 @@ export function CreateEvent() {
 
               <div className="form-group">
                 <label className="form-label">Special requests or notes</label>
-                <textarea
-                  className="form-input"
-                  style={{ minHeight: 110, resize: 'vertical' }}
+                <textarea className="form-input create-event-textarea"
                   placeholder="E.g. outdoor sunset venue, live acoustic music, Jain catering options..."
                   value={form.requirements}
                   onChange={e => set('requirements', e.target.value)}
@@ -362,7 +360,7 @@ export function CreateEvent() {
           onClick={step < totalSteps ? handleNext : handleCreate}
         >
           {saving ? (
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span className="inline-flex items-center gap-2">
               <Loader2 size={16} className="animate-spin" />
               Saving Event...
             </span>

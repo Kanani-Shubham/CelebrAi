@@ -465,3 +465,8 @@
     width: 100%;
   }
 }
+
+.landing-root-wrap { display: flex; flex-direction: column; min-height: 100vh; background: var(--bg-app); }
+.landing-hero-box { text-align: center; padding: 60px 20px; max-width: 800px; margin: 0 auto; }
+.landing-main-title { font-family: var(--font-serif); font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.2; margin: 0 0 20px 0; color: var(--color-tuxedo-black); }
+.landing-lead-desc { font-size: 18px; color: var(--text-secondary); line-height: 1.6; max-width: 600px; margin: 0 auto 32px; }

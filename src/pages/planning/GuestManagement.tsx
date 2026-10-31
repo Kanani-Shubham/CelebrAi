@@ -54,10 +54,8 @@ export function GuestManagement() {
           <div className="empty-state-icon">👥</div>
           <h3 className="empty-state-title">No event selected</h3>
           <p className="empty-state-text">Select or create an event to manage its guest list.</p>
-          <button
-            className="btn btn-primary"
+          <button className="btn btn-primary mt-3"
             onClick={() => navigate('/create-event')}
-            style={{ marginTop: 12 }}
           >
             <Plus size={16} /> Create an Event
           </button>
@@ -69,23 +67,19 @@ export function GuestManagement() {
   if (eventId.startsWith('evt-')) {
     return (
       <div className="guest-management-page">
-        <div
-          className="empty-state-container"
-          style={{ maxWidth: 440, margin: '40px auto', textAlign: 'center' }}
+        <div className="empty-state-container ui-modal-card-sm text-center"
         >
           <Calendar
             size={40}
-            style={{ color: 'var(--color-tuxedo-black)', margin: '0 auto 12px' }}
+            className="mx-auto mb-2 text-tuxedo"
           />
           <h3 className="empty-state-title font-serif">Sample Event Selected</h3>
           <p className="empty-state-text">
             "{activeEvent?.eventName}" is a preview template. Create your own persistent event to
             add and manage live guests.
           </p>
-          <button
-            className="btn btn-primary"
+          <button className="btn btn-primary mt-4"
             onClick={() => navigate('/create-event')}
-            style={{ marginTop: 16 }}
           >
             <Plus size={16} /> Create My Event
           </button>
@@ -136,12 +130,12 @@ export function GuestManagement() {
       )}
 
       {error && !loading && (
-        <div className="tasks-error-state" style={{ flexDirection: 'column', gap: 12, padding: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <AlertCircle size={20} style={{ color: '#dc2626' }} />
-            <span style={{ fontWeight: 500 }}>{error}</span>
+        <div className="tasks-error-state flex-col gap-3 p-4">
+          <div className="inline-flex items-center gap-2">
+            <AlertCircle size={20} className="text-error" />
+            <span className="font-medium">{error}</span>
           </div>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className="inline-flex gap-2">
             <button className="btn btn-secondary btn-sm" onClick={reload}>
               Retry
             </button>
@@ -157,10 +151,8 @@ export function GuestManagement() {
           <div className="empty-state-icon">👥</div>
           <h3 className="empty-state-title">No guests added yet</h3>
           <p className="empty-state-text">Start by adding your first guest or sharing your RSVP link.</p>
-          <button
-            className="btn btn-primary"
+          <button className="btn btn-primary mt-3"
             onClick={() => setShowAddModal(true)}
-            style={{ marginTop: 12 }}
           >
             <Plus size={16} /> Add First Guest
           </button>

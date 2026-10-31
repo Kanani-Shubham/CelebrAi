@@ -203,8 +203,8 @@ export function NotificationsCenter() {
       {/* Feed */}
       <div className="notif-sections-list">
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px' }}>
-            <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto', color: 'var(--color-tuxedo-black)' }} />
+          <div className="ui-center-empty">
+            <Loader2 className="animate-spin mx-auto text-tuxedo" size={24} />
           </div>
         ) : filtered.length === 0 ? (
           <div style={{
@@ -215,8 +215,8 @@ export function NotificationsCenter() {
             textAlign: 'center',
             color: 'var(--text-secondary)',
           }}>
-            <CheckCircle2 size={32} style={{ margin: '0 auto 8px', color: '#16a34a' }} />
-            <p style={{ margin: 0, fontSize: '14px' }}>You're all caught up! No notifications right now.</p>
+            <CheckCircle2 size={32} className="mx-auto mb-2 text-success" />
+            <p className="text-sm m-0">You're all caught up! No notifications right now.</p>
           </div>
         ) : (
           <div className="notif-items-group">

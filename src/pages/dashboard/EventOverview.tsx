@@ -28,15 +28,13 @@ export function EventOverview() {
 
   if (!currentEvent) {
     return (
-      <div className="event-overview-page" style={{ padding: '40px 20px', textAlign: 'center' }}>
-        <h2 style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-tuxedo-black)' }}>No Event Selected</h2>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>
+      <div className="event-overview-page ui-center-empty">
+        <h2 className="ui-modal-title">No Event Selected</h2>
+        <p className="text-muted mb-4">
           Please select an existing celebration or create a new one.
         </p>
-        <button
-          className="btn btn-primary"
+        <button className="btn btn-primary btn btn-primary rounded-full"
           onClick={() => navigate('/events')}
-          style={{ padding: '8px 20px', borderRadius: 'var(--radius-full)' }}
         >
           View All Celebrations
         </button>
@@ -204,7 +202,7 @@ export function EventOverview() {
             </div>
             <div className="kd-row">
               <span className="kd-label">Status</span>
-              <span className="kd-value" style={{ textTransform: 'capitalize' }}>
+              <span className="kd-value capitalize">
                 {currentEvent.status || 'Active'}
               </span>
             </div>

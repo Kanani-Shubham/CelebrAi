@@ -194,26 +194,24 @@ export function SubscriptionPlans() {
             }}
             onClick={e => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: 0 }}>
+            <div className="ui-modal-header">
+              <h3 className="ui-modal-title">
                 Payment Gateway Status
               </h3>
               <button
                 onClick={() => setShowGatewayModal(false)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}
+                className="ui-icon-btn-ghost"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <p style={{ fontSize: '14px', lineHeight: '1.5', color: 'var(--text-secondary)', margin: '0 0 16px 0' }}>
+            <p className="text-sm text-muted mb-4">
               Live credit card and UPI billing is configured in test/sandbox mode. During this preview period, all Pro capabilities are accessible without billing real customer funds.
             </p>
 
-            <button
-              className="btn btn-primary"
+            <button className="btn btn-primary btn btn-primary rounded-full w-full p-2"
               onClick={() => setShowGatewayModal(false)}
-              style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-full)' }}
             >
               Acknowledge &amp; Continue
             </button>
