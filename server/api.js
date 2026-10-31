@@ -6,27 +6,36 @@
  *   Development:  node server/api.js
  *   Production:   NODE_ENV=production node server/api.js
  *
- * Available models on this account (verified 2026-10-26):
- *   meta-llama/llama-4-scout-17b-16e-instruct  ← primary model
- *   llama-3.3-70b-versatile                    ← fallback model
+ * Available models on this account:
+ *   openai/gpt-oss-120b      ← primary reasoning model (Groq LPU)
+ *   openai/gpt-oss-20b       ← resilient fallback model
+ *   llama-3.3-70b-versatile  ← legacy alternative
  */
 
 import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
+import {
+  PRIMARY_MODEL,
+  RATE_LIMIT_WINDOW_MS,
+  RATE_LIMIT_MAX,
+} from './lib/config.js';
+import {
+  sanitize,
+  sanitizeNumber,
+  isGeneralProgrammingRequest,
+  DECLINE_CODE_MESSAGE,
+  extractJson,
+  stripCodeFences,
+} from './lib/sanitizers.js';
+import { callGroq } from './lib/groqClient.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const GROQ_BASE_URL = 'https://api.groq.com/openai/v1';
-
-// ---- Model Configuration ----
-// Primary model: meta-llama/llama-4-scout-17b-16e-instruct
-// Fallback model: llama-3.3-70b-versatile
-const MODEL = process.env.GROQ_MODEL || 'meta-llama/llama-4-scout-17b-16e-instruct';
-const FALLBACK_MODEL = 'llama-3.3-70b-versatile';
+const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
+const MODEL = PRIMARY_MODEL;
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -48,11 +57,9 @@ app.use(express.json({ limit: '512kb' }));
 
 // ---- Simple in-memory rate limiter ----
 const rateLimitMap = new Map();
-const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
-const RATE_LIMIT_MAX = 20; // 20 requests/minute/IP
 
 function rateLimit(req, res, next) {
-  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const ip = req.ip || req.connection?.remoteAddress || 'unknown';
   const now = Date.now();
   const record = rateLimitMap.get(ip) || { count: 0, windowStart: now };
 
@@ -76,157 +83,52 @@ function logRequest(endpoint, extras = {}) {
   console.log(`[${new Date().toISOString()}] POST ${endpoint}`, extras);
 }
 
-// ---- Groq Caller ----
-async function callGroqWithModel(model, messages, temperature, maxTokens, signal) {
-  const response = await fetch(`${GROQ_BASE_URL}/chat/completions`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${GROQ_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ model, messages, temperature, max_tokens: maxTokens }),
-    signal,
-  });
-
-  if (!response.ok) {
-    const errText = await response.text();
-    let errJson;
-    try { errJson = JSON.parse(errText); } catch { errJson = null; }
-    const msg = errJson?.error?.message || errText || `HTTP ${response.status}`;
-    const err = new Error(`Groq API: ${msg}`);
-    err.status = response.status;
-    throw err;
-  }
-
-  const data = await response.json();
-  return data.choices?.[0]?.message?.content ?? '';
-}
-
-async function callGroq(messages, options = {}) {
-  if (!GROQ_API_KEY) {
-    throw new Error('GROQ_API_KEY is not configured on the server. Add it to your .env file.');
-  }
-
-  const {
-    temperature = 0.7,
-    maxTokens = 1024,
-    model = MODEL,
-  } = options;
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30_000);
-
-  try {
-    try {
-      const result = await callGroqWithModel(model, messages, temperature, maxTokens, controller.signal);
-      clearTimeout(timeout);
-      return result;
-    } catch (err) {
-      // Fallback to reliable model on 400/404 (bad model name or not available)
-      if (err.status === 400 || err.status === 404) {
-        console.warn(`[callGroq] Primary model "${model}" failed (${err.status}), falling back to "${FALLBACK_MODEL}"`);
-        const result = await callGroqWithModel(FALLBACK_MODEL, messages, temperature, maxTokens, controller.signal);
-        clearTimeout(timeout);
-        return result;
-      }
-      throw err;
-    }
-  } catch (err) {
-    clearTimeout(timeout);
-    if (err.name === 'AbortError') throw new Error('Request timed out after 30 seconds.');
-    throw err;
-  }
-}
-
-// ---- Input sanitization ----
-function sanitize(str, maxLen = 2000) {
-  if (typeof str !== 'string') return '';
-  return str.replace(/<[^>]*>/g, '').slice(0, maxLen).trim();
-}
-
-function sanitizeNumber(n, min = 0, max = 100_000_000, fallback = 0) {
-  const num = Number(n);
-  return isNaN(num) ? fallback : Math.min(Math.max(num, min), max);
-}
-
-// ---- Event-Planning Scope & Code Restriction Guard ----
-export const DECLINE_CODE_MESSAGE =
-  "I'm CelebrAI, your event-planning assistant. I specialize in helping with celebrations, budgets, guests, vendors, and event management. I can't generate general-purpose programming code in this assistant.";
-
-export function isGeneralProgrammingRequest(text) {
-  if (!text || typeof text !== 'string') return false;
-  const t = text.trim().toLowerCase();
-
-  const codingPatterns = [
-    /\b(write|create|generate|give me|show me)\s+(an?\s+)?(html|css|python|java|c\+\+|cpp|c#|javascript|typescript|sql|bash|powershell|rust|ruby|php|golang|go)\s+(code|script|program|app|query)/i,
-    /\b(html|css|python|java|javascript|typescript|sql|c\+\+|cpp)\s+(code|script)\s+(for|to)\b/i,
-    /\b(write|create)\s+(html|css|python|js|javascript)\s+code\b/i,
-    /\bcode\s+(for|to create|to make)\s+(a\s+)?(lamp|game|calculator|scraper|server|bot|algorithm|todo app)\b/i,
-    /\b(write|create)\s+a\s+(python|node|bash|shell)\s+script\b/i,
-    /\b(html|css)\s+(for|of)\s+a\s+lamp\b/i,
-    /\bhow to code\b/i,
-  ];
-
-  const isEventException = /\b(invitation|rsvp|email template|guest list)\b/i.test(t);
-  if (isEventException && !/\b(lamp|calculator|scraper|game|fibonacci|sorting)\b/i.test(t)) {
-    return false;
-  }
-
-  return codingPatterns.some(p => p.test(t));
-}
-
-// ============================================================
-// ROUTES
-// ============================================================
-
-// Health check — no auth required
-app.get('/api/health', (_req, res) => {
+// ---- Health Check ----
+app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
-    model: MODEL,
-    groqKeyLoaded: !!GROQ_API_KEY,
     timestamp: new Date().toISOString(),
+    groqConfigured: Boolean(GROQ_API_KEY),
+    model: MODEL,
   });
 });
 
-// ---- Chat endpoint ----
+// ---- Chat with AI Mentor ----
 app.post('/api/ai/chat', rateLimit, async (req, res) => {
   try {
     const { messages = [], eventContext = {} } = req.body;
 
-    if (!Array.isArray(messages)) {
-      return res.status(400).json({ error: 'messages must be an array' });
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return res.status(400).json({ error: 'messages array is required' });
     }
 
-    logRequest('/api/ai/chat', { msgCount: messages.length });
+    logRequest('/api/ai/chat', { messageCount: messages.length });
 
-    const eventName = sanitize(eventContext.eventName || '', 100);
-    const eventType = sanitize(eventContext.eventType || '', 50);
-    const location = sanitize(eventContext.location || '', 100);
-    const guestCount = Number(eventContext.guestCount) > 0 ? Number(eventContext.guestCount) : null;
-    const budget = Number(eventContext.budget) > 0 ? Number(eventContext.budget) : null;
-    const currency = sanitize(eventContext.currency || '₹', 5);
-
-    const contextParts = [];
-    if (eventName && eventName !== 'your event') contextParts.push(`- Event Name: "${eventName}"`);
-    if (eventType && eventType !== 'Event') contextParts.push(`- Type: ${eventType}`);
-    if (location && location !== 'India' && location !== 'TBD') contextParts.push(`- Location: ${location}`);
-    if (guestCount) contextParts.push(`- Confirmed Guests: ${guestCount}`);
-    if (budget) contextParts.push(`- Confirmed Budget: ${currency} ${budget.toLocaleString('en-IN')}`);
-
-    const contextBlock = contextParts.length > 0
-      ? `CURRENT EVENT CONTEXT (Use ONLY when relevant to the user request. NEVER invent unconfirmed details):\n${contextParts.join('\n')}`
-      : 'CURRENT EVENT CONTEXT: No specific event details confirmed yet.';
-
-    // Sanitize and limit message history
-    const sanitizedMessages = messages.slice(-12).map(m => ({
+    const sanitizedMessages = messages.slice(-10).map(m => ({
       role: m.role === 'assistant' ? 'assistant' : 'user',
       content: sanitize(m.content, 2000),
-    })).filter(m => m.content.length > 0);
+    }));
 
-    const lastUserMsg = (sanitizedMessages[sanitizedMessages.length - 1]?.content || '').trim();
+    const eventName = sanitize(eventContext.eventName, 100);
+    const eventType = sanitize(eventContext.eventType, 50);
+    const budget = sanitizeNumber(eventContext.budget, 0, 100_000_000, 0);
+    const guestCount = sanitizeNumber(eventContext.guestCount, 0, 100_000, 0);
+    const eventDate = sanitize(eventContext.eventDate, 30);
+    const location = sanitize(eventContext.location, 100);
+    const currency = sanitize(eventContext.currency, 5) || '₹';
 
-    // Guard: Restrict unrequested general-purpose programming code generation
+    const contextBlock = [
+      'CONFIRMED EVENT CONTEXT:',
+      eventName ? `• Event: "${eventName}"` : null,
+      eventType ? `• Type: ${eventType}` : null,
+      eventDate ? `• Date: ${eventDate}` : null,
+      location ? `• Location: ${location}` : null,
+      budget ? `• Total Budget: ${currency} ${budget.toLocaleString('en-IN')}` : null,
+      guestCount ? `• Headcount: ${guestCount} guests` : null,
+    ].filter(Boolean).join('\n');
+
+    const lastUserMsg = sanitizedMessages[sanitizedMessages.length - 1]?.content || '';
+
     if (isGeneralProgrammingRequest(lastUserMsg)) {
       return res.json({ reply: DECLINE_CODE_MESSAGE, model: MODEL });
     }
@@ -238,24 +140,19 @@ ${contextBlock}
 CRITICAL BEHAVIOR INSTRUCTIONS:
 1. EVENT ASSISTANT SCOPE & CODE RESTRICTION:
    - You are exclusively an event-planning assistant for celebrations, weddings, birthdays, corporate events, budgets, guests, vendors, and schedules.
-   - Do NOT generate general-purpose programming code (e.g., HTML/CSS for lamps, Python scripts, JavaScript algorithms, backend code, SQL queries).
-   - If the user asks for general programming code, politely decline with this exact message:
-     "I'm CelebrAI, your event-planning assistant. I specialize in helping with celebrations, budgets, guests, vendors, and event management. I can't generate general-purpose programming code in this assistant."
-2. GREETINGS: If the user says "hi", "hello", "hey", or offers a casual greeting, respond with a short, warm greeting (1-2 sentences) asking how you can assist them with their celebration today. NEVER fabricate an event plan, budget breakdown, or venue list for a simple greeting.
+   - Do NOT generate general-purpose programming code.
+   - If asked for general-purpose programming code, decline with the standard message.
+2. GREETINGS: If the user offers a casual greeting, respond with a short warm greeting asking how you can assist them with their celebration today.
 3. CONTEXT INTEGRITY & STRICT NO-INVENTION POLICY:
    - Use confirmed event context only when relevant.
    - Confirmed Budget: ${budget ? `${currency} ${budget.toLocaleString('en-IN')}` : 'UNSPECIFIED'}.
    - Confirmed Guests: ${guestCount ? guestCount : 'UNSPECIFIED'}.
-   - STRICT PROHIBITION ON INVENTED DATA:
-     * NEVER invent, assume, or hallucinate an event budget (such as ₹5,00,000 or any other fabricated number), guest count, venue, date, or location if it is NOT in the confirmed event context or specified by the user.
-     * When asked for recommendations (such as catering, decor, or schedules) and NO budget is confirmed, provide suggestions across flexible tiers and politely ask the user what their target budget or guest count is. NEVER state or imply a specific budget number unless the user or confirmed context explicitly provided it.
-     * Do NOT fabricate vendor names, quotes, availability, or pretend external databases have been checked.
+   - NEVER invent or hallucinate fabricated numbers, quotes, or fake vendors.
 4. FORMATTING & RESPONSE QUALITY:
    - Present information using clean, standard Markdown.
-   - Use Markdown tables for tabular data, comparisons, or budget breakdowns.
-   - Use bullet points for lists and bold formatting for key concepts.
-   - NEVER output raw HTML tags (e.g. no <br>, <div>, or <span> tags). Use proper Markdown double-newlines for line breaks.
-   - Keep answers appropriately concise, elegant, and warm.`;
+   - Use Markdown tables for comparisons or budgets.
+   - NEVER output raw HTML tags.
+   - Keep answers elegant, warm, and concise.`;
 
     const groqMessages = [
       { role: 'system', content: systemPrompt },
@@ -263,13 +160,16 @@ CRITICAL BEHAVIOR INSTRUCTIONS:
     ];
 
     let reply;
+    let usedModel = MODEL;
     try {
-      reply = await callGroq(groqMessages, { temperature: 0.7, maxTokens: 1024 });
+      const groqRes = await callGroq(GROQ_API_KEY, groqMessages, { temperature: 0.7, maxTokens: 1024 });
+      reply = groqRes.content;
+      usedModel = groqRes.model;
     } catch (groqErr) {
       console.warn('[/api/ai/chat] Groq failed, using resilient reply:', groqErr.message);
       const lower = lastUserMsg.toLowerCase();
       if (/^(hi|hello|hey|greetings|good\s*(morning|afternoon|evening))\b/i.test(lower)) {
-        reply = `Hello! I'm CelebrAI, your personal celebration co-planner. How can I assist you with your event today?`;
+        reply = "Hello! I'm CelebrAI, your personal celebration co-planner. How can I assist you with your event today?";
       } else if (isGeneralProgrammingRequest(lastUserMsg)) {
         reply = DECLINE_CODE_MESSAGE;
       } else {
@@ -277,7 +177,7 @@ CRITICAL BEHAVIOR INSTRUCTIONS:
       }
     }
 
-    res.json({ reply, model: MODEL });
+    res.json({ reply, model: usedModel });
   } catch (err) {
     console.error('[/api/ai/chat]', err.message);
     res.status(500).json({ error: err.message });
@@ -292,7 +192,6 @@ app.post('/api/ai/generate-plan', rateLimit, async (req, res) => {
       guestCount, budget, currency, theme, requirements,
     } = req.body;
 
-    // Validate required fields
     if (!sanitize(eventName, 100)) {
       return res.status(400).json({ error: 'eventName is required' });
     }
@@ -338,30 +237,19 @@ Return ONLY this JSON shape with no other text:
 
 Requirements: 8-12 tasks, 5-7 budget items summing close to ${safeBudget}, 4-5 milestones, 4-5 recommendations.`;
 
-    const raw = await callGroq(
+    const groqRes = await callGroq(
+      GROQ_API_KEY,
       [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }],
-      { temperature: 0.5, maxTokens: 2500 }
+      { temperature: 0.5, maxTokens: 4096 }
     );
-
-    // Robustly extract JSON from response
-    let cleaned = raw.trim();
-    // Remove any markdown code fences
-    cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
-    // Find the outermost JSON object
-    const firstBrace = cleaned.indexOf('{');
-    const lastBrace = cleaned.lastIndexOf('}');
-    if (firstBrace !== -1 && lastBrace !== -1) {
-      cleaned = cleaned.slice(firstBrace, lastBrace + 1);
-    }
 
     let plan;
     try {
-      plan = JSON.parse(cleaned);
+      plan = extractJson(groqRes.content);
     } catch {
       throw new Error('AI returned malformed JSON. Please try again.');
     }
 
-    // Validate essential shape
     if (!plan.tasks || !Array.isArray(plan.tasks)) plan.tasks = [];
     if (!plan.budgetBreakdown || !Array.isArray(plan.budgetBreakdown)) plan.budgetBreakdown = [];
     if (!plan.milestones || !Array.isArray(plan.milestones)) plan.milestones = [];
@@ -369,7 +257,7 @@ Requirements: 8-12 tasks, 5-7 budget items summing close to ${safeBudget}, 4-5 m
     if (!plan.themeSuggestions || !Array.isArray(plan.themeSuggestions)) plan.themeSuggestions = [];
     if (typeof plan.eventSummary !== 'string') plan.eventSummary = '';
 
-    res.json({ ...plan, _model: MODEL });
+    res.json({ ...plan, _model: groqRes.model });
   } catch (err) {
     console.error('[/api/ai/generate-plan]', err.message);
     res.status(500).json({ error: err.message });
@@ -398,14 +286,15 @@ Host: ${safeHost}
 
 Write only the invitation text itself — elegant, warm, and ready to copy. No instructions, no explanations.`;
 
-    const text = await callGroq(
+    const groqRes = await callGroq(
+      GROQ_API_KEY,
       [
         { role: 'system', content: 'You are a luxury event copywriter. Write beautiful, emotionally resonant event invitations.' },
         { role: 'user', content: prompt },
       ],
       { temperature: 0.8, maxTokens: 600 }
     );
-    res.json({ text, model: MODEL });
+    res.json({ text: groqRes.content, model: groqRes.model });
   } catch (err) {
     console.error('[/api/ai/invitation]', err.message);
     res.status(500).json({ error: err.message });
@@ -425,7 +314,8 @@ app.post('/api/ai/decor', rateLimit, async (req, res) => {
 
     const prompt = `Generate exactly 5 creative ${safeStyle} decor ideas for a ${safeType} with ${safeGuests} guests. Return a valid JSON array of exactly 5 strings. Each string should be 1-2 sentences describing a specific, actionable decor idea. No other text — only the JSON array.`;
 
-    const raw = await callGroq(
+    const groqRes = await callGroq(
+      GROQ_API_KEY,
       [
         { role: 'system', content: 'You are a luxury event designer. Return only a valid JSON array of strings.' },
         { role: 'user', content: prompt },
@@ -433,22 +323,22 @@ app.post('/api/ai/decor', rateLimit, async (req, res) => {
       { temperature: 0.8, maxTokens: 600 }
     );
 
-    let cleaned = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
-    const firstBracket = cleaned.indexOf('[');
-    const lastBracket = cleaned.lastIndexOf(']');
-    if (firstBracket !== -1 && lastBracket !== -1) {
-      cleaned = cleaned.slice(firstBracket, lastBracket + 1);
-    }
-
     let ideas;
     try {
-      ideas = JSON.parse(cleaned);
+      const cleaned = stripCodeFences(groqRes.content);
+      const firstBracket = cleaned.indexOf('[');
+      const lastBracket = cleaned.lastIndexOf(']');
+      if (firstBracket !== -1 && lastBracket !== -1) {
+        ideas = JSON.parse(cleaned.slice(firstBracket, lastBracket + 1));
+      } else {
+        ideas = JSON.parse(cleaned);
+      }
       if (!Array.isArray(ideas)) ideas = [cleaned];
     } catch {
       ideas = ['Could not parse AI response. Please try again.'];
     }
 
-    res.json({ ideas: ideas.map(String), model: MODEL });
+    res.json({ ideas: ideas.map(String), model: groqRes.model });
   } catch (err) {
     console.error('[/api/ai/decor]', err.message);
     res.status(500).json({ error: err.message });

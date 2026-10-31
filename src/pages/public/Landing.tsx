@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, CheckCircle, LayoutDashboard, Users, DollarSign } from 'lucide-react';
+import { AI_MODEL_NAME } from '../../config/ai';
 import './Landing.css';
 
 const HERO_IMAGE_URL = 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85';
@@ -141,7 +142,7 @@ export function Landing() {
         </div>
         <div className="benefits-list">
           {[
-            'Generate a complete bespoke event plan in seconds with GPT-OSS 120B',
+            `Generate a complete bespoke event plan in seconds with ${AI_MODEL_NAME}`,
             'Track budgets, expenses and vendor payments in INR or preferred currency',
             'Manage your entire guest list, dietary needs, and digital RSVP confirmations',
             'Discover and compare top venues, caterers, decorators, and photographers',

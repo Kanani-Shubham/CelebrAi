@@ -1,3 +1,4 @@
+import { AI_MODEL_NAME } from '../../config/ai';
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -152,8 +153,8 @@ export function AIAssistant() {
     id: 'welcome',
     sender: 'ai',
     text: activeEvent?.eventName
-      ? `👋 Hi! I'm CelebrAI, your personal event planner powered by GPT-OSS 120B. How can I help you with "${activeEvent.eventName}"?`
-      : "👋 Hi! I'm CelebrAI, your personal event assistant powered by GPT-OSS 120B. How can I help you today?",
+      ? `👋 Hi! I'm CelebrAI, your personal event planner powered by ${AI_MODEL_NAME}. How can I help you with "${activeEvent.eventName}"?`
+      : "👋 Hi! I'm CelebrAI, your personal event assistant powered by ${AI_MODEL_NAME}. How can I help you today?",
     timestamp: 'Just now',
   }), [activeEvent?.eventName]);
 
@@ -446,7 +447,7 @@ export function AIAssistant() {
             <span className="ai-name font-serif">CelebrAI</span>
           </div>
           <span className="ai-sub">
-            GPT-OSS 120B · {activeEvent?.eventName ? `Planning "${activeEvent.eventName}"` : 'Planning your event'}
+            {AI_MODEL_NAME} · {activeEvent?.eventName ? `Planning "${activeEvent.eventName}"` : 'Planning your event'}
           </span>
         </div>
 
@@ -525,7 +526,7 @@ export function AIAssistant() {
             </div>
             <div className="message-bubble typing-bubble">
               <Loader2 size={16} className="animate-spin" />
-              <span>Thinking with GPT-OSS 120B...</span>
+              <span>Thinking with {AI_MODEL_NAME}...</span>
             </div>
           </div>
         )}

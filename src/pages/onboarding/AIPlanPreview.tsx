@@ -27,6 +27,11 @@ import {
   type AIPlanResult,
 } from '../../services/ai/groq';
 import {
+  AI_MODEL_LABEL,
+  AI_OFFLINE_BADGE,
+  AI_OFFLINE_ENGINE_ID,
+} from '../../config/ai';
+import {
   getDocById,
   saveApprovedEventPlan,
 } from '../../services/firebase/firestore';
@@ -607,13 +612,22 @@ export function AIPlanPreview() {
       </header>
 
       <div className="ai-plan-hero">
-        <div className="ai-badge">
-          <Sparkles size={14} /> Powered by Groq AI
+        <div className={`ai-badge ${plan?._model === AI_OFFLINE_ENGINE_ID ? 'ai-badge-fallback' : ''}`}>
+          <Sparkles size={14} />
+          {plan?._model === AI_OFFLINE_ENGINE_ID
+            ? AI_OFFLINE_BADGE
+            : `Powered by ${AI_MODEL_LABEL}`}
         </div>
         <h1 className="ai-plan-title">Your AI Event Plan ✨</h1>
         <p className="ai-plan-subtitle">
           Tailored blueprint generated for <strong>{eventName}</strong> based on your preferences.
         </p>
+        {plan?._model === AI_OFFLINE_ENGINE_ID && (
+          <div className="plan-offline-notice" role="status" style={{ marginTop: '12px', padding: '8px 14px', borderRadius: '8px', background: 'rgba(217, 119, 6, 0.1)', border: '1px solid rgba(217, 119, 6, 0.3)', color: '#b45309', fontSize: 'var(--text-sm)', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+            <span>ℹ️</span>
+            <span>Deterministic offline blueprint (AI proxy unavailable — generated locally by template engine)</span>
+          </div>
+        )}
       </div>
 
       {/* Tabs */}

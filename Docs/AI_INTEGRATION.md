@@ -47,36 +47,31 @@ By keeping it in `process.env.GROQ_API_KEY` on the server:
 
 ### Primary Model
 ```
-meta-llama/llama-4-scout-17b-16e-instruct
+openai/gpt-oss-120b
 ```
-- 16-expert Mixture-of-Experts architecture
-- 17B active parameters
-- Low latency for structured JSON generation
+- Open-weights 120B reasoning architecture accelerated on Groq LPU hardware
+- Tuned for complex multi-constraint event optimization and structured JSON generation
+- Parameterized with `max_completion_tokens: 4096` and `reasoning_effort: 'low'` to balance deep chain-of-thought analysis with fast response times
 
-### Fallback Model
+### Fallback Models
 ```
+openai/gpt-oss-20b
 llama-3.3-70b-versatile
 ```
-Used when the primary model is unavailable or returns an error. The proxy retries with the fallback automatically.
+Used if the primary reasoning model experiences temporary latency spikes, capacity limits, or HTTP 400/404 errors. The proxy server automatically cascades through the fallback chain.
 
-### Model Selection Logic (server pseudocode)
+### Client-Side Resilient Fallback Engine
+```
+client-resilient-engine
+```
+If the network is completely offline or the server proxy is unreachable, CelebrAI's client-side deterministic planner generates mathematically proportional budgets and milestone task timelines locally without failing. The UI surfaces this transparently as an offline template blueprint.
+
+### Model Selection & Execution Pipeline
 ```javascript
-const MODELS = [
-  'meta-llama/llama-4-scout-17b-16e-instruct',
-  'llama-3.3-70b-versatile',
-];
+import { PRIMARY_MODEL, FALLBACK_MODEL, LEGACY_FALLBACK_MODEL } from './lib/config.js';
 
-async function callWithFallback(prompt) {
-  for (const model of MODELS) {
-    try {
-      return await groq.chat.completions.create({ model, ...prompt });
-    } catch (err) {
-      if (isRateLimitError(err) || isModelUnavailable(err)) continue;
-      throw err;
-    }
-  }
-  throw new Error('All models unavailable');
-}
+// Cascades through primary reasoning model and resilient fallbacks
+const MODELS = [PRIMARY_MODEL, FALLBACK_MODEL, LEGACY_FALLBACK_MODEL];
 ```
 
 ---

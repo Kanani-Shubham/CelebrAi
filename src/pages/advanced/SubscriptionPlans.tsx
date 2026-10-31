@@ -1,3 +1,4 @@
+import { AI_MODEL_NAME } from '../../config/ai';
 import React, { useState } from 'react';
 import { Check, Sparkles, Info, X } from 'lucide-react';
 import './SubscriptionPlans.css';
@@ -69,7 +70,7 @@ export function SubscriptionPlans() {
           <div className="plan-feature-bullets">
             <div className="feature-bullet">
               <Check size={14} />
-              <span>AI planning with GPT-OSS 120B</span>
+              <span>AI planning with {AI_MODEL_NAME}</span>
             </div>
             <div className="feature-bullet">
               <Check size={14} />
@@ -108,7 +109,7 @@ export function SubscriptionPlans() {
           <div className="plan-feature-bullets">
             <div className="feature-bullet">
               <Check size={14} />
-              <span>Unlimited GPT-OSS 120B AI tokens</span>
+              <span>Unlimited {AI_MODEL_NAME} AI tokens</span>
             </div>
             <div className="feature-bullet">
               <Check size={14} />
@@ -143,8 +144,8 @@ export function SubscriptionPlans() {
 
           <div className="compare-data-row">
             <span className="td-feature">AI Model</span>
-            <span className="td-val">GPT-OSS 120B</span>
-            <span className="td-val font-semibold">GPT-OSS 120B</span>
+            <span className="td-val">{AI_MODEL_NAME}</span>
+            <span className="td-val font-semibold">{AI_MODEL_NAME}</span>
           </div>
 
           <div className="compare-data-row">

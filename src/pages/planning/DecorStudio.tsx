@@ -1,3 +1,4 @@
+import { AI_MODEL_NAME } from '../../config/ai';
 import React, { useState } from 'react';
 import { Sparkles, Heart, RefreshCw, Loader2, Bookmark, Check } from 'lucide-react';
 import { useEvent } from '../../contexts/EventContext';
@@ -63,7 +64,7 @@ export function DecorStudio() {
 
       if (ideas && ideas.length > 0) {
         setAiIdeas(ideas);
-        toast.success('Generated 5 decor concepts using GPT-OSS 120B');
+        toast.success(`Generated 5 decor concepts using ${AI_MODEL_NAME}`);
       }
     } catch (err) {
       console.error('[DecorStudio] Error generating decor ideas:', err);
@@ -179,7 +180,7 @@ export function DecorStudio() {
             <div style={{ textAlign: 'center', padding: '40px' }}>
               <Loader2 size={28} className="animate-spin" style={{ margin: '0 auto', color: '#7E57C2' }} />
               <p style={{ marginTop: '12px', fontSize: '14px', color: 'var(--text-secondary)' }}>
-                GPT-OSS 120B is generating custom {selectedStyle} decor concepts...
+                {AI_MODEL_NAME} is generating custom {selectedStyle} decor concepts...
               </p>
             </div>
           ) : aiIdeas.length === 0 ? (
@@ -307,7 +308,7 @@ export function DecorStudio() {
             disabled={isGenerating}
           >
             {isGenerating ? <Loader2 size={18} className="animate-spin" /> : <Sparkles size={18} />}
-            <span>Generate AI Decor Ideas with GPT-OSS 120B</span>
+            <span>Generate AI Decor Ideas with {AI_MODEL_NAME}</span>
           </button>
         </div>
       )}

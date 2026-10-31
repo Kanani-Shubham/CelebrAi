@@ -1,3 +1,4 @@
+import { AI_PRIMARY_MODEL } from '../../config/ai';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -15,7 +16,7 @@ import './AdminModeration.css';
 
 const RECENT_ACTIVITIES = [
   { id: 'act-1', title: 'System health check', desc: 'All database and proxy clusters healthy', time: '1m ago', icon: '✅' },
-  { id: 'act-2', title: 'Groq API proxy active', desc: 'openai/gpt-oss-120b responding with 200 OK', time: '5m ago', icon: '🤖' },
+  { id: 'act-2', title: 'Groq API proxy active', desc: `${AI_PRIMARY_MODEL} responding with 200 OK`, time: '5m ago', icon: '🤖' },
   { id: 'act-3', title: 'Firestore security rules active', desc: 'Owner-scoped read/write enforced', time: '12m ago', icon: '🔒' },
 ];
 

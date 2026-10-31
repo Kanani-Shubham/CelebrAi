@@ -1,3 +1,4 @@
+import { AI_MODEL_NAME } from '../../config/ai';
 import React, { useState } from 'react';
 import {
   Search,
@@ -20,7 +21,7 @@ import { toast } from '../../components/ui';
 import './HelpFeedback.css';
 
 const FAQS = [
-  { q: 'How does CelebrAI use GPT-OSS 120B?', a: 'CelebrAI securely routes planning prompts through our dedicated proxy server to Groq API. Your API keys are kept server-side.' },
+  { q: 'How does CelebrAI use ${AI_MODEL_NAME}?', a: 'CelebrAI securely routes planning prompts through our dedicated proxy server to Groq API. Your API keys are kept server-side.' },
   { q: 'Can I export my event budget and checklist?', a: 'Yes! Navigate to Reports & Export to download CSV spreadsheets of tasks, expenses, and guest lists, or a complete JSON master blueprint.' },
   { q: 'How do guest RSVPs work?', a: 'Every event has a shareable RSVP link. Guests submit their party size and dietary preferences without needing an account, and entries sync instantly to your guest dashboard.' },
   { q: 'Is my event data private?', a: 'Yes. Cloud Firestore security rules strictly isolate your private events, budgets, notes, and AI conversations to your authenticated account.' },
@@ -107,7 +108,7 @@ export function HelpFeedback() {
             <Sparkles size={18} />
           </div>
           <div>
-            <h4 className="h-card-title">GPT-OSS 120B</h4>
+            <h4 className="h-card-title">{AI_MODEL_NAME}</h4>
             <p className="h-card-sub">AI planning tips</p>
           </div>
         </div>

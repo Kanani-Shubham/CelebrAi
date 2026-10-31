@@ -1,3 +1,4 @@
+import { AI_MODEL_NAME } from '../../config/ai';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Copy, Check, CheckCircle2, Clock, XCircle, Share2, Sparkles, Loader2 } from 'lucide-react';
@@ -166,7 +167,7 @@ export function InvitationsRSVP() {
         </div>
         <div className="promo-text">
           <strong>Customize Digital Invitations in Content Studio</strong>
-          <p>Generate WhatsApp copy, announcements, and banquet menus with GPT-OSS 120B.</p>
+          <p>Generate WhatsApp copy, announcements, and banquet menus with {AI_MODEL_NAME}.</p>
         </div>
       </div>
     </div>
