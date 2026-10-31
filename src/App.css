@@ -1,4 +1,22 @@
 /* App Core Layout */
+.skip-to-content {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 10000;
+  padding: 8px 16px;
+  background: var(--color-tuxedo-black, #171f20);
+  color: var(--color-bridal-white, #ffffff);
+  border-radius: var(--radius-sm, 6px);
+  font-weight: 500;
+  font-size: 13px;
+  transition: top 0.2s ease;
+  text-decoration: none;
+}
+.skip-to-content:focus {
+  top: 16px;
+}
+
 .app-content {
   flex: 1;
   display: flex;

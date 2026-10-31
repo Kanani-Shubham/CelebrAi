@@ -53,7 +53,7 @@ export function AppShell({ children, requireAuth = true, hideNav = false }: Prop
   return (
     <div className="page-container app-shell-container">
       <AppHeader />
-      <main className="app-content">
+      <main id="main-content" className="app-content">
         {children}
       </main>
       <BottomNav />
@@ -63,8 +63,8 @@ export function AppShell({ children, requireAuth = true, hideNav = false }: Prop
 
 export function PublicShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="page-container public-shell-container">
+    <main id="main-content" className="page-container public-shell-container">
       {children}
-    </div>
+    </main>
   );
 }
