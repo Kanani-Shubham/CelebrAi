@@ -1,538 +1,552 @@
 # CelebrAI — Next-Generation AI Event Planning Platform
 
 <p align="center">
-  <img src="Docs/screenshots/desktop/desktop-01-landing-page.png" alt="CelebrAI — Plan Smarter. Celebrate Better." width="100%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.12);" />
+  <img src="public/assets/branding/celebrai-logo.png" alt="CelebrAI Logo" width="280" />
 </p>
 
 <p align="center">
   <strong>Plan Smarter. Celebrate Better.</strong><br>
-  An intelligent, full-stack event planning workspace bringing event ideation, AI-driven blueprint generation, dynamic budget allocations, milestone task management, guest RSVP coordination, and a context-aware AI Mentor into one cohesive web platform.
+  An intelligent celebration operating system bringing event ideation, AI-driven blueprint generation, dynamic budget allocations, milestone task management, guest RSVP coordination, and a context-aware AI Mentor into one cohesive web platform.
 </p>
 
 <p align="center">
   <a href="https://celebr-ai.netlify.app/"><img src="https://img.shields.io/badge/Live_Demo-celebr--ai.netlify.app-171F20?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo"></a>
   <a href="https://github.com/Kanani-Shubham/CelebrAi"><img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="Source Code"></a>
-  <a href="#-hack2skill-ai-evaluation-benchmark"><img src="https://img.shields.io/badge/Hack2Skill-Evaluated_6_Factors-4B3F72?style=for-the-badge" alt="Evaluation Alignment"></a>
-  <a href="#-automated-testing--verification-suite"><img src="https://img.shields.io/badge/Vitest-134%2F134_Passing-22c55e?style=for-the-badge&logo=vitest&logoColor=white" alt="Tests"></a>
+  <a href="https://www.instagram.com/reel/DfJckDCIOv7/"><img src="https://img.shields.io/badge/Instagram-Reel_Challenge-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Instagram Reel"></a>
+  <a href="#-hack2skill-ai-evaluation--six-parameter-engineering-matrix"><img src="https://img.shields.io/badge/Hack2Skill-6_Factor_Evaluation-4B3F72?style=for-the-badge" alt="Evaluation Matrix"></a>
+  <a href="#-parameter-4--testing"><img src="https://img.shields.io/badge/Vitest-134%2F134_Passing-22c55e?style=for-the-badge&logo=vitest&logoColor=white" alt="Tests"></a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19.0.0-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19">
-  <img src="https://img.shields.io/badge/TypeScript-5.7-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/Vite-6.2-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/React-19.3.1-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19">
+  <img src="https://img.shields.io/badge/TypeScript-6.0.3-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Vite-8.3.5-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
   <img src="https://img.shields.io/badge/GenAI-Groq_GPT--OSS_120B-F05A28?style=flat-square" alt="Groq AI">
   <img src="https://img.shields.io/badge/Database-Cloud_Firestore-FFCA28?style=flat-square&logo=firebase&logoColor=black" alt="Firestore">
-  <img src="https://img.shields.io/badge/Auth-Firebase_OAuth-FFCA28?style=flat-square&logo=firebase&logoColor=black" alt="Firebase Auth">
-  <img src="https://img.shields.io/badge/Linter-Oxlint_Clean-00D8FF?style=flat-square" alt="Oxlint">
-  <img src="https://img.shields.io/badge/A11y-WCAG_2.1_AA_Compliant-success?style=flat-square" alt="Accessibility">
+  <img src="https://img.shields.io/badge/Auth-Firebase_Auth-FFCA28?style=flat-square&logo=firebase&logoColor=black" alt="Firebase Auth">
+  <img src="https://img.shields.io/badge/Linter-Oxlint_0_Errors-00D8FF?style=flat-square" alt="Oxlint">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License">
 </p>
 
 ---
 
 ## 📑 Table of Contents
 
-1. [Executive Summary & Problem Statement](#-executive-summary--problem-statement)
-2. [Hack2Skill AI Evaluation Benchmark (6 Factors)](#-hack2skill-ai-evaluation-benchmark)
-   - [Factor 1: Problem Statement Alignment & Gen AI Utilization](#factor-1-problem-statement-alignment--gen-ai-utilization)
-   - [Factor 2: Code Quality & Architecture](#factor-2-code-quality--architecture)
-   - [Factor 3: Performance, Efficiency & Bundle Architecture](#factor-3-performance-efficiency--bundle-architecture)
-   - [Factor 4: Automated Testing & Verification Suite](#factor-4-automated-testing--verification-suite)
-   - [Factor 5: Accessibility (a11y) & Editorial Design System](#factor-5-accessibility-a11y--editorial-design-system)
-   - [Factor 6: Security, Credential Safety & Data Governance](#factor-6-security-credential-safety--data-governance)
-3. [Visual Gallery & User Journey (Desktop & Mobile)](#-visual-gallery--user-journey)
-4. [Master 36-Page Route Matrix](#-master-36-page-route-matrix)
-5. [System Architecture & Data Flow](#-system-architecture--data-flow)
-6. [Generative AI Integration Deep-Dive](#-generative-ai-integration-deep-dive)
-7. [Database Schema & Offline Storage Engine](#-database-schema--offline-storage-engine)
-8. [Local Development & Deployment Guide](#-local-development--deployment-guide)
-9. [Submission Reference & Form Responses](#-submission-reference--form-responses)
-10. [Authors & Project Licensing](#-authors--project-licensing)
+1. [Executive Overview & Problem Statement](#-executive-overview--problem-statement)
+2. [Vision, Target Users & Supported Events](#-vision-target-users--supported-events)
+3. [Hack2Skill AI Evaluation — Six-Parameter Engineering Matrix](#-hack2skill-ai-evaluation--six-parameter-engineering-matrix)
+   - [Parameter 1: Code Quality](#parameter-1--code-quality)
+   - [Parameter 2: Security](#parameter-2--security)
+   - [Parameter 3: Efficiency](#parameter-3--efficiency)
+   - [Parameter 4: Testing](#parameter-4--testing)
+   - [Parameter 5: Accessibility](#parameter-5--accessibility)
+   - [Parameter 6: Problem Statement Alignment](#parameter-6--problem-statement-alignment)
+4. [Product Screenshots & Visual Walkthrough](#-product-screenshots--visual-walkthrough)
+   - [A. Landing and Authentication](#a-landing-and-authentication)
+   - [B. Multi-Step Event Creation Wizard](#b-multi-step-event-creation-wizard)
+   - [C. AI Celebration Plan Blueprint](#c-ai-celebration-plan-blueprint)
+   - [D. Command Center, Tasks & Financials](#d-command-center-tasks--financials)
+   - [E. AI Mentor, Guest RSVP & Account Management](#e-ai-mentor-guest-rsvp--account-management)
+5. [Master 36-Page Route Matrix](#-master-36-page-route-matrix)
+6. [System Architecture & Data Flow](#-system-architecture--data-flow)
+7. [Generative AI Integration Deep-Dive](#-generative-ai-integration-deep-dive)
+8. [Database Schema & Offline Storage Engine](#-database-schema--offline-storage-engine)
+9. [Local Development & Execution Guide](#-local-development--execution-guide)
+10. [Hack2Skill Official Submission Reference](#-hack2skill-official-submission-reference)
+11. [Documentation Library & Technical Reports](#-documentation-library--technical-reports)
+12. [Project Maintainers & Open-Source Licensing](#-project-maintainers--open-source-licensing)
 
 ---
 
-## 🌟 Executive Summary & Problem Statement
+## 🌟 Executive Overview & Problem Statement
 
-Organizing any life celebration—whether an intimate 50-guest birthday, a 500-guest luxury Indian wedding, a high-stakes corporate conference, or an anniversary gala—inevitably descends into chaotic fragmentation:
-- **Scattered Information**: Budgets live in messy spreadsheets, task checklists in notes apps, RSVP lists across WhatsApp and SMS, and design inspirations in chaotic image galleries.
-- **Decision Paralysis**: Hosts struggle to calculate sensible budget allocations across venue, catering, decor, and photography, often incurring unexpected cost overruns of 35%–50%.
-- **Zero Real-Time Assistance**: Traditional event software consists of static form templates that lack context-aware recommendations, intelligent deadline forecasting, or localized vendor matching.
+Organizing a celebration—whether an intimate 50-guest milestone birthday, a 500-attendee wedding, an anniversary gala, or an executive corporate summit—routinely devolves into stressful logistical friction:
+
+- **Extreme Fragmentation**: Budgets live in messy spreadsheets, task checklists in personal notes apps, RSVP confirmations across SMS and WhatsApp threads, and design ideas in unorganized photo galleries.
+- **Financial Ambiguity**: Hosts struggle to calculate realistic category percentages across Venue, Catering, Decor, and Photography, frequently incurring unexpected cost overruns of 30% to 50%.
+- **Zero Real-Time Intelligence**: Traditional event planning software consists of static form templates that lack context-aware recommendations, intelligent deadline forecasting, or localized vendor matching.
 
 ### The CelebrAI Solution
-**CelebrAI** is an AI-native celebration operating system. By pairing the speed of **Groq-accelerated GPT-OSS 120B** with an editorial-grade **React 19 + TypeScript** frontend and a secure **Firebase Cloud Firestore** persistence backbone, CelebrAI eliminates fragmentation entirely.
+**CelebrAI** is an AI-native celebration operating system. Built on **React 19**, **TypeScript**, and **Google Cloud Firestore**, and accelerated by **Groq GPT-OSS 120B** LPU inference, CelebrAI consolidates the entire planning lifecycle into one cohesive workspace.
 
-From the first concept to the final toast, hosts enjoy:
-1. **Instant AI Event Blueprints**: 4-step wizard turning simple event ideas into complete concept summaries, milestone checklists, categorized budget allocations, and hour-by-hour timelines.
-2. **Interactive AI Mentor**: Real-time event planning copilot possessing deep context of the host's active budget, location, date, and guest count.
-3. **Smart Financial Tracking**: Real-time category tracking (Venue, Catering, Decor, Photography, Entertainment, Contingency) with budget vs. actual variance analysis in Indian Rupees (₹) and global currencies.
-4. **End-to-End Guest & RSVP Engine**: Live guest roster tracking, party size counts, dietary preferences, and shareable public RSVP access.
-5. **Fail-Safe Offline Architecture**: Resilient client caching via HTML5 Canvas compression, IndexedDB avatar storage, and offline fallback event plans.
+Hosts can:
+1. Turn simple celebration goals into a full concept summary, milestone checklist, categorized budget, and timeline in seconds.
+2. Converse with a context-aware **AI Mentor** possessing real-time knowledge of active budgets, remaining days, and guest headcounts.
+3. Manage itemized expenses with variance tracking in Indian Rupees (₹) and major global currencies.
+4. Distribute public, tokenized RSVP links to guests for live attendance and dietary preference tracking.
+5. Work seamlessly across devices with zero-latency IndexedDB avatar caching and offline blueprint fallbacks.
 
 ---
 
-## 🎯 Hack2Skill AI Evaluation Benchmark
+## 🎯 Vision, Target Users & Supported Events
 
-This section directly maps CelebrAI's codebase, architecture, and validation metrics to the **6 Hack2Skill AI Evaluation Factors** for rigorous automated and peer evaluation.
+### Product Philosophy
+- **User Agency Over Automation**: AI-generated event plans and budget distributions are presented as editable suggestions. Hosts retain complete control to accept, edit, or override any milestone, task deadline, or financial allocation.
+- **Data Accuracy Over Hallucination**: Strict system prompts instruct the AI to utilize only user-provided facts (dates, locations, guest counts) without inventing fabricated vendor details or false budget totals.
+- **Privacy by Design**: Sensitive user information and event data are isolated through row-level Firestore database rules. Private AI API keys never reach the client browser.
+
+### Target Users
+- **Everyday Hosts**: Individuals organizing birthdays, anniversaries, dinner parties, or family reunions.
+- **Couples & Families**: Hosts planning multi-day weddings with intricate timelines, guest lists, and vendor contracts.
+- **Community & College Organizers**: Student leaders and coordinators managing festivals, hackathons, and galas.
+- **Corporate Event Managers**: Professionals orchestrating conferences, team offsites, and product launches.
+
+### Supported Celebration Categories
+CelebrAI natively categorizes events across 8 distinct archetypes:
+`Wedding`, `Birthday`, `Anniversary`, `Corporate`, `Community`, `College Event`, `Festival`, and `Custom Celebration`.
+
+---
+
+## 🏆 Hack2Skill AI Evaluation — Six-Parameter Engineering Matrix
+
+This section presents CelebrAI's engineering architecture and verification evidence mapped directly against the **six official Hack2Skill evaluation parameters** in the exact designated order:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
 │                   HACK2SKILL 6-FACTOR EVALUATION MATRIX               │
 ├──────────────────────────┬───────────────────────┬─────────────────────┤
-│ Evaluation Factor        │ Measured Score / Tier │ Primary Proof Point │
+│ Evaluation Parameter     │ Measured Result       │ Physical Proof      │
 ├──────────────────────────┼───────────────────────┼─────────────────────┤
-│ 1. Gen AI Utilization    │ Grade A+ (Exceptional)│ Groq GPT-OSS 120B   │
-│ 2. Code Quality          │ Grade A+ (0 Warnings) │ Oxlint & Strict TS  │
-│ 3. Efficiency & Arch     │ Grade A  (<540ms Vite)│ Multi-chunk rollup  │
-│ 4. Testing & Reliability │ Grade A+ (100% Pass)  │ 134/134 Vitest unit │
-│ 5. Accessibility (a11y)  │ Grade A  (14.8:1 AAA) │ WCAG 2.1 AA Compl.  │
-│ 6. Security & Privacy    │ Grade A+ (Zero Leaks) │ Isolated Server API │
+│ 1. Code Quality          │ 0 Errors across 78 fls│ Oxlint + Strict TS  │
+│ 2. Security              │ Zero Leaked Secrets   │ Row-Level Firestore │
+│ 3. Efficiency            │ 757ms Build, <100KB Im│ Rollup 3-Tier Chunk │
+│ 4. Testing               │ 134/134 Passed (100%) │ Vitest v2.1.9       │
+│ 5. Accessibility         │ 14.8:1 Contrast (AAA) │ WCAG 2.1 AA Compl.  │
+│ 6. Problem Alignment     │ 36 Connected Routes   │ End-to-End Workflows│
 └──────────────────────────┴───────────────────────┴─────────────────────┘
 ```
 
 ---
 
-### Factor 1: Problem Statement Alignment & Gen AI Utilization
+### Parameter 1: Code Quality
 
-CelebrAI does not merely treat AI as an afterthought chat widget. Generative AI is deeply embedded across core user journeys, backed by strict JSON schemas, fallback engines, and context injection.
+CelebrAI adheres to modern, strict TypeScript standards and layered software architecture:
 
-| Route / Module | Gen AI Service | Model / Hardware | Purpose & Implementation |
-|---|---|---|---|
-| `/ai-plan-preview`<br>`CreateEvent.tsx` | **Groq Cloud API** | `openai/gpt-oss-120b`<br>(Groq LPU Inference) | **Automated Celebration Blueprint**: Takes event name, type, date, location, guest count, budget, and theme preferences to generate a 4-part plan: Concept Overview, Priority Milestones, Category Budget Breakdown, and Run Sheet Countdown. |
-| `/ai`<br>`AIAssistant.tsx` | **Groq Cloud API** | `openai/gpt-oss-120b`<br>(Groq LPU Inference) | **Context-Aware AI Mentor**: Stateful, multi-turn conversational planner injected with active event details (`activeEvent` state, remaining budget, days until celebration). Provides one-click chips: *"Recommend caterers"*, *"Suggest decor themes"*, *"Optimize budget"*, *"Create run sheet"*. |
-| `/content-studio`<br>`ContentStudio.tsx` | **Groq Cloud API** | `openai/gpt-oss-120b`<br>(Groq LPU Inference) | **AI Invitation & Content Generator**: Generates personalized digital invitation cards, WhatsApp broadcast messages, itinerary announcements, and host welcome speeches tailored to the event theme and formality tone. |
-| `/budget`<br>`BudgetDashboard.tsx` | **Heuristic + AI Optimizer** | Hybrid Rule-Engine + AI | **Dynamic Budget Distribution**: Automatically balances budget weights across 6 categories (Venue: 35%, Food & Beverage: 30%, Decor: 15%, Photography: 10%, Entertainment: 5%, Contingency: 5%) based on target budget and guest headcount. |
-| `/tasks`<br>`TodoList.tsx` | **AI Milestone Decomposer** | Structured Prompt Extraction | **Intelligent Task Breakdown**: Decomposes high-level event milestones into actionable, dated tasks tagged by priority (`High`, `Medium`, `Low`) and functional category (`Venue`, `Decor`, `Catering`, `Photography`). |
-
-#### Strict Prompt Engineering & Schema Validation
-All AI calls pass through server-side JSON schema sanitization ([`server/api.js`](server/api.js) and Netlify Function [`netlify/functions/api.js`](netlify/functions/api.js)). If an AI response contains formatting anomalies or markdown fences, automated regex cleaners strip markdown wrappers and parse standard JSON. If the Groq API key is unconfigured in development, the system seamlessly activates the deterministic local blueprint generator ([`src/pages/onboarding/AIPlanPreview.tsx`](src/pages/onboarding/AIPlanPreview.tsx)), guaranteeing zero broken UI states.
+- **Strict Type Safety**: The codebase operates with zero fallback `any` types. All domain models (`EventItem`, `TaskItem`, `ExpenseItem`, `GuestItem`, `AIPlanResult`, `ConversationMessage`) are centralized in [`src/types/index.ts`](src/types/index.ts).
+- **Static Syntax & Linter Verification**: Tested with [`oxlint`](.oxlintrc.json) executing 116 rules across 78 source files in **90ms with 0 errors**.
+- **Clean Service Boundaries**: UI presentation components are cleanly decoupled from external backend operations:
+  - `src/services/firebase/`: Encapsulates authentication observers, Firestore document CRUD wrappers, and storage fallbacks.
+  - `src/services/ai/`: Handles server-side AI proxy requests and system prompt constructions.
+  - `src/services/storage/`: Manages local IndexedDB binary avatar persistence.
+  - `src/utils/`: Pure utility functions for date arithmetic, input validation, and security sanitization.
+- **Context State Management**: Global state is managed via [`AuthContext.tsx`](src/contexts/AuthContext.tsx) and [`EventContext.tsx`](src/contexts/EventContext.tsx), utilizing clean subscription listeners and memoized dispatchers.
 
 ---
 
-### Factor 2: Code Quality & Architecture
+### Parameter 2: Security
 
-CelebrAI adheres to modern enterprise TypeScript standards, zero-warning linter policies, and modular layered software architecture.
+Security and user privacy are enforced at every application boundary:
 
-```
-e:\Project\CelebrAI\
-├── src/
-│   ├── components/         # Atomic & feature UI modules
-│   │   ├── common/         # SafeMarkdown, Modal, ImageUpload, FloatingDrawer
-│   │   └── layout/         # AppHeader, AppShell, Footer, MobileNav
-│   ├── contexts/           # Global reactive state
-│   │   ├── AuthContext.tsx # Firebase auth listener, user roles, token refresh
-│   │   └── EventContext.tsx# Active event selection, CRUD actions, sync
-│   ├── pages/              # 36 fully implemented feature views
-│   │   ├── advanced/       # GuestRSVP, NotificationsCenter, RunSheet
-│   │   ├── auth/           # Sign In, Sign Up, OAuth handler
-│   │   ├── dashboard/      # HomeDashboard, AIAssistant
-│   │   ├── onboarding/     # CreateEvent wizard, AIPlanPreview
-│   │   ├── planning/       # BudgetDashboard, ExpenseManager, GuestManagement, TodoList
-│   │   ├── public/         # Landing, ExploreEvents, PublicEventView
-│   │   └── workspace/      # Profile, Settings, PrivacyConsent, ContentStudio
-│   ├── services/           # Decoupled backend connectors
-│   │   ├── ai/             # Groq client proxy, system prompt templates
-│   │   ├── firebase/       # Auth, Firestore CRUD, Storage fallback
-│   │   ├── notifications/  # In-app event & deadline alert dispatchers
-│   │   └── storage/        # IndexedDB multi-tier profile photo cache
-│   ├── types/              # Master TypeScript type definitions (0 `any` types)
-│   └── utils/              # Security sanitizers, currency formatters, date math
-├── server/                 # Express backend proxy for local server execution
-├── netlify/                # Serverless Netlify function handlers
-└── Docs/                   # Technical manuals, architectural specs & reports
-```
-
-- **Zero `any` Types**: Strict type safety across all interfaces (`EventPlan`, `Guest`, `Expense`, `TaskItem`, `ConversationMessage`).
-- **Static Syntax Validation**: Verified with `.oxlintrc.json` high-performance linter executing over 116 rules across 78 files in 73ms with **0 errors**.
-- **Immutable Context APIs**: React contexts leverage memoized dispatcher callbacks and state reducers to eliminate unnecessary re-renders.
+- **Zero Client Secret Exposure**: Private API keys (`GROQ_API_KEY`) reside exclusively in server environments ([`server/api.js`](server/api.js) and Netlify Function [`netlify/functions/api.js`](netlify/functions/api.js)). No AI keys exist in client-side code or build bundles.
+- **Strict Repository Hygiene**: Both `.env` and `.env.example` are excluded from Git tracking via [`.gitignore`](.gitignore). Verified via Git tree inspection.
+- **Row-Level Firestore Rules ([`firestore.rules`](firestore.rules))**:
+  - Enforces multi-tenant user isolation: `request.auth.uid == userId` for `/users/{userId}`.
+  - Event resource authorization: Only the event creator or confirmed collaborators can mutate `/events/{eventId}`, `/tasks/{taskId}`, or `/expenses/{expenseId}`.
+  - Public RSVP write-only permissions: Guests can update their own RSVP attendance without gaining read or write access to the host's event budget or private notes.
+- **Multi-Pass Input Sanitization ([`src/utils/security.ts`](src/utils/security.ts))**: Strips malicious HTML constructs, `<script>` tags, inline event handlers (`onload`, `onerror`), and `javascript:` URIs.
+- **Safe Markdown Rendering ([`src/components/common/SafeMarkdown.tsx`](src/components/common/SafeMarkdown.tsx))**: Renders AI assistant markdown outputs securely without raw HTML execution risks.
+- **Privacy & Consent Governance ([`src/pages/workspace/PrivacyConsent.tsx`](src/pages/workspace/PrivacyConsent.tsx))**: Provides hosts with explicit AI processing consent toggles, full JSON data export, and complete account deletion workflows.
 
 ---
 
-### Factor 3: Performance, Efficiency & Bundle Architecture
+### Parameter 3: Efficiency
 
-To ensure instant First Contentful Paint (FCP) and smooth 60fps animations across low-end mobile devices and high-end desktop workstations, CelebrAI leverages Vite 6.2 with optimized Rollup code splitting.
+Optimized for instant page loads, smooth 60fps animations, and minimal network overhead:
 
-```
-Vite Production Build Output (vite v8.3.5 / rollup v4):
-dist/index.html                             2.24 kB │ gzip:   0.82 kB
-dist/assets/index-B2IEjwoI.css            161.67 kB │ gzip:  24.03 kB
-dist/assets/rolldown-runtime-XKyaHtl9.js    0.72 kB │ gzip:   0.42 kB
-dist/assets/vendor-icons-Ckz54iR9.js       33.72 kB │ gzip:  11.85 kB
-dist/assets/index-yfFtE40Z.js             361.15 kB │ gzip:  88.83 kB
-dist/assets/vendor-react-CFyf3Nuw.js      368.54 kB │ gzip: 114.95 kB
-dist/assets/vendor-firebase-D4FnO4s2.js   601.33 kB │ gzip: 181.20 kB
-✓ Built in 538ms across 2,310 transformed modules
-```
+- **Measured Production Build Output**:
+  ```bash
+  > celebrai@0.0.0 build
+  > tsc -b && vite build
 
-#### Efficiency Architectural Pillars:
-1. **Three-Tier Chunk Splitting**:
-   - `vendor-react`: Bundles React 19, React DOM, and React Router independently for persistent browser cache hits.
-   - `vendor-firebase`: Isolates Firebase Authentication and Firestore SDKs.
-   - `vendor-icons`: Tree-shakes Lucide React icon assets to minimize SVG bloat.
-2. **IndexedDB Multi-Tier Image Caching**:
-   - Instead of repeatedly hitting external image storage for profile avatars, images are compressed on an HTML5 Canvas down to `<100 KB` and cached in client-side IndexedDB ([`src/services/storage/indexedDB.ts`](src/services/storage/indexedDB.ts)), yielding instant 0ms offline renders.
-3. **Repository Footprint Discipline**:
-   - Total repository screenshot payload is strictly managed at **~4.8 MB** (well under the **10 MB** Hack2Skill maximum repository threshold).
+  vite v8.3.5 building client environment for production...
+  ✓ 2310 modules transformed.
+  dist/index.html                             2.24 kB │ gzip:   0.82 kB
+  dist/assets/index-B2IEjwoI.css            161.67 kB │ gzip:  24.03 kB
+  dist/assets/rolldown-runtime-XKyaHtl9.js    0.72 kB │ gzip:   0.42 kB
+  dist/assets/vendor-icons-Ckz54iR9.js       33.72 kB │ gzip:  11.85 kB
+  dist/assets/index-yfFtE40Z.js             361.15 kB │ gzip:  88.83 kB
+  dist/assets/vendor-react-CFyf3Nuw.js      368.54 kB │ gzip: 114.95 kB
+  dist/assets/vendor-firebase-D4FnO4s2.js   601.33 kB │ gzip: 181.20 kB
+  ✓ built in 757ms
+  ```
+- **3-Tier Rollup Chunk Isolation**: Configured in [`vite.config.ts`](vite.config.ts) to separate `vendor-firebase`, `vendor-react`, and `vendor-icons`, maximizing long-term browser cache hits.
+- **Client-Side Canvas Compression (<100 KB)**: Image uploads are scaled on an HTML5 Canvas to 512×512px with 85% quality before storage, preventing bandwidth bloat.
+- **IndexedDB Zero-Latency Avatar Caching**: Stored locally in `celebrai_avatars` for 0ms initial render latency without repetitive cloud egress.
+- **Firestore Listener Cleanup**: All real-time snapshot subscriptions return explicit cleanup callbacks on component unmount, preventing memory leaks and unnecessary network reads.
+- **Repository Size Discipline**: Git repository size is strictly maintained at **6.38 MiB** (well below the Hack2Skill 10 MB maximum).
 
 ---
 
-### Factor 4: Automated Testing & Verification Suite
+### Parameter 4: Testing
 
-CelebrAI includes an extensive automated test suite built on **Vitest 2.1.9**, featuring **14 dedicated test suites** and **134 unit and integration tests** executing with a **100% pass rate**.
+CelebrAI features an automated test suite running on **Vitest v2.1.9**:
 
-```
- ✓ src/__tests__/chatHistory.test.ts (4 tests) 9ms
- ✓ src/__tests__/rsvpCalculations.test.ts (6 tests) 7ms
- ✓ src/__tests__/securitySanitizer.test.ts (7 tests) 5ms
- ✓ src/__tests__/budgetCalculations.test.ts (7 tests) 64ms
- ✓ src/__tests__/markdownAndCodePolicy.test.ts (7 tests) 54ms
- ✓ src/__tests__/dateUtils.test.ts (20 tests) 62ms
- ✓ src/__tests__/aiPlanGenerator.test.ts (10 tests) 60ms
- ✓ src/__tests__/validation.test.ts (14 tests) 11ms
+```bash
+> celebrai@0.0.0 test
+> vitest run
+
+ RUN  v2.1.9 E:/Project/CelebrAI
+
+ ✓ src/__tests__/chatHistory.test.ts (4 tests) 6ms
+ ✓ src/__tests__/budgetCalculations.test.ts (7 tests) 21ms
+ ✓ src/__tests__/dateUtils.test.ts (20 tests) 26ms
+ ✓ src/__tests__/rsvpCalculations.test.ts (6 tests) 6ms
+ ✓ src/__tests__/validation.test.ts (14 tests) 12ms
+ ✓ src/__tests__/markdownAndCodePolicy.test.ts (7 tests) 32ms
+ ✓ src/__tests__/aiPlanGenerator.test.ts (10 tests) 33ms
+ ✓ src/__tests__/securitySanitizer.test.ts (7 tests) 8ms
  ✓ src/__tests__/securityAndAccessControl.test.ts (10 tests) 13ms
- ✓ src/__tests__/taskAndNotificationEngine.test.ts (18 tests) 99ms
- ✓ src/__tests__/indexedDBAvatar.test.ts (8 tests) 33ms
- ✓ src/__tests__/authService.test.ts (10 tests) 6ms
- ✓ src/__tests__/expenseManager.test.ts (9 tests) 7ms
+ ✓ src/__tests__/indexedDBAvatar.test.ts (8 tests) 31ms
+ ✓ src/__tests__/taskAndNotificationEngine.test.ts (18 tests) 79ms
+ ✓ src/__tests__/authService.test.ts (10 tests) 4ms
+ ✓ src/__tests__/expenseManager.test.ts (9 tests) 4ms
  ✓ src/__tests__/e2eUserJourneys.test.ts (4 tests) 5ms
 
  Test Files  14 passed (14)
       Tests  134 passed (134)
-   Duration  1.88s (Transform: 1.22s, Tests: 434ms)
+   Duration  1.99s (Transform: 2.49s, Tests: 281ms)
 ```
 
-#### Core Test Verification Domains:
-- `aiPlanGenerator.test.ts`: Verifies JSON schema compliance, plan regeneration, fallback defaults, and prompt structure.
-- `budgetCalculations.test.ts`: Tests currency formatting (INR ₹), category totals, remaining balance calculations, and over-budget triggers.
-- `securitySanitizer.test.ts`: Verifies complete neutralization of XSS vectors, `<script>` tags, javascript: URI injection, and HTML attributes.
-- `taskAndNotificationEngine.test.ts`: Asserts due-date calculations, urgency status badges, and in-app alert propagation.
-- `indexedDBAvatar.test.ts`: Confirms IndexedDB table creation, binary blob storage, Base64 retrieval, and quota handling.
-- `e2eUserJourneys.test.ts`: Validates complete user flow from event creation, plan customization, guest addition, and expense logging.
+| Verification Metric | Measured Value |
+|---|---|
+| **Test Suites** | **14 Files** |
+| **Total Tests** | **134 Tests** |
+| **Pass Rate** | **100% (134 Passed, 0 Failed, 0 Skipped)** |
+| **Execution Duration** | **1.99 seconds** |
+
+*For complete test file breakdowns and reproduction commands, see [Docs/TESTING_REPORT.md](Docs/TESTING_REPORT.md).*
 
 ---
 
-### Factor 5: Accessibility (a11y) & Editorial Design System
+### Parameter 5: Accessibility
 
-CelebrAI was built around an editorial luxury aesthetic engineered to meet **WCAG 2.1 AA** color contrast and assistive technology standards.
+Engineered to fulfill **WCAG 2.1 Level AA** standards:
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                      CELEBRAI COLOR DESIGN SYSTEM                     │
-├────────────────────┬───────────┬──────────────┬────────────────────────┤
-│ Token Name         │ Hex Value │ Role         │ Contrast Ratio         │
-├────────────────────┼───────────┼──────────────┼────────────────────────┤
-│ Soft Satin         │ #F7F1E8   │ Canvas BG    │ Foundation             │
-│ Bridal White       │ #FFFFFF   │ Surface Card │ Elevated Surface       │
-│ Morning Fog        │ #ECE6DE   │ Subtle Border│ Structural Separation  │
-│ Violet Accent      │ #D8CBF1   │ Brand Accent │ Highlights & Badges    │
-│ Tuxedo Black       │ #171F20   │ Primary Text │ 14.8:1 on Satin (AAA)  │
-│ Deep Charcoal      │ #2C3539   │ Secondary    │ 11.2:1 on White (AAA)  │
-└────────────────────┴───────────┴──────────────┴────────────────────────┘
-```
+- **Measured Text Contrast**: Primary interactive typography uses **Tuxedo Black (`#171F20`)** over **Soft Satin (`#F7F1E8`)**, achieving a **14.8:1 contrast ratio** (far exceeding the 4.5:1 AA requirement and surpassing 7:1 AAA).
+- **Keyboard Navigability**: Every interactive card, filter tab, button, and modal trigger features explicit `tabIndex={0}`, `:focus-visible` styling, and keyboard activation (`Enter` and `Space` key triggers).
+- **Semantic HTML & ARIA**: Employs `<header>`, `<nav>`, `<main>`, `<section>`, and `<article>` landmarks. Dynamic elements leverage `role="alert"`, `role="dialog"`, `role="progressbar"`, and `aria-valuenow`.
+- **Descriptive Alt Attributes**: Every screenshot and UI illustration includes descriptive, human-readable alt descriptions.
+- **Mobile Touch Targets**: Primary action buttons and navigation docks maintain a minimum interactive hit target of **44×44 CSS pixels**.
 
-#### Accessibility Features:
-- **High-Contrast Text**: Primary buttons and headers use Tuxedo Black (`#171F20`) against Bridal White and Soft Satin, yielding a **14.8:1** contrast ratio (far exceeding the 4.5:1 AA requirement and fulfilling 7:1 AAA).
-- **Comprehensive Keyboard Navigation**: Every interactive card, navigation chip, modal dismiss, and drawer button has explicit `:focus-visible` outlines, `tabIndex={0}`, and `onKeyDown` listeners (Enter and Space key triggers).
-- **Semantic ARIA Standards**: All form inputs are explicitly coupled with `<label>` identifiers, dynamic alerts leverage `role="alert"`, and progress meters utilize `role="progressbar"` with `aria-valuenow`.
-- **Descriptive Alt Attributes**: Every screenshot and vector graphic includes human-readable and screen-reader accessible alt descriptions.
+*For full contrast tables and the WCAG checklist, see [Docs/ACCESSIBILITY.md](Docs/ACCESSIBILITY.md).*
 
 ---
 
-### Factor 6: Security, Credential Safety & Data Governance
+### Parameter 6: Problem Statement Alignment
 
-Security and user privacy are enforced at every architectural layer:
+CelebrAI directly solves real-world celebration planning fragmentation by connecting every workflow into a unified workspace:
 
-1. **Zero Client Secret Exposure**:
-   - The Groq API key is strictly maintained on the backend server ([`server/api.js`](server/api.js)) or Netlify Serverless Function ([`netlify/functions/api.js`](netlify/functions/api.js)).
-   - **No API secrets exist in client code, client bundles, or frontend environment files.**
-2. **Repository Hygiene (.gitignore Enforcement)**:
-   - All `.env`, `.env.example`, `.env.local`, and test cache files are strictly excluded via [`.gitignore`](.gitignore). No secrets or operational keys are tracked in git history.
-3. **Row-Level Firestore Security Rules ([`firestore.rules`](firestore.rules))**:
-   - Multi-tenant isolation: Users can only read and write events, tasks, guests, expenses, and chats where `request.auth.uid == resource.data.userId`.
-   - Public RSVP rules allow write-only guest responses without granting access to host event budgets or sensitive user details.
-4. **Input Sanitization & Safe Markdown ([`src/components/common/SafeMarkdown.tsx`](src/components/common/SafeMarkdown.tsx))**:
-   - AI outputs and user inputs pass through a multi-pass regex sanitizer removing malicious HTML tags, embedded iframes, inline event handlers (`onload`, `onerror`), and unsafe protocols.
-5. **GDPR / Privacy Consent Workspace ([`src/pages/workspace/PrivacyConsent.tsx`](src/pages/workspace/PrivacyConsent.tsx))**:
-   - Gives hosts granular toggles for AI data processing, data retention preferences, instant JSON data export, and complete account deletion.
+| Real-World Problem | CelebrAI Solution | Architectural Implementation | Measurable Result |
+|---|---|---|---|
+| **Fragmented Tools** | Unified celebration command center | 36 connected routes with global navigation & active event switcher | One single workspace for all event operations |
+| **Decision Paralysis** | AI celebration plan generation | Groq GPT-OSS 120B blueprint engine (`/ai-plan-preview`) | Instant, tailored concept summary, tasks & budget |
+| **Budget Overruns** | Dynamic financial tracking & variance | Categorized allocation engine with Indian Rupee (₹) formatting | Real-time visibility into spent vs. remaining funds |
+| **Missed Deadlines** | Milestone task management & run sheet | Automated due-date engine with overdue status categorization | Clear operational timeline from kickoff to event day |
+| **RSVP Chaos** | Digital guest roster & public RSVP links | Tokenized public guest portal with party size & dietary tags | Live attendee headcount calculation without manual tallying |
+| **Generic Chatbots** | Context-aware AI Mentor copilot | Event state injection (`budget`, `daysLeft`, `guests`) into LLM | Relevant planning advice grounded in real event facts |
 
 ---
 
-## 📸 Visual Gallery & User Journey
+## 📸 Product Screenshots & Visual Walkthrough
 
-### 💻 Desktop Experience (1920×1080 High-Resolution)
+CelebrAI includes **39 authentic, high-resolution screen captures** (21 desktop 1920×1080 and 18 mobile responsive captures) committed directly inside [`Docs/screenshots/`](Docs/screenshots/).
+
+### A. Landing and Authentication
 
 <div align="center">
 
-| 1. Landing Page Hero | 2. Host Command Center Dashboard |
-|:---:|:---:|
-| <img src="Docs/screenshots/desktop/desktop-01-landing-page.png" width="480" /> | <img src="Docs/screenshots/desktop/desktop-12-dashboard.png" width="480" /> |
-| *Editorial luxury hero with clear value proposition and CTAs* | *Countdown timer, budget left, tasks done, guest count* |
-
-| 3. Step 1: Event Type Selector | 4. Step 3: Guests & Budget Setup |
-|:---:|:---:|
-| <img src="Docs/screenshots/desktop/desktop-04-event-type-selection.png" width="480" /> | <img src="Docs/screenshots/desktop/desktop-06-guest-budget-setup.png" width="480" /> |
-| *8 celebration categories with instant selection state* | *Guest headcount, regional currency (INR ₹), and target budget* |
-
-| 5. AI Event Plan — Concept Overview | 6. AI Event Plan — Categorized Budget |
-|:---:|:---:|
-| <img src="Docs/screenshots/desktop/desktop-08-ai-plan-overview.png" width="480" /> | <img src="Docs/screenshots/desktop/desktop-10-ai-plan-budget.png" width="480" /> |
-| *Groq GPT-OSS 120B tailored blueprint and curated theme tags* | *Automated percentage allocations across venue, catering, decor* |
-
-| 7. Tasks & Milestone Run Sheet | 8. Budget & Expense Analytics |
-|:---:|:---:|
-| <img src="Docs/screenshots/desktop/desktop-15-tasks-run-sheet.png" width="480" /> | <img src="Docs/screenshots/desktop/desktop-16-budget-dashboard.png" width="480" /> |
-| *Interactive milestone manager with priority badges & categories* | *Budget utilization donut chart and category spend breakdown* |
-
-| 9. Curated Vendor Discovery | 10. AI Mentor Interactive Conversation |
-|:---:|:---:|
-| <img src="Docs/screenshots/desktop/desktop-17-vendors-directory.png" width="480" /> | <img src="Docs/screenshots/desktop/desktop-21-ai-mentor-chat.png" width="480" /> |
-| *Verified vendor directory with filter chips and saved favorites* | *Context-aware planning chat with instant suggestion chips* |
+| Desktop Landing Hero | Mobile Landing Hero | Sign In Page |
+|:---:|:---:|:---:|
+| <img src="Docs/screenshots/desktop/desktop-01-landing-page.png" width="340" alt="CelebrAI Desktop Landing Page" /> | <img src="Docs/screenshots/mobile/mobile-01-landing-page.png" width="160" alt="CelebrAI Mobile Landing Page" /> | <img src="Docs/screenshots/desktop/desktop-02-login.png" width="340" alt="Sign In Page" /> |
+| *Editorial luxury hero with clear value proposition and CTAs* | *Mobile-optimized responsive viewport* | *Email/password authentication and Google OAuth* |
 
 </div>
 
 ---
 
-### 📱 Mobile Experience (Responsive Touch Interface)
+### B. Multi-Step Event Creation Wizard
 
 <div align="center">
 
-| Mobile Landing | Mobile Sign In | Event Details | AI Plan Tasks | Host Dashboard | AI Mentor Chat |
-|:---:|:---:|:---:|:---:|:---:|:---:|
-| <img src="Docs/screenshots/mobile/mobile-01-landing-page.png" width="150" /> | <img src="Docs/screenshots/mobile/mobile-02-login.png" width="150" /> | <img src="Docs/screenshots/mobile/mobile-05-event-details.png" width="150" /> | <img src="Docs/screenshots/mobile/mobile-09-ai-plan-tasks.png" width="150" /> | <img src="Docs/screenshots/mobile/mobile-12-dashboard.png" width="150" /> | <img src="Docs/screenshots/mobile/mobile-18-ai-mentor-chat.png" width="150" /> |
-| *Hero View* | *OAuth Modal* | *Step 2 Setup* | *AI Tasks* | *Home Metrics* | *Live Copilot* |
+| Step 1: Event Type Selection | Step 2: Core Event Details | Step 3: Guests & Budget Setup | Step 4: Theme Preferences |
+|:---:|:---:|:---:|:---:|
+| <img src="Docs/screenshots/desktop/desktop-04-event-type-selection.png" width="220" alt="Step 1 Event Selection" /> | <img src="Docs/screenshots/desktop/desktop-05-event-details.png" width="220" alt="Step 2 Event Details" /> | <img src="Docs/screenshots/desktop/desktop-06-guest-budget-setup.png" width="220" alt="Step 3 Guests and Budget" /> | <img src="Docs/screenshots/desktop/desktop-07-theme-preferences.png" width="220" alt="Step 4 Theme Preferences" /> |
+| *8 celebration categories* | *Title, date picker & venue* | *Headcount & INR (₹) budget* | *Theme style & custom notes* |
 
 </div>
 
-> 📖 **Complete Verified Catalog**: For detailed descriptions, file sizes, and pixel dimensions for all 39 screenshots, see the [Screenshot Index & Gallery Catalog](Docs/SCREENSHOT_INDEX.md).
+---
+
+### C. AI Celebration Plan Blueprint
+
+<div align="center">
+
+| AI Plan: Concept Overview | AI Plan: Priority Tasks | AI Plan: Categorized Budget | AI Plan: Milestone Timeline |
+|:---:|:---:|:---:|:---:|
+| <img src="Docs/screenshots/desktop/desktop-08-ai-plan-overview.png" width="220" alt="AI Plan Concept Overview" /> | <img src="Docs/screenshots/desktop/desktop-09-ai-plan-tasks.png" width="220" alt="AI Plan Priority Tasks" /> | <img src="Docs/screenshots/desktop/desktop-10-ai-plan-budget.png" width="220" alt="AI Plan Categorized Budget" /> | <img src="Docs/screenshots/desktop/desktop-11-ai-plan-timeline.png" width="220" alt="AI Plan Timeline" /> |
+| *Groq GPT-OSS 120B blueprint* | *Editable milestone action items* | *6-category spending breakdown* | *Countdown run sheet schedule* |
+
+</div>
+
+---
+
+### D. Command Center, Tasks & Financials
+
+<div align="center">
+
+| Host Command Center Dashboard | Tasks & Milestone Run Sheet | Budget & Expense Breakdown | Curated Vendor Discovery |
+|:---:|:---:|:---:|:---:|
+| <img src="Docs/screenshots/desktop/desktop-12-dashboard.png" width="220" alt="Host Home Dashboard" /> | <img src="Docs/screenshots/desktop/desktop-15-tasks-run-sheet.png" width="220" alt="Tasks and Run Sheet" /> | <img src="Docs/screenshots/desktop/desktop-16-budget-dashboard.png" width="220" alt="Budget and Expenses" /> | <img src="Docs/screenshots/desktop/desktop-17-vendors-directory.png" width="220" alt="Vendor Directory" /> |
+| *Countdown clock & summary metrics* | *Filterable tasks with priority badges* | *Financial donut chart & category spend* | *Filterable directory & saved favorites* |
+
+</div>
+
+---
+
+### E. AI Mentor, Guest RSVP & Account Management
+
+<div align="center">
+
+| AI Mentor Conversation | Guest & RSVP Management | User Profile & Workspace | Notifications Center |
+|:---:|:---:|:---:|:---:|
+| <img src="Docs/screenshots/desktop/desktop-21-ai-mentor-chat.png" width="220" alt="AI Mentor Conversation" /> | <img src="Docs/screenshots/desktop/desktop-14-guests-management.png" width="220" alt="Guest Management" /> | <img src="Docs/screenshots/desktop/desktop-18-profile.png" width="220" alt="User Profile" /> | <img src="Docs/screenshots/desktop/desktop-19-notifications.png" width="220" alt="Notifications Center" /> |
+| *Context-aware planning chat* | *RSVP attendance & dietary tracking* | *IndexedDB avatar & statistics* | *Deadline alerts & event notifications* |
+
+</div>
+
+> 📖 **Full Visual Catalog**: Complete technical metadata (dimensions, file sizes, and viewports) for all 39 screenshots is cataloged in [`Docs/SCREENSHOT_INDEX.md`](Docs/SCREENSHOT_INDEX.md).
 
 ---
 
 ## 🗺️ Master 36-Page Route Matrix
 
-CelebrAI features an extensive routing architecture implemented with clean route guards and persistent drawer navigation.
+All 36 pages from the master specification are implemented, connected, and navigable:
 
-| # | Route | Page Component | Feature Scope & Purpose |
-|---|---|---|---|
-| 1 | `/` | `Landing.tsx` | Brand showcase, core value proposition, feature highlights, and onboarding CTAs. |
-| 2 | `/explore-events` | `ExploreEvents.tsx` | Visual gallery of supported event categories with sample budgets and schedules. |
-| 3 | `/signin` | `Auth.tsx` | Email/password sign-in and Google OAuth popup/redirect handlers. |
-| 4 | `/signup` | `Auth.tsx` | New account registration with real-time password strength analyzer. |
-| 5 | `/onboarding` | `Onboarding.tsx` | First-time host setup wizard for default currency, location, and celebration style. |
-| 6 | `/create-event` | `CreateEvent.tsx` | 4-step wizard: Type, Core Details, Guest/Budget, Theme Preferences. |
-| 7 | `/ai-plan-preview` | `AIPlanPreview.tsx` | 4-tab plan generator: Concept Overview, Tasks, Budget, and Milestones. |
-| 8 | `/dashboard` | `HomeDashboard.tsx` | Host command center: countdown clock, summary cards, and focus tasks. |
-| 9 | `/events` | `EventsList.tsx` | Catalog of Active, Past, and Archived celebrations with status switchers. |
-| 10 | `/event-overview` | `EventOverview.tsx` | Comprehensive single-event summary with quick edit controls. |
-| 11 | `/ai` | `AIAssistant.tsx` | Event-aware conversational AI Mentor with session history and prompt chips. |
-| 12 | `/tasks` | `TodoList.tsx` | Priority task tracker with status filters (All, Due Today, Overdue, Done). |
-| 13 | `/timeline` | `TimelineCalendar.tsx` | Chronological schedule view from planning milestones to celebration day. |
-| 14 | `/budget` | `BudgetDashboard.tsx` | Total planned budget, recorded spend, category allocations, and progress bars. |
-| 15 | `/expenses` | `ExpenseManager.tsx` | Itemized expense ledger with receipt note attachments and status toggles. |
-| 16 | `/guests` | `GuestManagement.tsx` | Attendee directory with RSVP tracking (Accepted, Pending, Declined) and search. |
-| 17 | `/invitations` | `InvitationsRSVP.tsx` | Digital invitation builder with shareable event links and QR code generators. |
-| 18 | `/vendors` | `VendorDiscovery.tsx` | Filterable directory of photographers, venues, caterers, and decorators. |
-| 19 | `/vendors/:id` | `VendorDetails.tsx` | Detailed vendor portfolio, pricing tiers, reviews, and booking contacts. |
-| 20 | `/decor` | `DecorThemeStudio.tsx` | Visual moodboards, color palette generator, and theme inspiration gallery. |
-| 21 | `/content-studio` | `ContentStudio.tsx` | AI-generated invitation copy, WhatsApp broadcasts, and host speech scripts. |
-| 22 | `/saved` | `SavedWorkspace.tsx` | Bookmarked vendors, moodboard snapshots, and saved AI suggestions. |
-| 23 | `/run-sheet` | `RunSheet.tsx` | Minute-by-minute celebration day schedule for coordinators and vendors. |
-| 24 | `/team` | `TeamResponsibilities.tsx` | Co-host delegation board assigning specific tasks to family or planners. |
-| 25 | `/reports` | `ReportsExport.tsx` | Comprehensive PDF/CSV export of budget ledgers, vendor lists, and guest rosters. |
-| 26 | `/profile` | `Profile.tsx` | Host profile info, IndexedDB avatar sync, and workspace statistics. |
-| 27 | `/settings` | `Settings.tsx` | Regional settings (INR, USD, EUR), language, and password resets. |
-| 28 | `/help` | `HelpFeedback.tsx` | Frequently asked questions, user guides, and bug reporting portal. |
-| 29 | `/privacy` | `PrivacyConsent.tsx` | Transparent AI processing consent, data retention controls, and data export. |
-| 30 | `/notifications` | `NotificationsCenter.tsx` | Real-time notification center with filter chips and mark-all-read. |
-| 31 | `/public-event` | `PublicEvent.tsx` | Public event microsite for attendees with directions, itinerary, and dress code. |
-| 32 | `/guest-rsvp` | `GuestRSVP.tsx` | One-click public RSVP submission page for invited guests. |
-| 33 | `/collaboration` | `Collaboration.tsx` | Shared event planning workspace for multi-user coordination. |
-| 34 | `/subscription` | `SubscriptionUsage.tsx` | Token quota tracking, active plan tier, and premium feature previews. |
-| 35 | `/admin` | `AdminModeration.tsx` | Administrative controls for vendor catalog moderation and feedback review. |
-| 36 | `/demo-states` | `DemoStates.tsx` | Visual showcase of empty states, loading skeletons, and offline banners. |
+| # | Route | Page Title | Component | Auth Required | Purpose & Functional Scope | Status |
+|---|---|---|---|---|---|---|
+| **01** | `/` | Landing Page | `Landing.tsx` | No | Brand showcase, value proposition, and onboarding CTAs | Verified |
+| **02** | `/explore-events` | Explore Event Types | `ExploreEvents.tsx` | No | Gallery of 8 event types with sample budgets and schedules | Verified |
+| **03** | `/signin` | Sign In | `Auth.tsx` | No | Email/password sign-in and Google OAuth popup authentication | Verified |
+| **04** | `/signup` | Sign Up | `Auth.tsx` | No | Account registration with real-time password strength validation | Verified |
+| **05** | `/onboarding` | Onboarding | `Onboarding.tsx` | No | Host preferences setup (currency, planning style, location) | Verified |
+| **06** | `/create-event` | Create Event Wizard | `CreateEvent.tsx` | No | 4-step wizard: Type, Details, Guest/Budget, Theme Preferences | Verified |
+| **07** | `/ai-plan-preview` | AI Plan Preview | `AIPlanPreview.tsx` | No | 4-tab plan generator: Concept, Tasks, Budget, and Timeline | Verified |
+| **08** | `/dashboard` | Home Dashboard | `HomeDashboard.tsx` | No | Command center with countdown clock, summary cards, and tasks | Verified |
+| **09** | `/events` | All Events | `AllEvents.tsx` | No | Catalog of Active, Past, and Archived celebrations | Verified |
+| **10** | `/event-overview` | Event Overview | `EventOverview.tsx` | No | Detailed single-event summary with quick edit controls | Verified |
+| **11** | `/ai` | AI Assistant / Mentor | `AIAssistant.tsx` | No | Event-aware conversational planner with chat history & chips | Verified |
+| **12** | `/tasks` | To-do List | `TodoList.tsx` | No | Priority task tracker with status filters (Due Today, Overdue) | Verified |
+| **13** | `/timeline` | Timeline & Calendar | `TimelineCalendar.tsx` | No | Chronological schedule view from milestones to celebration day | Verified |
+| **14** | `/budget` | Budget Dashboard | `BudgetDashboard.tsx` | No | Planned budget vs actual spend with category allocation bars | Verified |
+| **15** | `/expenses` | Expense Manager | `ExpenseManager.tsx` | No | Line-item expense ledger with paid/pending status toggles | Verified |
+| **16** | `/guests` | Guest Management | `GuestManagement.tsx` | No | Attendee roster with RSVP tracking (Accepted, Pending, Declined) | Verified |
+| **17** | `/invitations` | Invitations & RSVP | `InvitationsRSVP.tsx` | No | Digital invitation preview carousel with shareable RSVP links | Verified |
+| **18** | `/vendors` | Vendor Discovery | `VendorDiscovery.tsx` | No | Filterable directory of photographers, venues, and caterers | Verified |
+| **19** | `/vendors/:id` | Vendor Details | `VendorDetails.tsx` | No | Detailed vendor profile with amenities, pricing, and reviews | Verified |
+| **20** | `/decor` | Decor & Theme Studio | `DecorStudio.tsx` | No | Visual moodboards, color palette swatches, and style generator | Verified |
+| **21** | `/content-studio` | Content Studio | `ContentStudio.tsx` | No | AI invitation copywriter, WhatsApp broadcasts, and speeches | Verified |
+| **22** | `/saved` | Saved Workspace | `SavedWorkspace.tsx` | No | Bookmarked vendors, moodboard snapshots, and saved plans | Verified |
+| **23** | `/run-sheet` | Event Run Sheet | `RunSheet.tsx` | No | Minute-by-minute day-of-event schedule for coordinators | Verified |
+| **24** | `/team` | Team Responsibilities | `TeamResponsibilities.tsx`| No | Co-host delegation matrix with role badges and assignments | Verified |
+| **25** | `/reports` | Reports & Export | `ReportsExport.tsx` | No | Exportable budget ledgers, vendor lists, and guest rosters | Verified |
+| **26** | `/profile` | My Profile | `Profile.tsx` | No | Host profile, IndexedDB avatar upload, and account stats | Verified |
+| **27** | `/settings` | Settings | `Settings.tsx` | No | Currency (INR, USD, EUR), language, and password reset | Verified |
+| **28** | `/help` | Help & Feedback | `HelpFeedback.tsx` | No | User guide, frequently asked questions, and feedback form | Verified |
+| **29** | `/privacy` | Privacy & Consent | `PrivacyConsent.tsx` | No | Transparent AI consent toggles, data export, and account deletion | Verified |
+| **30** | `/demo-states` | Loading & Error States | `StatesDemo.tsx` | No | Showcase of empty states, loading skeletons, and offline banners | Verified |
+| **31** | `/public-event` | Public Event Page | `PublicEvent.tsx` | No | Shareable attendee site with countdown, story, and dress code | Verified |
+| **32** | `/guest-rsvp` | Guest RSVP Page | `GuestRSVP.tsx` | No | Public tokenized RSVP portal for attendee attendance confirmation | Verified |
+| **33** | `/collaboration` | Collaboration | `CollaborationWorkspace.tsx`| No | Shared event planning workspace for multi-user coordination | Verified |
+| **34** | `/notifications` | Notifications Center | `NotificationsCenter.tsx` | No | In-app notification center with filter pills and mark-all-read | Verified |
+| **35** | `/subscription` | Subscription Plans | `SubscriptionPlans.tsx` | No | Usage tier overview, token quotas, and premium feature previews | Verified |
+| **36** | `/admin` | Admin & Moderation | `AdminModeration.tsx` | No | Administrative controls for vendor moderation and platform logs | Verified |
 
-*Note: The interactive floating drawer button accessible on every page lets evaluators jump directly to any of the 36 pages with a single click.*
+*Note: The floating **"36 Pages"** drawer button on every screen allows immediate, one-click access to any page in the matrix.*
 
 ---
 
 ## 🏗️ System Architecture & Data Flow
 
+```mermaid
+flowchart TD
+    subgraph Client [Client Application — React 19 + TypeScript]
+        A[User Input / Event Setup] --> B[EventContext & State Machines]
+        B --> C[IndexedDB Avatar Cache]
+        B --> D[HTML5 Canvas Compressor]
+    end
+
+    subgraph Server [Backend Gateway — Express / Netlify Functions]
+        E[POST /api/ai/generate-plan]
+        F[POST /api/ai/chat]
+        G[Request Sanitization & Validation]
+    end
+
+    subgraph AI [Inference Cloud — Groq LPU]
+        H[Model: openai/gpt-oss-120b]
+        I[Structured JSON Blueprint]
+    end
+
+    subgraph Database [Persistence Suite — Google Firebase]
+        J[Firebase Auth — Tokens & OAuth]
+        K[Cloud Firestore — Row-Level Rules]
+        L[Users, Events, Tasks, Expenses, Guests]
+    end
+
+    B -->|HTTPS API Request| E
+    B -->|HTTPS Chat Request| F
+    E --> G
+    F --> G
+    G --> H
+    H --> I
+    I -->|Validated JSON| B
+    B -->|Persist Approved Plan| K
+    K --> L
+    A -->|Authentication| J
 ```
-                      ┌─────────────────────────────────────────┐
-                      │          CLIENT APPLICATION             │
-                      │    (React 19 + TypeScript + Vite)       │
-                      └────┬───────────────────────────────┬────┘
-                           │                               │
-        Client State & Offline Sync           Server Proxy AI Requests
-                           │                               │
-                           ▼                               ▼
-       ┌───────────────────────────────┐   ┌───────────────────────────────┐
-       │     BROWSER STORAGE LAYER     │   │     EXPRESS / NETLIFY API     │
-       │  • IndexedDB (Avatars)        │   │  • Groq API Proxy             │
-       │  • LocalStorage (Fallback)    │   │  • Schema Validator           │
-       │  • Firestore Offline Cache    │   │  • Request Rate Limiter       │
-       └───────────────┬───────────────┘   └───────────────┬───────────────┘
-                       │                                   │
-                       ▼                                   ▼
-       ┌───────────────────────────────┐   ┌───────────────────────────────┐
-       │     FIREBASE CLOUD SUITE      │   │     GROQ INFERENCE ENGINE     │
-       │  • Firebase Authentication    │   │  • Model: GPT-OSS 120B        │
-       │  • Cloud Firestore Database   │   │  • Ultralow Latency LPU       │
-       │  • Row-Level Security Rules   │   │  • JSON Schema Blueprint      │
-       └───────────────────────────────┘   └───────────────────────────────┘
-```
+
+*For complete data lifecycle diagrams, see [Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md).*
 
 ---
 
 ## ⚡ Generative AI Integration Deep-Dive
 
-### Server-Side Groq Integration (`server/api.js`)
-To protect API keys and ensure zero client-side credential exposure, all AI generation calls flow through an Express or Netlify serverless endpoint:
+CelebrAI utilizes the **Groq Cloud API** running the open-weights **GPT-OSS 120B** model (`openai/gpt-oss-120b`) on specialized Groq LPU hardware, delivering sub-second response latencies.
 
-```javascript
-// Server API endpoint with strict prompt engineering
-app.post('/api/ai/generate-plan', async (req, res) => {
-  const { eventType, eventName, date, location, guestCount, budget, theme, specialNotes } = req.body;
-  
-  const systemPrompt = `You are CelebrAI, a world-class luxury event planning AI.
-Generate a structured JSON event plan for:
-Event: ${eventName} (${eventType})
-Date: ${date}, Location: ${location}
-Guests: ${guestCount}, Budget: ₹${budget}
-Theme: ${theme || 'Classic Elegance'}
-Notes: ${specialNotes || 'None'}
+### AI Event Plan Generation
+When a host completes the 4-step wizard, the client transmits the event specifications to the server proxy:
 
-Return ONLY valid JSON matching this schema:
+```json
 {
-  "conceptSummary": "string",
-  "suggestedThemes": ["string"],
-  "tasks": [{"title": "string", "category": "Venue|Decor|Catering|Photography", "priority": "High|Medium|Low"}],
-  "budgetBreakdown": [{"category": "string", "percentage": number, "estimatedAmount": number}],
-  "milestones": [{"title": "string", "timeframe": "string"}]
-}`;
+  "eventType": "Birthday",
+  "eventName": "My Birthday Party",
+  "date": "2027-01-31",
+  "location": "Ahmedabad, Gujarat",
+  "guestCount": 100,
+  "budget": 100000,
+  "theme": "Classic Elegance",
+  "specialNotes": "Focus on outdoor lighting and vegetarian catering"
+}
+```
 
-  const completion = await groq.chat.completions.create({
-    messages: [{ role: 'system', content: systemPrompt }],
-    model: 'openai/gpt-oss-120b',
-    temperature: 0.7,
-    max_tokens: 2500,
-  });
+The server proxy attaches the protected `GROQ_API_KEY`, issues a strict system prompt enforcing JSON schema output, strips any surrounding markdown code fences via regex, and returns structured data:
 
-  res.json(JSON.parse(completion.choices[0].message.content));
-});
+```json
+{
+  "conceptSummary": "An exquisite Birthday planned with a INR 1,00,000 budget for 100 guests...",
+  "suggestedThemes": ["Classic Elegance", "Botanical Opulence", "Champagne Gold"],
+  "tasks": [
+    { "title": "Finalize and contract the main celebration venue", "category": "Venue", "priority": "High" },
+    { "title": "Tasting and menu confirmation for 100 guests", "category": "Catering", "priority": "High" }
+  ],
+  "budgetBreakdown": [
+    { "category": "Venue & Infrastructure", "percentage": 35, "estimatedAmount": 35000 },
+    { "category": "Food & Beverage", "percentage": 30, "estimatedAmount": 30000 }
+  ],
+  "milestones": [
+    { "title": "Core Vendor Confirmations", "timeframe": "Month 1" },
+    { "title": "Celebration Day", "timeframe": "Event Day" }
+  ]
+}
 ```
 
 ---
 
 ## 💾 Database Schema & Offline Storage Engine
 
-### Firestore Multi-Tenant Schema
+### Firestore Multi-Tenant Architecture
+- `users/{userId}`: Stores user credentials, regional preferences (`currency: 'INR'`), and planning style.
+- `events/{eventId}`: Master event document storing title, date, target budget, and concept summaries.
+- `tasks/{taskId}`: Operational checklist linked by `eventId` with `priority` and `dueDate`.
+- `expenses/{expenseId}`: Itemized budget ledger linked by `eventId` with `amount`, `category`, and `status`.
+- `guests/{guestId}`: Guest records supporting both authenticated host management and public unauthenticated RSVP updates.
+- `conversations/{convId}/messages`: Threaded AI Mentor conversation turns.
 
-```
-users/{userId}
-  ├── profile: { name, email, avatarUrl, currency, createdAt }
-  └── events/{eventId}
-        ├── eventName: string
-        ├── eventType: string ("Wedding" | "Birthday" | "Corporate" | ...)
-        ├── eventDate: ISO timestamp
-        ├── location: string
-        ├── guestCount: number
-        ├── budget: number
-        ├── theme: string
-        ├── tasks/{taskId}
-        │     ├── title: string
-        │     ├── category: string
-        │     ├── priority: "High" | "Medium" | "Low"
-        │     ├── isCompleted: boolean
-        │     └── dueDate: ISO timestamp
-        ├── expenses/{expenseId}
-        │     ├── title: string
-        │     ├── category: string
-        │     ├── amount: number
-        │     └── status: "Paid" | "Pending"
-        └── guests/{guestId}
-              ├── name: string
-              ├── email: string
-              ├── partySize: number
-              ├── status: "Accepted" | "Pending" | "Declined"
-              └── dietaryNotes: string
-```
+### Local Client Storage
+- **IndexedDB (`celebrai_avatars`)**: Stores compressed profile photos locally, enabling instantaneous 0ms avatar rendering upon page reload without cloud egress.
+- **LocalStorage**: Caches developer drawer flags and active event identifiers for offline persistence.
+
+*For complete schema tables and index definitions, see [Docs/DATABASE_SCHEMA.md](Docs/DATABASE_SCHEMA.md).*
 
 ---
 
-## 🚀 Local Development & Deployment Guide
+## 🚀 Local Development & Execution Guide
 
 ### Prerequisites
 - **Node.js**: v18.0.0 or higher
 - **npm**: v9.0.0 or higher
-- Optional: Firebase Project & Groq API Key (The app functions smoothly in offline demo mode if unconfigured)
 
-### 1. Clone the Repository
+### 1. Clone & Install
 ```bash
 git clone https://github.com/Kanani-Shubham/CelebrAi.git
 cd CelebrAi
-```
-
-### 2. Install Dependencies
-```bash
 npm install
 ```
 
-### 3. Run Automated Tests
-Execute the full Vitest automated test suite:
+### 2. Verify Baseline Quality
+Run automated tests and static linter:
 ```bash
 npm test
-```
-*All 14 test suites and 134 tests will execute and confirm green.*
-
-### 4. Run Static Code Linting
-Run the fast Oxlint linter:
-```bash
 npm run lint
 ```
 
-### 5. Start the Application
-- **Frontend only** (with smart local AI blueprint generator):
+### 3. Launch the Application
+- **Frontend Only** (includes local deterministic fallback AI generator):
   ```bash
   npm run dev
   ```
-- **Full-stack (Frontend + Express API Server)**:
+- **Full-Stack Mode** (Frontend + Local Express AI Proxy):
   ```bash
   npm run dev:all
   ```
 Open `http://localhost:5173` in your browser.
 
-### 6. Production Build
+### 4. Production Build
 ```bash
 npm run build
 ```
-Generates an optimized, chunk-split production bundle inside `dist/`.
+Generates the optimized chunk-split production bundle inside `dist/`.
 
 ---
 
-## 📋 Submission Reference & Form Responses
+## 📋 Hack2Skill Official Submission Reference
 
-For quick copy-paste into the Hack2Skill submission form:
+| Field Name | Official Value | Notes |
+|---|---|---|
+| **Public GitHub Repository Link** | `https://github.com/Kanani-Shubham/CelebrAi` | Clean Git tree under 10 MB |
+| **Project Deployed Link** | `https://celebr-ai.netlify.app/` | Fully functional Netlify live release |
+| **Instagram Reel** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Official Instagram Reels challenge link |
+| **Demo Video** | `[ADD_UNLISTED_YOUTUBE_OR_ACCESSIBLE_GOOGLE_DRIVE_URL]` | Unlisted video walkthrough |
+| **LinkedIn Announcement** | `[ADD_PUBLIC_LINKEDIN_POST_URL]` | Public project post |
 
-| Form Question | Recommended Response |
-|---|---|
-| **Public GitHub Repository Link** | `https://github.com/Kanani-Shubham/CelebrAi` |
-| **Project Deployed Link** | `https://celebr-ai.netlify.app/` |
-| **Project Demo Video Submission** | `[PASTE_YOUR_UNLISTED_YOUTUBE_OR_DRIVE_LINK]` |
-| **LinkedIn Post** | `[PASTE_YOUR_PUBLIC_LINKEDIN_POST_LINK]` |
-| **Changes and updates in the deployed version** | CelebrAI delivers a full-stack AI event planning workspace built with React 19, TypeScript, and Firebase. The deployed version includes all 36 interconnected pages, a 4-step event creation wizard, an AI event plan generator powered by Groq GPT-OSS 120B, an interactive AI Mentor with multi-turn chat memory, comprehensive budget allocation and expense tracking in INR (₹), a task deadline management engine, a live guest RSVP coordination system, and multi-tier IndexedDB client caching. All 14 Vitest test suites (134 tests) pass with 100% test reliability. |
-| **Mention the Gen AI services utilized in the submission, and where did you utilize it?** | CelebrAI utilizes the Groq Cloud API with the GPT-OSS 120B model on ultra-low latency LPU hardware across three primary areas: 1) AI Plan Preview (/ai-plan-preview) to generate tailored concept blueprints, milestone tasks, budget distributions, and timeline rundowns; 2) AI Mentor (/ai) for context-aware multi-turn event planning guidance injected with live event state (budget, guest count, days remaining); 3) Content Studio (/content-studio) for AI generation of invitation copy, itineraries, and host speeches. All generation requests pass through server-side proxies to prevent API key exposure, supported by deterministic fallback generators for offline resilience. |
+*For exact 1024-character copy-paste form answers, see [Docs/HACK2SKILL_SUBMISSION.md](Docs/HACK2SKILL_SUBMISSION.md).*
 
 ---
 
-## 👥 Authors & Project Licensing
+## 📚 Documentation Library & Technical Reports
+
+- **[Master Documentation Portal](Docs/README.md)**: Master portal and cross-index.
+- **[System Architecture & Data Flow](Docs/ARCHITECTURE.md)**: Deep architectural flow and Mermaid diagrams.
+- **[Database Schema & Models](Docs/DATABASE_SCHEMA.md)**: Complete Firestore collection specifications.
+- **[Security Architecture & Governance](Docs/SECURITY.md)**: Security rules, XSS sanitization, and secret protection.
+- **[Testing & QA Verification Report](Docs/TESTING_REPORT.md)**: Evidence from 14 test suites and 134 passed tests.
+- **[Performance & Bundle Analysis](Docs/PERFORMANCE.md)**: Measured build times, chunk sizes, and caching.
+- **[Accessibility & Design Review](Docs/ACCESSIBILITY.md)**: WCAG 2.1 AA checklist and contrast calculations.
+- **[Screenshot Index & Gallery](Docs/SCREENSHOT_INDEX.md)**: Catalog of all 39 verified desktop and mobile captures.
+- **[Hack2Skill Final Evaluation Audit](Docs/HACK2SKILL_FINAL_AUDIT.md)**: Six-parameter evaluation report.
+- **[Documentation Pre-Audit](Docs/DOCUMENTATION_AUDIT.md)**: Claim verification log and baseline inventory.
+
+---
+
+## 👥 Project Maintainers & Open-Source Licensing
 
 - **Lead Developer**: Shubham Kanani
 - **GitHub**: [@Kanani-Shubham](https://github.com/Kanani-Shubham)
 - **Email**: `shubhamkanani.2006@gmail.com`
-- **Live Demo**: [https://celebr-ai.netlify.app/](https://celebr-ai.netlify.app/)
-- **Repository**: [https://github.com/Kanani-Shubham/CelebrAi](https://github.com/Kanani-Shubham/CelebrAi)
+- **License**: Released under the [MIT License](LICENSE).
 
 ---
 
 <p align="center">
   <strong>CelebrAI — Plan Smarter. Celebrate Better.</strong><br>
-  Built with passion for the Hack2Skill AI Hackathon.
+  Engineered with pride for the Hack2Skill AI Hackathon.
 </p>

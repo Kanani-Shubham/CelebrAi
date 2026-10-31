@@ -1,91 +1,134 @@
-# CelebrAI Automated Testing Report & Quality Verification
+# CelebrAI — Automated Testing & Quality Assurance Report
 
-> Generated: 2026-10-30  
-> Test Framework: [Vitest](https://vitest.dev/) v2.1.9  
-> Execution Engine: Node.js (Vite Native TypeScript runner)
+**Test Framework:** Vitest v2.1.9  
+**Execution Environment:** Node.js v24.19.2 (Antigravity Environment)  
+**Report Date:** October 31, 2026  
+**Status:** 100% Pass Rate (All 14 Test Suites Passed)  
 
 ---
 
-## 1. Test Suite Summary
-
-CelebrAI incorporates an automated test suite verifying business logic, calculations, client-side security sanitization, task lifecycles, chat persistence, and end-to-end user workflows.
+## 1. Verified Execution Summary
 
 ```bash
-$ npm test
+> celebrai@0.0.0 test
+> vitest run
 
  RUN  v2.1.9 E:/Project/CelebrAI
 
- ✓ src/__tests__/chatHistory.test.ts (4 tests)
- ✓ src/__tests__/rsvpCalculations.test.ts (6 tests)
- ✓ src/__tests__/securitySanitizer.test.ts (7 tests)
- ✓ src/__tests__/validation.test.ts (14 tests)
- ✓ src/__tests__/securityAndAccessControl.test.ts (10 tests)
- ✓ src/__tests__/budgetCalculations.test.ts (7 tests)
- ✓ src/__tests__/dateUtils.test.ts (20 tests)
- ✓ src/__tests__/markdownAndCodePolicy.test.ts (7 tests)
- ✓ src/__tests__/taskAndNotificationEngine.test.ts (18 tests)
- ✓ src/__tests__/indexedDBAvatar.test.ts (8 tests)
- ✓ src/__tests__/expenseManager.test.ts (9 tests)
- ✓ src/__tests__/e2eUserJourneys.test.ts (4 tests)
+ ✓ src/__tests__/chatHistory.test.ts (4 tests) 6ms
+ ✓ src/__tests__/budgetCalculations.test.ts (7 tests) 21ms
+ ✓ src/__tests__/dateUtils.test.ts (20 tests) 26ms
+ ✓ src/__tests__/rsvpCalculations.test.ts (6 tests) 6ms
+ ✓ src/__tests__/validation.test.ts (14 tests) 12ms
+ ✓ src/__tests__/markdownAndCodePolicy.test.ts (7 tests) 32ms
+ ✓ src/__tests__/aiPlanGenerator.test.ts (10 tests) 33ms
+ ✓ src/__tests__/securitySanitizer.test.ts (7 tests) 8ms
+ ✓ src/__tests__/securityAndAccessControl.test.ts (10 tests) 13ms
+ ✓ src/__tests__/indexedDBAvatar.test.ts (8 tests) 31ms
+ ✓ src/__tests__/taskAndNotificationEngine.test.ts (18 tests) 79ms
+ ✓ src/__tests__/authService.test.ts (10 tests) 4ms
+ ✓ src/__tests__/expenseManager.test.ts (9 tests) 4ms
+ ✓ src/__tests__/e2eUserJourneys.test.ts (4 tests) 5ms
 
- Test Files  12 passed (12)
-      Tests  114 passed (114)
-   Duration  1.68s
+ Test Files  14 passed (14)
+      Tests  134 passed (134)
+   Duration  1.99s (Transform: 2.49s, Setup: 0ms, Collect: 6.59s, Tests: 281ms)
 ```
 
----
-
-## 2. Test File Breakdown & Coverage
-
-| Test File | Scenarios Covered | Status |
-| :--- | :--- | :--- |
-| **`chatHistory.test.ts`** | Conversation creation, message ordering, temporal grouping, and event-specific chat isolation. | ✅ 4/4 Passed |
-| **`taskAndNotificationEngine.test.ts`** | Complete 17-scenario task & notification matrix: future due dates, due today, past-dated warning, overdue automatic detection, reschedule lifecycle, completed status immutability, morning/evening notification cycles, deduplication, timezone resilience, and Spark free plan compatibility. | ✅ 18/18 Passed |
-| **`expenseManager.test.ts`** | Paid, Pending, and Overdue category calculations; remaining balance updates; status transitions; and currency formatting. | ✅ 9/9 Passed |
-| **`e2eUserJourneys.test.ts`** | End-to-end user journeys: Event creation -> Task management -> Expense status transitions -> Multi-guest RSVPs -> Chat history synchronization. | ✅ 4/4 Passed |
-| **`securityAndAccessControl.test.ts`** | Multi-tenant isolation, event owner permission checks, collaborator access control, script/XSS stripping, and file upload limits. | ✅ 10/10 Passed |
-| **`securitySanitizer.test.ts`** | HTML entity sanitization, `javascript:` pseudo-protocol removal, inline event handler blocking, and text truncation. | ✅ 7/7 Passed |
-| **`validation.test.ts`** | Strict form validation for guests and events, phone number formats (+91 & international), email RFC 5322 compliance, and impossible calendar date rejection. | ✅ 14/14 Passed |
-| **`indexedDBAvatar.test.ts`** | Local profile image storage via IndexedDB `celebrai-local-cache`, avoiding Firebase Storage paywalls, image compression, and fallback handling. | ✅ 8/8 Passed |
-| **`markdownAndCodePolicy.test.ts`** | Safe Markdown rendering, responsive table parsing, and programming request detection (`isGeneralProgrammingRequest`). | ✅ 7/7 Passed |
-| **`dateUtils.test.ts`** | Timezone-neutral date parsing, countdown calculation, and format display. | ✅ 20/20 Passed |
-| **`budgetCalculations.test.ts`** | Budget variance, percentage calculations, category spending distribution, and zero-division safety. | ✅ 7/7 Passed |
-| **`rsvpCalculations.test.ts`** | Headcount aggregation by RSVP status (Attending, Pending, Declined) and dietary summaries. | ✅ 6/6 Passed |
+| Verification Metric | Actual Measured Result |
+|---|---|
+| **Total Test Suites** | **14** |
+| **Total Tests Executed** | **134** |
+| **Tests Passed** | **134 (100%)** |
+| **Tests Failed** | **0** |
+| **Tests Skipped** | **0** |
+| **Total Execution Duration** | **1.99 seconds** |
 
 ---
 
-## 3. Production Build Verification
+## 2. Test Suite Breakdown & Coverage Matrix
 
+### 1. `aiPlanGenerator.test.ts` (10 Tests)
+- Verifies JSON structure returned by the AI plan synthesis engine.
+- Tests validation of `conceptSummary`, `tasks`, `budgetBreakdown`, and `milestones`.
+- Validates deterministic local fallback generation when the external AI proxy is unreachable.
+- Asserts that task priorities adhere strictly to `'High'`, `'Medium'`, or `'Low'`.
+
+### 2. `budgetCalculations.test.ts` (7 Tests)
+- Tests Indian Rupee (₹) currency formatting, thousands separators, and Lakh representations.
+- Asserts calculated remaining budget: `remaining = totalPlanned - totalRecorded`.
+- Verifies category summation across Venue, Food, Decor, Photography, Entertainment, and Contingency.
+- Validates over-budget warning triggers and boundary zero-budget calculations.
+
+### 3. `expenseManager.test.ts` (9 Tests)
+- Validates status transitions between `'Paid'`, `'Pending'`, and `'Overdue'`.
+- Tests expense addition, updates, and soft-delete behavior.
+- Verifies paid sum vs pending sum aggregation calculations.
+
+### 4. `dateUtils.test.ts` (20 Tests)
+- Asserts days-until-celebration countdown calculations across past, present, and future dates.
+- Tests human-readable date formatting (e.g., "31 Jan 2027").
+- Verifies ISO timestamp transformations and timezone offset safety.
+
+### 5. `taskAndNotificationEngine.test.ts` (18 Tests)
+- Verifies automated task deadline status calculations (`'Due Today'`, `'Overdue'`, `'Pending'`, `'Completed'`).
+- Tests notification alert generation based on task urgency and upcoming event milestones.
+- Validates deduplication logic ensuring duplicate notification cards are not generated.
+
+### 6. `rsvpCalculations.test.ts` (6 Tests)
+- Asserts headcount aggregation by RSVP state: `Accepted`, `Pending`, `Declined`.
+- Validates total attendee counts accounting for `partySize` and plus-one additions.
+
+### 7. `validation.test.ts` (14 Tests)
+- Tests email regex validation, phone number character stripping, and name length checks.
+- Validates budget numerical boundaries (positive integers) and event date validity.
+
+### 8. `securitySanitizer.test.ts` (7 Tests)
+- Tests neutralization of malicious `<script>` tags, inline `onload`/`onerror` handlers, and `javascript:` URIs.
+- Validates stripping of disallowed HTML elements while preserving valid text formatting.
+
+### 9. `securityAndAccessControl.test.ts` (10 Tests)
+- Verifies image MIME type whitelisting (`image/jpeg`, `image/png`, `image/webp`).
+- Asserts file size limits (`< 5 MB`) and validates multi-tenant user access boundaries.
+
+### 10. `indexedDBAvatar.test.ts` (8 Tests)
+- Tests client-side IndexedDB database initialization (`celebrai_avatars`).
+- Asserts binary blob storage, Base64 retrieval, key updating, and deletion routines using `fake-indexeddb`.
+
+### 11. `authService.test.ts` (10 Tests)
+- Validates sign-in and registration input sanitation.
+- Tests token refresh callback triggers and mock Firebase Auth state transitions.
+
+### 12. `chatHistory.test.ts` (4 Tests)
+- Verifies AI Mentor conversation session initialization.
+- Validates message persistence, multi-turn ordering, and timestamp sorting.
+
+### 13. `markdownAndCodePolicy.test.ts` (7 Tests)
+- Verifies safe markdown rendering for headings, lists, tables, and bold tags.
+- Asserts that raw execution scripts embedded in markdown are sanitized.
+
+### 14. `e2eUserJourneys.test.ts` (4 Tests)
+- Validates end-to-end integration journeys:
+  1. Event Creation -> AI Plan Generation -> Plan Approval.
+  2. Plan Approval -> Dashboard Metric Population.
+  3. Expense Addition -> Budget Donut Update.
+  4. Guest RSVP Submission -> Guest Count Update.
+
+---
+
+## 3. How to Execute Tests Locally
+
+### Run All Tests Once
 ```bash
-$ npm run build
-
-> celebrai@0.0.0 build
-> tsc -b && vite build
-
-vite v8.3.5 building client environment for production...
-transforming...
-✓ 2309 modules transformed.
-rendering chunks...
-computing gzip size...
-dist/index.html                             1.40 kB │ gzip:   0.64 kB
-dist/assets/index-BV5oikSH.css            160.04 kB │ gzip:  23.59 kB
-dist/assets/rolldown-runtime-XKyaHtl9.js    0.72 kB │ gzip:   0.42 kB
-dist/assets/vendor-icons-hA2UwGjm.js       34.18 kB │ gzip:  12.04 kB
-dist/assets/index-DGEpMxcC.js             357.23 kB │ gzip:  87.30 kB
-dist/assets/vendor-react-BhEIgAt4.js      368.54 kB │ gzip: 114.96 kB
-dist/assets/vendor-firebase-D4FnO4s2.js   601.33 kB │ gzip: 181.20 kB
-
-✓ built in 610ms (0 TypeScript errors)
+npm test
 ```
 
----
+### Run in Watch Mode (Interactive Development)
+```bash
+npx vitest
+```
 
-## 4. Known Infrastructure Limitations
-
-1. **Firebase Spark Free Tier**:
-   - Google Cloud Scheduler and 24/7 background push notifications while the browser is closed require the paid Firebase Blaze plan.
-   - CelebrAI implements proactive **in-app lifecycle audits** (running on app launch, focus change, and route navigation), maintaining full audit accuracy and persisting all alerts to Firestore without incurring unexpected billing.
-2. **Local AI Proxy vs. Netlify Function**:
-   - During local development, the AI proxy runs via `node server/api.js` on port 3001.
-   - In production on Netlify, the serverless function `netlify/functions/api.js` serves AI requests, keeping the `GROQ_API_KEY` protected on the server.
-
+### Run a Specific Test Suite
+```bash
+npx vitest run src/__tests__/aiPlanGenerator.test.ts
+```
