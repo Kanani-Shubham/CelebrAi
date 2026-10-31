@@ -10,11 +10,16 @@
 </p>
 
 <p align="center">
+  <a href="#-hack2skill-challenge-5--official-ai-evaluation-results"><img src="https://img.shields.io/badge/Hack2Skill_Score-96.09%2F100-success?style=for-the-badge&logo=target&logoColor=white" alt="Score 96.09/100"></a>
+  <a href="#-hack2skill-challenge-5--official-ai-evaluation-results"><img src="https://img.shields.io/badge/Rank-%23233_of_51%2C679-blueviolet?style=for-the-badge" alt="Rank #233 of 51,679"></a>
   <a href="https://celebr-ai.netlify.app/"><img src="https://img.shields.io/badge/Live_Demo-celebr--ai.netlify.app-171F20?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo"></a>
   <a href="https://github.com/Kanani-Shubham/CelebrAi"><img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="Source Code"></a>
-  <a href="https://www.instagram.com/reel/DfJckDCIOv7/"><img src="https://img.shields.io/badge/Demo_Video-Instagram_Reel-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Demo Video"></a>
-  <a href="https://lnkd.in/p/d4VrMW3Y"><img src="https://img.shields.io/badge/LinkedIn-Announcement-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Post"></a>
-  <a href="#-hack2skill-ai-evaluation--six-parameter-engineering-matrix"><img src="https://img.shields.io/badge/Hack2Skill-6_Factor_Evaluation-4B3F72?style=for-the-badge" alt="Evaluation Matrix"></a>
+</p>
+
+<p align="center">
+  <a href="https://youtube.com/shorts/j8jOsHhBtjU?feature=share"><img src="https://img.shields.io/badge/YouTube-Product_Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Demo"></a>
+  <a href="https://www.linkedin.com/posts/shubham-kanani-5694802b3_celebrai-hack2skill-artificialintelligence-ugcPost-7522188052555788288-GgMv/"><img src="https://img.shields.io/badge/LinkedIn-Announcement-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Post"></a>
+  <a href="https://www.instagram.com/reel/DfJckDCIOv7/"><img src="https://img.shields.io/badge/Instagram-Reel_Challenge-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Instagram Reel"></a>
   <a href="#-parameter-4--testing"><img src="https://img.shields.io/badge/Vitest-134%2F134_Passing-22c55e?style=for-the-badge&logo=vitest&logoColor=white" alt="Tests"></a>
 </p>
 
@@ -33,29 +38,71 @@
 
 ## 📑 Table of Contents
 
-1. [Executive Overview & Problem Statement](#-executive-overview--problem-statement)
-2. [Vision, Target Users & Supported Events](#-vision-target-users--supported-events)
-3. [Hack2Skill AI Evaluation — Six-Parameter Engineering Matrix](#-hack2skill-ai-evaluation--six-parameter-engineering-matrix)
+1. [Hack2Skill Challenge 5 — Official AI Evaluation Results](#-hack2skill-challenge-5--official-ai-evaluation-results)
+2. [Executive Overview & Problem Statement](#-executive-overview--problem-statement)
+3. [Vision, Target Users & Supported Events](#-vision-target-users--supported-events)
+4. [Hack2Skill AI Evaluation — Six-Parameter Engineering Matrix](#-hack2skill-ai-evaluation--six-parameter-engineering-matrix)
    - [Parameter 1: Code Quality](#parameter-1--code-quality)
    - [Parameter 2: Security](#parameter-2--security)
    - [Parameter 3: Efficiency](#parameter-3--efficiency)
    - [Parameter 4: Testing](#parameter-4--testing)
    - [Parameter 5: Accessibility](#parameter-5--accessibility)
    - [Parameter 6: Problem Statement Alignment](#parameter-6--problem-statement-alignment)
-4. [Product Screenshots & Visual Walkthrough](#-product-screenshots--visual-walkthrough)
+5. [Product Screenshots & Visual Walkthrough](#-product-screenshots--visual-walkthrough)
    - [A. Landing and Authentication](#a-landing-and-authentication)
    - [B. Multi-Step Event Creation Wizard](#b-multi-step-event-creation-wizard)
    - [C. AI Celebration Plan Blueprint](#c-ai-celebration-plan-blueprint)
    - [D. Command Center, Tasks & Financials](#d-command-center-tasks--financials)
    - [E. AI Mentor, Guest RSVP & Account Management](#e-ai-mentor-guest-rsvp--account-management)
-5. [Master 36-Page Route Matrix](#-master-36-page-route-matrix)
-6. [System Architecture & Data Flow](#-system-architecture--data-flow)
-7. [Generative AI Integration Deep-Dive](#-generative-ai-integration-deep-dive)
-8. [Database Schema & Offline Storage Engine](#-database-schema--offline-storage-engine)
-9. [Local Development & Execution Guide](#-local-development--execution-guide)
-10. [Hack2Skill Official Submission Reference](#-hack2skill-official-submission-reference)
-11. [Documentation Library & Technical Reports](#-documentation-library--technical-reports)
-12. [Project Maintainers & Open-Source Licensing](#-project-maintainers--open-source-licensing)
+6. [Master 36-Page Route Matrix](#-master-36-page-route-matrix)
+7. [System Architecture & Data Flow](#-system-architecture--data-flow)
+8. [Generative AI Integration Deep-Dive](#-generative-ai-integration-deep-dive)
+9. [Database Schema & Offline Storage Engine](#-database-schema--offline-storage-engine)
+10. [Local Development & Execution Guide](#-local-development--execution-guide)
+11. [Hack2Skill Official Submission Reference](#-hack2skill-official-submission-reference)
+12. [Documentation Library & Technical Reports](#-documentation-library--technical-reports)
+13. [Project Maintainers & Open-Source Licensing](#-project-maintainers--open-source-licensing)
+
+---
+
+## 🏆 Hack2Skill Challenge 5 — Official AI Evaluation Results
+
+> [!NOTE]
+> **Evaluation Milestone Snapshot (Captured October 31, 2026):**  
+> CelebrAI achieved an AI evaluation score of **96.09 / 100** on its first official Hack2Skill Challenge 5 submission, placing **#233 among 51,679 participants** (Top 0.45% globally).  
+> *Note: Leaderboard rankings are dynamic as new submissions arrive and evaluate. This records Attempt 1 of 3 (2 attempts remaining, maximum allowed: 3).*
+
+### 📊 Official Scorecard Breakdown
+
+| Hack2Skill Evaluation Parameter | Score | Status | Primary Verified Benchmark |
+|---|:---:|:---:|---|
+| **Code Quality** | **86 / 100** | ✅ Solid | Oxlint 0 errors (78 files), strict TypeScript, zero `any` types |
+| **Security** | **99 / 100** | 🛡️ Near Perfect | Row-level Firestore rules, zero client secrets, XSS multi-pass sanitizers |
+| **Efficiency** | **100 / 100** | ⚡ Flawless | 757ms Vite build, 3-tier Rollup chunking, Canvas compression (<100 KB) |
+| **Testing** | **99 / 100** | 🧪 Near Perfect | 14 test suites, 134/134 passing unit/integration tests in 1.99s |
+| **Accessibility** | **98 / 100** | 👁️ Near Perfect | 14.8:1 Tuxedo-on-Satin contrast (exceeds AAA), ARIA landmarks, focus rings |
+| **Problem Statement Alignment** | **99 / 100** | 🎯 Near Perfect | 36 connected routes, Groq GPT-OSS 120B blueprints, real-time AI Mentor |
+| **Overall AI Evaluation Score** | **96.09 / 100** | 🌟 **Top 0.45%** | **Rank #233 of 51,679 Participants** (Attempt 1 of 3) |
+
+---
+
+### 🔍 Technical Evaluation Analysis
+
+#### Strongest Evaluated Dimensions
+1. **Efficiency (100 / 100)**: Full score achieved via Vite v8.3.5 bundling in under 800ms, intelligent code-splitting separating heavy vendor dependencies (`vendor-firebase`, `vendor-react`), and zero-latency IndexedDB local avatar persistence.
+2. **Security (99 / 100)**: Evaluator recognized enterprise-grade row-level Firestore rules (`request.auth.uid == userId`), server-side Groq API isolation, and strict multi-pass input sanitization preventing Stored XSS and SQL/NoSQL injection.
+3. **Problem Statement Alignment (99 / 100)**: Directly mapped against all 36 specified screens, providing authentic end-to-end planning workflows from initial AI prompt generation to financial expense variance and public guest RSVP.
+4. **Testing (99 / 100)**: High score driven by 14 comprehensive Vitest suites and 134 tests with 100% pass rate validating core state reducers, budget math, countdown calculators, and E2E journeys.
+5. **Accessibility (98 / 100)**: Editorial luxury palette providing 14.8:1 contrast ratios on primary text, keyboard navigation support, and semantic DOM landmarks.
+
+#### Lowest Evaluated Dimension & Attempt 2/3 Roadmap
+- **Code Quality (86 / 100)**: The AI evaluator's primary deduction was in Code Quality. While the codebase contains **0 syntax or linting errors** and **0 `any` types**, code audit reveals 98 informational style warnings flagged by `oxlint`:
+  1. *Unused mock imports* in test fixtures (`src/__tests__/validation.test.ts`, `src/__tests__/securityAndAccessControl.test.ts`, `src/__tests__/e2eUserJourneys.test.ts`).
+  2. *Unnecessary regex escapes* in `src/utils/security.ts` and `src/utils/validation.ts`.
+  3. *Synchronous state dispatches inside effects* in `src/pages/dashboard/AIAssistant.tsx` and `src/pages/onboarding/AIPlanPreview.tsx`.
+- **Targeting 100 / 100 in Subsequent Attempts**: Cleaning these 98 stylistic warnings directly addresses the AI code evaluator's strict heuristics, providing a clear path to maximize Code Quality from 86 to 100 on remaining submissions.
+
+*For complete evaluation data and verification steps, read [Docs/HACK2SKILL_EVALUATION_RESULTS.md](Docs/HACK2SKILL_EVALUATION_RESULTS.md).*
 
 ---
 
@@ -515,9 +562,10 @@ Generates the optimized chunk-split production bundle inside `dist/`.
 |---|---|---|
 | **Public GitHub Repository Link** | `https://github.com/Kanani-Shubham/CelebrAi` | Clean Git tree under 10 MB |
 | **Project Deployed Link** | `https://celebr-ai.netlify.app/` | Fully functional Netlify live release |
+| **YouTube Product Demo** | `https://youtube.com/shorts/j8jOsHhBtjU?feature=share` | Dedicated product demo & functional walkthrough |
 | **Instagram Reel** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Official Instagram Reels challenge link |
-| **Demo Video** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Demo video & application walkthrough |
-| **LinkedIn Announcement** | `https://lnkd.in/p/d4VrMW3Y` | Public project announcement on LinkedIn |
+| **LinkedIn Announcement** | `https://www.linkedin.com/posts/shubham-kanani-5694802b3_celebrai-hack2skill-artificialintelligence-ugcPost-7522188052555788288-GgMv/` | Public project announcement on LinkedIn ([Short Link](https://lnkd.in/p/d4VrMW3Y)) |
+| **Official Hack2Skill AI Score** | **96.09 / 100** (Rank #233 of 51,679) | [Full Hack2Skill Evaluation Report](Docs/HACK2SKILL_EVALUATION_RESULTS.md) |
 
 *For exact 1024-character copy-paste form answers, see [Docs/HACK2SKILL_SUBMISSION.md](Docs/HACK2SKILL_SUBMISSION.md).*
 
@@ -525,6 +573,7 @@ Generates the optimized chunk-split production bundle inside `dist/`.
 
 ## 📚 Documentation Library & Technical Reports
 
+- **[Hack2Skill Official Evaluation Results & Attempt Roadmap](Docs/HACK2SKILL_EVALUATION_RESULTS.md)**: 96.09/100 scorecard, rank #233 analysis, and Attempt 2/3 100/100 roadmap.
 - **[Master Documentation Portal](Docs/README.md)**: Master portal and cross-index.
 - **[System Architecture & Data Flow](Docs/ARCHITECTURE.md)**: Deep architectural flow and Mermaid diagrams.
 - **[Database Schema & Models](Docs/DATABASE_SCHEMA.md)**: Complete Firestore collection specifications.

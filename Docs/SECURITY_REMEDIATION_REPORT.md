@@ -138,3 +138,4 @@ The entire verification pipeline was executed following the security audit:
 | **Firebase Auth Flow** | Local / Netlify | Email/Password & Google OAuth popup listeners intact |
 | **Firestore Security** | Rule verification | Multi-tenant row-level isolation enforced (`firestore.rules`) |
 | **Server AI Gateway** | `server/api.js` | `GROQ_API_KEY` protected server-side |
+

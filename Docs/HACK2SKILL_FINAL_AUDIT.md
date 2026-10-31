@@ -59,12 +59,31 @@ The six official Hack2Skill evaluation criteria have been audited against actual
 
 1. **Public GitHub Repository**: [https://github.com/Kanani-Shubham/CelebrAi](https://github.com/Kanani-Shubham/CelebrAi)
 2. **Production Deployed Web App**: [https://celebr-ai.netlify.app/](https://celebr-ai.netlify.app/)
-3. **Demo Video & Walkthrough**: [https://www.instagram.com/reel/DfJckDCIOv7/](https://www.instagram.com/reel/DfJckDCIOv7/)
-4. **Public LinkedIn Announcement**: [https://lnkd.in/p/d4VrMW3Y](https://lnkd.in/p/d4VrMW3Y)
+3. **Dedicated YouTube Demo Walkthrough**: [https://youtube.com/shorts/j8jOsHhBtjU?feature=share](https://youtube.com/shorts/j8jOsHhBtjU?feature=share)
+4. **Public LinkedIn Announcement**: [https://www.linkedin.com/posts/shubham-kanani-5694802b3_celebrai-hack2skill-artificialintelligence-ugcPost-7522188052555788288-GgMv/](https://www.linkedin.com/posts/shubham-kanani-5694802b3_celebrai-hack2skill-artificialintelligence-ugcPost-7522188052555788288-GgMv/) ([Short Link](https://lnkd.in/p/d4VrMW3Y))
 5. **Instagram Reels Challenge**: [https://www.instagram.com/reel/DfJckDCIOv7/](https://www.instagram.com/reel/DfJckDCIOv7/)
 
 ---
 
-## 5. Submission Readiness Conclusion
+## 5. Official Hack2Skill AI Evaluation Results (Attempt 1)
 
-CelebrAI's documentation and codebase are **100% Fully Ready for Hack2Skill Evaluation**. All technical parameters have been audited, all 134 automated unit/integration tests pass with a 100% success rate, the production build compiles in 757ms, and all official submission links are attached and verified.
+On **October 31, 2026**, CelebrAI was evaluated by the Hack2Skill AI Code Evaluation engine:
+
+- **Overall Score**: **96.09 / 100**
+- **Leaderboard Position**: **#233 among 51,679 participants** (Top 0.45% globally)
+- **Submission Attempt**: Attempt 1 of 3 (2 attempts remaining, maximum allowed: 3)
+- **Score Breakdown**:
+  - Efficiency: **100 / 100**
+  - Security: **99 / 100**
+  - Testing: **99 / 100**
+  - Problem Statement Alignment: **99 / 100**
+  - Accessibility: **98 / 100**
+  - Code Quality: **86 / 100**
+
+*Detailed breakdown, root-cause analysis of the 86 Code Quality score, and concrete roadmap for Attempt 2/3 to target 100/100 are documented in [Docs/HACK2SKILL_EVALUATION_RESULTS.md](HACK2SKILL_EVALUATION_RESULTS.md).*
+
+---
+
+## 6. Submission Readiness Conclusion
+
+CelebrAI's documentation and codebase are **100% Fully Ready for Hack2Skill Evaluation**. All technical parameters have been audited, all 134 automated unit/integration tests pass with a 100% success rate, the production build compiles in 757ms, and all official submission links are attached and verified. Attempt 1 has officially proven CelebrAI's elite tier status at 96.09/100.

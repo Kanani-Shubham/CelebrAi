@@ -12,9 +12,35 @@
 <p align="center">
   <a href="https://celebr-ai.netlify.app/"><strong>Live Application</strong></a> ·
   <a href="https://github.com/Kanani-Shubham/CelebrAi"><strong>Source Code</strong></a> ·
+  <a href="https://youtube.com/shorts/j8jOsHhBtjU?feature=share"><strong>YouTube Demo</strong></a> ·
   <a href="https://www.instagram.com/reel/DfJckDCIOv7/"><strong>Instagram Reel</strong></a> ·
-  <a href="Docs/README.md"><strong>Technical Documentation Hub</strong></a>
+  <a href="Docs/HACK2SKILL_EVALUATION_RESULTS.md"><strong>Official AI Evaluation (96.09/100)</strong></a> ·
+  <a href="Docs/README.md"><strong>Documentation Hub</strong></a>
 </p>
+
+---
+
+## 🏆 Hack2Skill Evaluation Achievement
+
+CelebrAI achieved an AI evaluation score of **96.09 / 100** in its first Hack2Skill Challenge 5 submission, ranking **#233 among 51,679 participants** (Top 0.45% globally).
+
+- **Submission Attempt**: Attempt 1 of 3 (2 attempts remaining, maximum allowed: 3)
+- **Evaluation Date**: October 31, 2026
+- **Status**: Dynamic leaderboard ranking captured on October 31, 2026
+
+### Parameter Breakdown
+
+| Hack2Skill Parameter | Score | Status |
+|---|:---:|---|
+| **Code Quality** | **86 / 100** | Strict TS, 0 errors, 98 informational style warnings to polish |
+| **Security** | **99 / 100** | Row-level Firestore rules, 0 client secrets, XSS multi-pass protection |
+| **Efficiency** | **100 / 100** | 757ms Vite build, 3-tier Rollup chunking, Canvas compression (<100 KB) |
+| **Testing** | **99 / 100** | 14 test suites, 134/134 passing unit/integration tests |
+| **Accessibility** | **98 / 100** | 14.8:1 Tuxedo-on-Satin contrast ratio (exceeds WCAG AAA), keyboard focus |
+| **Problem Statement Alignment** | **99 / 100** | 36 connected routes, Groq GPT-OSS 120B blueprints, real-time AI Mentor |
+| **Overall AI Score** | **96.09 / 100** | **Rank #233 of 51,679 Participants** |
+
+*See [Docs/HACK2SKILL_EVALUATION_RESULTS.md](Docs/HACK2SKILL_EVALUATION_RESULTS.md) for full evaluation data and Attempt 2/3 roadmap.*
 
 ---
 
@@ -70,7 +96,8 @@ CelebrAI includes all 36 feature screens accessible via direct routes or the per
 
 - **Live Netlify Demo**: [https://celebr-ai.netlify.app/](https://celebr-ai.netlify.app/)
 - **GitHub Repository**: [https://github.com/Kanani-Shubham/CelebrAi](https://github.com/Kanani-Shubham/CelebrAi)
+- **YouTube Product Demo**: [https://youtube.com/shorts/j8jOsHhBtjU?feature=share](https://youtube.com/shorts/j8jOsHhBtjU?feature=share)
 - **Instagram Reel**: [https://www.instagram.com/reel/DfJckDCIOv7/](https://www.instagram.com/reel/DfJckDCIOv7/)
-- **Demo Video**: [https://www.instagram.com/reel/DfJckDCIOv7/](https://www.instagram.com/reel/DfJckDCIOv7/)
-- **LinkedIn Post**: [https://lnkd.in/p/d4VrMW3Y](https://lnkd.in/p/d4VrMW3Y)
+- **LinkedIn Announcement**: [https://www.linkedin.com/posts/shubham-kanani-5694802b3_celebrai-hack2skill-artificialintelligence-ugcPost-7522188052555788288-GgMv/](https://www.linkedin.com/posts/shubham-kanani-5694802b3_celebrai-hack2skill-artificialintelligence-ugcPost-7522188052555788288-GgMv/) ([Short Link](https://lnkd.in/p/d4VrMW3Y))
+- **Official AI Evaluation Results**: [96.09 / 100 (Rank #233 / 51,679)](Docs/HACK2SKILL_EVALUATION_RESULTS.md)
 - **Lead Developer**: Shubham Kanani (`shubhamkanani.2006@gmail.com`)

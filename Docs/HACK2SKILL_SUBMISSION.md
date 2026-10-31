@@ -14,11 +14,12 @@
 |---|---|---|
 | **Public GitHub Repository Link** | `https://github.com/Kanani-Shubham/CelebrAi` | Verified public repository; clean Git tree under 10 MB. |
 | **Project Deployed Link** | `https://celebr-ai.netlify.app/` | Fully functional, live production deployment on Netlify. |
-| **Project Demo Video Submission** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Official project demo video walkthrough. |
-| **LinkedIn Post** | `https://lnkd.in/p/d4VrMW3Y` | Direct URL to the public LinkedIn announcement showcasing CelebrAI. |
+| **Project Demo Video Submission** | `https://youtube.com/shorts/j8jOsHhBtjU?feature=share` | Dedicated product demo & functional walkthrough on YouTube. |
+| **LinkedIn Post** | `https://www.linkedin.com/posts/shubham-kanani-5694802b3_celebrai-hack2skill-artificialintelligence-ugcPost-7522188052555788288-GgMv/` | Direct URL to the public LinkedIn announcement showcasing CelebrAI ([Short Link](https://lnkd.in/p/d4VrMW3Y)). |
 | **Instagram Reels Challenge URL** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Separate submission track for the Hack2Skill Instagram Reels Challenge. |
+| **Official Hack2Skill AI Score** | **96.09 / 100** (Rank #233 of 51,679) | Captured October 31, 2026 (Attempt 1 of 3, 2 attempts remaining). |
 
-> **IMPORTANT SEPARATION NOTE:** The Instagram Reel link (`https://www.instagram.com/reel/DfJckDCIOv7/`) belongs exclusively in the Instagram Reels submission field. Do not place the Instagram Reel URL in the LinkedIn field.
+> **IMPORTANT SEPARATION NOTE:** The YouTube Demo Video (`https://youtube.com/shorts/j8jOsHhBtjU?feature=share`) and Instagram Reel (`https://www.instagram.com/reel/DfJckDCIOv7/`) are distinct submission tracks. The Instagram Reel link belongs in the Instagram Reels challenge field, while the YouTube link belongs in the project demo video field. Do not place the Instagram Reel URL in the LinkedIn or YouTube field.
 
 ---
 
@@ -57,6 +58,8 @@ All AI calls pass through isolated server-side proxies (Express & Netlify Functi
 - [x] **Automated Tests Verified**: 14 test suites, 134 tests passed, 0 failures.
 - [x] **Static Code Analysis**: 0 Oxlint errors across 78 files; clean TypeScript compilation (`tsc -b`).
 - [x] **Screenshot Evidence**: 39 verified screenshots committed in `Docs/screenshots/` (21 desktop, 18 mobile).
-- [x] **Demo Video URL Attached**: Verified live at `https://www.instagram.com/reel/DfJckDCIOv7/`.
-- [x] **LinkedIn URL Attached**: Verified live at `https://lnkd.in/p/d4VrMW3Y`.
+- [x] **Demo Video URL Attached**: Verified live on YouTube at `https://youtube.com/shorts/j8jOsHhBtjU?feature=share`.
+- [x] **LinkedIn URL Attached**: Verified live at `https://www.linkedin.com/posts/shubham-kanani-5694802b3_celebrai-hack2skill-artificialintelligence-ugcPost-7522188052555788288-GgMv/`.
+- [x] **Instagram Reels URL Attached**: Verified live at `https://www.instagram.com/reel/DfJckDCIOv7/`.
+- [x] **Official Attempt 1 Score Documented**: 96.09/100, Rank #233 of 51,679 ([Details](HACK2SKILL_EVALUATION_RESULTS.md)).
 
