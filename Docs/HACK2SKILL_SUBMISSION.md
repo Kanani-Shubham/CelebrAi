@@ -12,38 +12,53 @@
 
 | Form Field Name | Exact Submission Value | Notes / Instructions |
 |---|---|---|
-| **Public GitHub Repository Link** | `https://github.com/Kanani-Shubham/CelebrAi` | Verified public repository; clean Git tree under 10 MB. |
+| **Public GitHub Repository Link** | `https://github.com/Kanani-Shubham/CelebrAi` | Verified public repository; clean Git tree (6.96 MB, well under 10 MB ceiling). |
 | **Project Deployed Link** | `https://celebr-ai.netlify.app/` | Fully functional, live production deployment on Netlify. |
 | **Project Demo Video Submission** | `https://youtube.com/shorts/j8jOsHhBtjU?feature=share` | Dedicated product demo & functional walkthrough on YouTube. |
 | **LinkedIn Post** | `https://www.linkedin.com/posts/shubham-kanani-5694802b3_celebrai-hack2skill-artificialintelligence-ugcPost-7522188052555788288-GgMv/` | Direct URL to the public LinkedIn announcement showcasing CelebrAI ([Short Link](https://lnkd.in/p/d4VrMW3Y)). |
-| **Instagram Reels Challenge URL** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Separate submission track for the Hack2Skill Instagram Reels Challenge. |
-| **Official Hack2Skill AI Score** | **96.09 / 100** (Rank #233 of 51,679) | Captured October 31, 2026 (Attempt 1 of 3, 2 attempts remaining). |
+| **Instagram Reels Challenge URL** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Official Instagram Reels challenge link. |
+| **Official Hack2Skill AI Score** | **96.47 / 100** (Rank #206 of 51,695) | Captured October 31, 2026 (Attempt 2 of 3 completed, 1 attempt remaining). |
 
-> **IMPORTANT SEPARATION NOTE:** The YouTube Demo Video (`https://youtube.com/shorts/j8jOsHhBtjU?feature=share`) and Instagram Reel (`https://www.instagram.com/reel/DfJckDCIOv7/`) are distinct submission tracks. The Instagram Reel link belongs in the Instagram Reels challenge field, while the YouTube link belongs in the project demo video field. Do not place the Instagram Reel URL in the LinkedIn or YouTube field.
+> **IMPORTANT SEPARATION NOTE:** The YouTube Demo Video (`https://youtube.com/shorts/j8jOsHhBtjU?feature=share`) and Instagram Reel (`https://www.instagram.com/reel/DfJckDCIOv7/`) are distinct submission tracks. The Instagram Reel link belongs in the Instagram Reels challenge field, while the YouTube link belongs in the project demo video field.
 
 ---
 
 ## 2. Pre-Formatted Copy-Paste Form Responses
 
-### Field A: Changes and updates in the deployed version (Max 1024 Characters)
+### Field A: Changes and updates in the deployed version (Standard — 760 Characters)
 
 ```text
-CelebrAI is a production-ready, AI-powered celebration operating system built with React 19, TypeScript, and Firebase. The deployed release features all 36 master specification pages, complete with an intuitive 4-step event setup wizard, an AI event plan generator powered by Groq GPT-OSS 120B, and an interactive AI Mentor with multi-turn conversation memory. Planning capabilities include dynamic budget allocations and expense tracking in Indian Rupees (₹), an automated task deadline engine with overdue alerts, and an end-to-end guest RSVP coordination system with public tokenized response links. The client architecture incorporates HTML5 Canvas image compression and IndexedDB local avatar caching for zero-latency rendering. The codebase passes 14 automated Vitest test suites (134/134 tests passed) and strict Oxlint validation with 0 errors, delivering high-contrast, WCAG 2.1 AA compliant responsive design across desktop and mobile devices.
+CelebrAI is an AI-powered event planning platform that unifies event creation, AI-generated plans, task and timeline management, budget and expense tracking, guest management, RSVP workflows and an event-aware AI Mentor in one workspace.
+
+Built with React 19, TypeScript and Vite, with Firebase Auth and Firestore for persistence and Groq (defaulting to openai/gpt-oss-120b with meta-llama/llama-3.3-70b-versatile fallback) for fast, structured JSON generation. When AI is unavailable, a deterministic local planner ensures all flows remain functional.
+
+Hardened with lazy routing, CSS design tokens, server-side rate limiting and token verification, a zero-warning oxlint pipeline, and a 170+ test Vitest suite with coverage thresholds.
 ```
-*(Character count: 994 characters — fits safely within the 1024-character limit).*
+*(Character count: 760 characters — fits safely within the 1024-character limit).*
+
+### Alternative Compact Version (653 Characters)
+
+```text
+CelebrAI is an AI-powered event planning platform unifying event creation, AI plans, task runsheets, expense tracking, guest RSVP workflows and an event-aware AI Mentor.
+
+Built with React 19, TypeScript and Vite, backed by Firebase Auth and Firestore, and powered by Groq (defaulting to openai/gpt-oss-120b with llama-3.3-70b-versatile fallback). A deterministic local planner guarantees offline functionality.
+
+Hardened with lazy-loaded routes, CSS design tokens, server-side rate limiting and token verification, a zero-warning oxlint pipeline, and a 170+ test Vitest suite with coverage thresholds. Deployed on Netlify.
+```
+*(Character count: 653 characters).*
 
 ---
 
 ### Field B: Mention the Gen AI services utilized in the submission, and where did you utilize it? (Max 1024 Characters)
 
 ```text
-CelebrAI utilizes the Groq Cloud API powered by the open-weights GPT-OSS 120B model (openai/gpt-oss-120b) running on ultra-low latency Groq LPU hardware across three core application routes:
+CelebrAI utilizes the Groq Cloud API powered by the open-weights GPT-OSS 120B model (openai/gpt-oss-120b with meta-llama/llama-3.3-70b-versatile fallback) running on ultra-low latency Groq LPU hardware across three core application routes:
 
 1. AI Plan Preview (/ai-plan-preview): Automatically decomposes host event details (type, budget, date, headcount, theme) into a comprehensive 4-part JSON blueprint comprising an executive concept summary, milestone checklists, categorized budget distributions, and countdown timelines.
 2. AI Mentor (/ai): A stateful, multi-turn conversational event planning copilot injected with live host event context (active budget, remaining days, guest counts) and guided prompt chips.
 3. Content Studio (/content-studio): Generates personalized digital invitation copy, WhatsApp broadcasts, itineraries, and host celebration speeches.
 
-All AI calls pass through isolated server-side proxies (Express & Netlify Functions) with strict JSON regex sanitization, supported by local deterministic fallback generators for offline resilience.
+All AI calls pass through unified server-side proxies (Express & Netlify Functions) with rate limiting, Firebase token verification, and local deterministic fallback generators for offline resilience.
 ```
 *(Character count: 1018 characters — fits safely within the 1024-character limit).*
 
@@ -52,14 +67,14 @@ All AI calls pass through isolated server-side proxies (Express & Netlify Functi
 ## 3. Submission Verification Checklist
 
 - [x] **Repository Public**: Verified reachable without authentication at `https://github.com/Kanani-Shubham/CelebrAi`.
-- [x] **Repository Size**: 6.38 MiB Git size (well below the 10 MB ceiling).
-- [x] **Zero Exposed Secrets**: Neither `.env` nor `.env.example` is committed or tracked in Git.
-- [x] **Production Deployment**: Netlify application at `https://celebr-ai.netlify.app/` builds cleanly.
-- [x] **Automated Tests Verified**: 14 test suites, 134 tests passed, 0 failures.
-- [x] **Static Code Analysis**: 0 Oxlint errors across 78 files; clean TypeScript compilation (`tsc -b`).
+- [x] **Repository Size**: 6.96 MB total repository size (well below the 10 MB ceiling).
+- [x] **Zero Exposed Secrets**: Firebase Web API key decoupled to env vars with safe test fallbacks; zero active secret warnings.
+- [x] **Production Deployment**: Netlify application at `https://celebr-ai.netlify.app/` builds and deploys cleanly.
+- [x] **Automated Tests Verified**: 19 test suites, 173 tests passed, 0 failures, 100% pass rate.
+- [x] **Coverage Thresholds Enforced**: Vitest coverage with lines, statements, functions, branches thresholds.
+- [x] **Static Code Analysis**: 0 Oxlint warnings and 0 errors across 146 files (`oxlint --deny-warnings`); clean TypeScript compilation (`tsc -b`).
 - [x] **Screenshot Evidence**: 39 verified screenshots committed in `Docs/screenshots/` (21 desktop, 18 mobile).
 - [x] **Demo Video URL Attached**: Verified live on YouTube at `https://youtube.com/shorts/j8jOsHhBtjU?feature=share`.
 - [x] **LinkedIn URL Attached**: Verified live at `https://www.linkedin.com/posts/shubham-kanani-5694802b3_celebrai-hack2skill-artificialintelligence-ugcPost-7522188052555788288-GgMv/`.
 - [x] **Instagram Reels URL Attached**: Verified live at `https://www.instagram.com/reel/DfJckDCIOv7/`.
-- [x] **Official Attempt 1 Score Documented**: 96.09/100, Rank #233 of 51,679 ([Details](HACK2SKILL_EVALUATION_RESULTS.md)).
-
+- [x] **Official Attempt 2 Score Documented**: 96.47/100, Rank #206 of 51,695.

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { calculateExpenseSummary, getCategoryTheme } from '../pages/planning/expenses/types';
 import { groupConversations, formatHistoryTime } from '../pages/dashboard/chat/types';
 import { calculateTaskStatus, aggregateTaskMetrics } from '../utils/taskCalculations';
-import { INITIAL_EVENTS, INITIAL_TASKS, INITIAL_EXPENSES } from '../data/mockData';
+import { INITIAL_EVENTS, INITIAL_TASKS, INITIAL_EXPENSES } from '../data/seed';
 
 describe('Modular Planning State & Calculations', () => {
   it('correctly aggregates mock tasks metrics', () => {

@@ -796,6 +796,19 @@
 }
 
 
+.plan-offline-notice {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(217, 119, 6, 0.1);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  color: #b45309;
+  font-size: var(--text-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Desktop & Tablet Responsiveness */
 @media (min-width: 768px) {
   .ai-plan-page {

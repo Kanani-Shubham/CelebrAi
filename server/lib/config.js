@@ -13,3 +13,5 @@ export const GROQ_BASE_URL = 'https://api.groq.com/openai/v1';
 
 export const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
 export const RATE_LIMIT_MAX = 20; // 20 requests per minute per IP
+export const MAX_PROMPT_LENGTH = 4000; // maximum input length per prompt
+export const MAX_BODY_SIZE_BYTES = 512 * 1024; // 512kb

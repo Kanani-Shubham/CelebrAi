@@ -40,6 +40,7 @@ export function sanitizeText(input: string, maxLength = 2000): string {
 export function sanitizeEventName(input: string, maxLength = 100): string {
   if (typeof input !== 'string') return '';
   return input
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
     .replace(/<[^>]*>/g, '')
     .replace(/javascript:\s*/gi, '')
     .slice(0, maxLength)
@@ -52,6 +53,7 @@ export function sanitizeEventName(input: string, maxLength = 100): string {
 export function sanitizeGuestName(input: string, maxLength = 80): string {
   if (typeof input !== 'string') return '';
   return input
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
     .replace(/<[^>]*>/g, '')
     .replace(/[^\p{L}\p{M}\s.'-]/gu, '')
     .slice(0, maxLength)

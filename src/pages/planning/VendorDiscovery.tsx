@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Filter, Heart, Bookmark } from 'lucide-react';
-import { INITIAL_VENDORS, type VendorItem } from '../../data/mockData';
+import { INITIAL_VENDORS, type VendorItem } from '../../data/seed';
 import './VendorDiscovery.css';
 
 export function VendorDiscovery() {

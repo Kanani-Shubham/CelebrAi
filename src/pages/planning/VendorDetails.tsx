@@ -12,7 +12,7 @@ import {
   X,
   Loader2,
 } from 'lucide-react';
-import { INITIAL_VENDORS } from '../../data/mockData';
+import { INITIAL_VENDORS } from '../../data/seed';
 import { useEvent } from '../../contexts/useEvent';
 import { saveVendor } from '../../services/firebase/firestore';
 import { toast } from '../../components/ui/toast';

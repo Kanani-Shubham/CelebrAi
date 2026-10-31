@@ -53,7 +53,7 @@ export async function saveAvatarBlob(uid: string, blob: Blob): Promise<void> {
   if (!uid || typeof uid !== 'string') {
     throw new Error('Valid user UID is required to save avatar.');
   }
-  if (!(blob instanceof Blob)) {
+  if (!(blob instanceof Blob) && !(blob && typeof blob === 'object' && 'size' in blob)) {
     throw new Error('Avatar must be a valid Blob instance.');
   }
 
@@ -64,7 +64,6 @@ export async function saveAvatarBlob(uid: string, blob: Blob): Promise<void> {
       const store = transaction.objectStore(STORE_NAME);
       const putRequest = store.put(blob, uid);
 
-      putRequest.onsuccess = () => resolve();
       putRequest.onerror = () => {
         const err = putRequest.error;
         if (err && err.name === 'QuotaExceededError') {
@@ -74,7 +73,10 @@ export async function saveAvatarBlob(uid: string, blob: Blob): Promise<void> {
         }
       };
 
-      transaction.oncomplete = () => db.close();
+      transaction.oncomplete = () => {
+        db.close();
+        resolve();
+      };
       transaction.onerror = () => {
         db.close();
         reject(transaction.error || new Error('Transaction error while saving avatar.'));
@@ -102,7 +104,7 @@ export async function getAvatarBlob(uid: string): Promise<Blob | null> {
 
         getRequest.onsuccess = () => {
           const result = getRequest.result;
-          resolve(result instanceof Blob ? result : null);
+          resolve(result && (result instanceof Blob || result.size !== undefined) ? result : null);
         };
 
         getRequest.onerror = () => {
@@ -139,10 +141,12 @@ export async function deleteAvatarBlob(uid: string): Promise<void> {
         const store = transaction.objectStore(STORE_NAME);
         const deleteRequest = store.delete(uid);
 
-        deleteRequest.onsuccess = () => resolve();
         deleteRequest.onerror = () => reject(deleteRequest.error);
 
-        transaction.oncomplete = () => db.close();
+        transaction.oncomplete = () => {
+          db.close();
+          resolve();
+        };
         transaction.onerror = () => {
           db.close();
           reject(transaction.error);
@@ -156,4 +160,3 @@ export async function deleteAvatarBlob(uid: string): Promise<void> {
     logger.warn('[IndexedDB] Could not delete cached avatar:', err);
   }
 }
-

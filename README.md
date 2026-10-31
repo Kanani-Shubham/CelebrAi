@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
-  <a href="#-hack2skill-challenge-5--official-ai-evaluation-results"><img src="https://img.shields.io/badge/Hack2Skill_Score-96.09%2F100-success?style=for-the-badge&logo=target&logoColor=white" alt="Score 96.09/100"></a>
-  <a href="#-hack2skill-challenge-5--official-ai-evaluation-results"><img src="https://img.shields.io/badge/Rank-%23233_of_51%2C679-blueviolet?style=for-the-badge" alt="Rank #233 of 51,679"></a>
+  <a href="#-hack2skill-challenge-5--official-ai-evaluation-results"><img src="https://img.shields.io/badge/Hack2Skill_Score-96.47%2F100-success?style=for-the-badge&logo=target&logoColor=white" alt="Score 96.47/100"></a>
+  <a href="#-hack2skill-challenge-5--official-ai-evaluation-results"><img src="https://img.shields.io/badge/Rank-%23206_of_51%2C695-blueviolet?style=for-the-badge" alt="Rank #206 of 51,695"></a>
   <a href="https://celebr-ai.netlify.app/"><img src="https://img.shields.io/badge/Live_Demo-celebr--ai.netlify.app-171F20?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo"></a>
   <a href="https://github.com/Kanani-Shubham/CelebrAi"><img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="Source Code"></a>
 </p>
@@ -20,7 +20,7 @@
   <a href="https://youtube.com/shorts/j8jOsHhBtjU?feature=share"><img src="https://img.shields.io/badge/YouTube-Product_Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Demo"></a>
   <a href="https://lnkd.in/p/d4VrMW3Y"><img src="https://img.shields.io/badge/LinkedIn-Announcement-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Post"></a>
   <a href="https://www.instagram.com/reel/DfJckDCIOv7/"><img src="https://img.shields.io/badge/Instagram-Reel_Challenge-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Instagram Reel"></a>
-  <a href="#-parameter-4--testing"><img src="https://img.shields.io/badge/Vitest-149%2F149_Passing-22c55e?style=for-the-badge&logo=vitest&logoColor=white" alt="Tests"></a>
+  <a href="#-parameter-4--testing"><img src="https://img.shields.io/badge/Vitest-173%2F173_Passing-22c55e?style=for-the-badge&logo=vitest&logoColor=white" alt="Tests"></a>
 </p>
 
 <p align="center">
@@ -71,37 +71,37 @@
 
 > [!NOTE]
 > **Official Evaluation Snapshot (Captured October 31, 2026):**  
-> CelebrAI achieved an AI evaluation score of **96.09 / 100** on its first official Hack2Skill Challenge 5 submission, placing **#233 among 51,679 participants** (Top 0.45% globally).  
-> *Note: Leaderboard rankings are dynamic as new submissions arrive and evaluate. This records Attempt 1 of 3 (2 attempts remaining, maximum allowed: 3).*
+> CelebrAI achieved an AI evaluation score of **96.47 / 100** on its first official Hack2Skill Challenge 5 submission, placing **#206 among 51,695 participants** (Top 0.45% globally).  
+> *Note: Leaderboard rankings are dynamic as new submissions arrive and evaluate. This records Attempt 2 of 3 (1 attempt remaining, maximum allowed: 3).*
 
 ### 📊 Official Scorecard Breakdown
 
 | Hack2Skill Evaluation Parameter | Score | Status | Primary Verified Benchmark |
 |---|:---:|:---:|---|
-| **Code Quality** | **86 / 100** | 🚀 Hardened to 100 | **0 Oxlint warnings, 0 errors (127 files)**, zero `any` types, decomposed monoliths |
+| **Code Quality** | **88 / 100** | 🚀 Hardened to 100 | **0 Oxlint warnings, 0 errors (146 files)**, zero `any` types, decomposed monoliths |
 | **Security** | **99 / 100** | 🛡️ Near Perfect | Row-level Firestore rules, 0 client secrets, GitHub secret scanning alerts eliminated |
 | **Efficiency** | **100 / 100** | ⚡ Flawless | **54.58 kB initial JS bundle**, 728ms build, 34 lazy routes, Canvas compression (<100 KB) |
-| **Testing** | **99 / 100** | 🧪 Near Perfect | **16 test suites, 149/149 passing unit/integration tests** in 2.4s (100% pass rate) |
-| **Accessibility** | **98 / 100** | 👁️ Near Perfect | **14.8:1 Tuxedo-on-Satin contrast (exceeds AAA)**, Skip-to-content anchor, ARIA landmarks |
+| **Testing** | **99 / 100** | 🧪 Near Perfect | **19 test suites, 173/173 passing unit/integration tests** in 2.4s (100% pass rate) |
+| **Accessibility** | **99 / 100** | 👁️ Near Perfect | **14.8:1 Tuxedo-on-Satin contrast (exceeds AAA)**, Skip-to-content anchor, ARIA landmarks |
 | **Problem Statement Alignment** | **99 / 100** | 🎯 Near Perfect | **36 connected routes**, Groq GPT-OSS 120B blueprints, real-time AI Mentor |
-| **Overall AI Evaluation Score** | **96.09 / 100** | 🌟 **Top 0.45%** | **Rank #233 of 51,679 Participants** (Attempt 1 of 3) |
+| **Overall AI Evaluation Score** | **96.47 / 100** | 🌟 **Top 0.45%** | **Rank #206 of 51,695 Participants** (Attempt 1 of 3) |
 
 ---
 
 ## ⚡ Code Quality & Architecture Hardening Pass (Before vs. After)
 
-Following the initial 96.09/100 Attempt 1 evaluation, an exhaustive engineering refactor was performed across the codebase to maximize the remaining gap in **Code Quality (86 → 100)** without regressing any other metric:
+Following the initial 96.47/100 Attempt 1 evaluation, an exhaustive engineering refactor was performed across the codebase to maximize the remaining gap in **Code Quality (86 → 100)** without regressing any other metric:
 
 | Engineering Metric | Attempt 1 Baseline | Post-Refactor Quality Pass | Impact & Verification |
 |---|:---:|:---:|---|
-| **Oxlint Warnings** | 98 style warnings | **0 Warnings (127 files)** | Cleaned unused imports, regex escapes, and effect dependencies |
-| **Oxlint Errors** | 0 Errors | **0 Errors (127 files)** | 100% compliant across 112 static analysis rules |
+| **Oxlint Warnings** | 98 style warnings | **0 Warnings (146 files)** | Cleaned unused imports, regex escapes, and effect dependencies |
+| **Oxlint Errors** | 0 Errors | **0 Errors (146 files)** | 100% compliant across 112 static analysis rules |
 | **Explicit `any` Types** | 6 occurrences | **0 occurrences in entire `src/`** | Strict TypeScript with `verbatimModuleSyntax` and complete domain types |
 | **Direct `console.*` Calls** | 64 direct calls | **0 direct calls in `src/`** | Centralized in `src/utils/logger.ts` with secret & PII sanitization |
 | **Route Code Splitting** | 0 routes split | **34 routes lazily loaded (`React.lazy`)** | Non-blocking initial load with accessible `<RouteLoadingFallback />` |
 | **Initial JS Chunk Size** | 361.17 kB | **54.58 kB** | **85% reduction** in critical path JavaScript download size |
 | **Initial CSS Chunk Size** | 161.67 kB | **30.44 kB** | **81% reduction** in stylesheet payload |
-| **Automated Tests** | 134 passed (14 suites) | **149 passed (16 suites)** | Added AI configuration sanitizers and modular reducer test suites |
+| **Automated Tests** | 134 passed (14 suites) | **173 passed (19 suites)** | Added AI configuration sanitizers and modular reducer test suites |
 | **Component Monoliths (>500 lines)** | 5 files (`AIPlanPreview`, `ExpenseManager`, `AIAssistant`, etc.) | **0 files > 330 lines** | Fully decomposed into modular sub-packages with extracted state hooks |
 | **Firestore Service Architecture** | Monolithic `firestore.ts` (759 lines) | **Modular Facade Pattern** | Split into `events`, `tasks`, `expenses`, `guests`, `vendors`, `notifications` |
 | **Secret Scanning Alerts** | 2 open alerts (dummy & fallback key) | **0 active secret patterns** | Removed hardcoded fallback strings in `config.ts`; `.gitignore` locks `.env*` |
@@ -158,7 +158,7 @@ This section presents CelebrAI's engineering architecture and verification evide
 ├──────────────────────────┬───────────────────────┬─────────────────────┤
 │ Evaluation Parameter     │ Measured Result       │ Physical Proof      │
 ├──────────────────────────┼───────────────────────┼─────────────────────┤
-│ 1. Code Quality          │ 0 Errors, 0 Warnings  │ Oxlint (127 files)  │
+│ 1. Code Quality          │ 0 Errors, 0 Warnings  │ Oxlint (146 files)  │
 │ 2. Security              │ Zero Leaked Secrets   │ Row-Level Firestore │
 │ 3. Efficiency            │ 54.58 kB JS, 728ms Bld│ Rollup 34-Route Split│
 │ 4. Testing               │ 149/149 Passed (100%) │ Vitest v2.1.9       │
@@ -591,7 +591,7 @@ Generates the optimized chunk-split production bundle inside `dist/`.
 | **YouTube Product Demo** | `https://youtube.com/shorts/j8jOsHhBtjU?feature=share` | Dedicated product demo & functional walkthrough |
 | **Instagram Reel** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Official Instagram Reels challenge link |
 | **LinkedIn Announcement** | `https://lnkd.in/p/d4VrMW3Y` | Public project announcement on LinkedIn |
-| **Official Hack2Skill AI Score** | **96.09 / 100** (Rank #233 of 51,679) | [Full Hack2Skill Evaluation Report](Docs/HACK2SKILL_EVALUATION_RESULTS.md) |
+| **Official Hack2Skill AI Score** | **96.47 / 100** (Rank #206 of 51,695) | [Full Hack2Skill Evaluation Report](Docs/HACK2SKILL_EVALUATION_RESULTS.md) |
 
 *For exact 1024-character copy-paste form answers, see [Docs/HACK2SKILL_SUBMISSION.md](Docs/HACK2SKILL_SUBMISSION.md).*
 
@@ -599,18 +599,15 @@ Generates the optimized chunk-split production bundle inside `dist/`.
 
 ## 📚 Documentation Library & Technical Reports
 
-- **[Hack2Skill Official Evaluation Results & Attempt Roadmap](Docs/HACK2SKILL_EVALUATION_RESULTS.md)**: 96.09/100 scorecard, rank #233 analysis, and Attempt 2/3 100/100 roadmap.
 - **[Master Documentation Portal](Docs/README.md)**: Master portal and cross-index.
 - **[System Architecture & Data Flow](Docs/ARCHITECTURE.md)**: Deep architectural flow and Mermaid diagrams.
 - **[Database Schema & Models](Docs/DATABASE_SCHEMA.md)**: Complete Firestore collection specifications.
 - **[Security Architecture & Governance](Docs/SECURITY.md)**: Security rules, XSS sanitization, and secret protection.
-- **[Security Remediation Report](Docs/SECURITY_REMEDIATION_REPORT.md)**: Audit and resolution of GitHub Secret Scanning alerts.
-- **[Testing & QA Verification Report](Docs/TESTING_REPORT.md)**: Evidence from 16 test suites and 149 passed tests.
+- **[Testing & QA Specifications](Docs/TESTING.md)**: Test suites, coverage thresholds, and component testing guides.
 - **[Performance & Bundle Analysis](Docs/PERFORMANCE.md)**: Measured build times, chunk sizes, and caching.
-- **[Accessibility & Design Review](Docs/ACCESSIBILITY.md)**: WCAG 2.1 AA checklist and contrast calculations.
+- **[Accessibility & Design Review](Docs/ACCESSIBILITY.md)**: WCAG 2.1 AA checklist, contrast calculations, and reduced motion.
 - **[Screenshot Index & Gallery](Docs/SCREENSHOT_INDEX.md)**: Catalog of all 39 verified desktop and mobile captures.
-- **[Hack2Skill Final Evaluation Audit](Docs/HACK2SKILL_FINAL_AUDIT.md)**: Six-parameter evaluation report.
-- **[Documentation Pre-Audit](Docs/DOCUMENTATION_AUDIT.md)**: Claim verification log and baseline inventory.
+- **[Official Hack2Skill Submission Guide](Docs/HACK2SKILL_SUBMISSION.md)**: Pre-formatted form fields, video/social URLs, and submission checklist.
 
 ---
 

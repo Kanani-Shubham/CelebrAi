@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ChevronLeft,
@@ -28,7 +28,6 @@ import { signInWithGoogle } from '../../services/firebase/auth';
 import { toast } from '../../components/ui/toast';
 import { logger } from '../../utils/logger';
 
-import type { TaskItem, BudgetItem, MilestoneItem } from './plan/types';
 import { PlanOverviewTab } from './plan/PlanOverviewTab';
 import { PlanTasksTab } from './plan/PlanTasksTab';
 import { PlanBudgetTab } from './plan/PlanBudgetTab';
@@ -40,6 +39,7 @@ import {
   MilestoneModal,
   AuthModal,
 } from './plan/PlanModals';
+import { usePlanModalsState } from './plan/usePlanModalsState';
 
 import './AIPlanPreview.css';
 
@@ -59,50 +59,17 @@ export function AIPlanPreview() {
   const [savingPlan, setSavingPlan] = useState(false);
   const [planSaved, setPlanSaved] = useState(false);
 
-  // Modals state
-  const [isOverviewModalOpen, setIsOverviewModalOpen] = useState(false);
-  const [overviewForm, setOverviewForm] = useState({
-    eventName: '',
-    conceptSummary: '',
-    location: '',
-    guestCount: 100,
-    budget: 0,
-  });
-  const [newThemeTag, setNewThemeTag] = useState('');
-
-  const [taskModalMode, setTaskModalMode] = useState<'add' | 'edit' | null>(null);
-  const [editingTaskIdx, setEditingTaskIdx] = useState<number | null>(null);
-  const [taskForm, setTaskForm] = useState<TaskItem>({
-    title: '',
-    category: 'General',
-    priority: 'medium',
-    suggestedDueDate: null,
-  });
-
-  const [budgetModalMode, setBudgetModalMode] = useState<'add' | 'edit' | null>(null);
-  const [editingBudgetIdx, setEditingBudgetIdx] = useState<number | null>(null);
-  const [budgetForm, setBudgetForm] = useState({
-    category: '',
-    amount: '',
-    notes: '',
-  });
-
-  const [milestoneModalMode, setMilestoneModalMode] = useState<'add' | 'edit' | null>(null);
-  const [editingMilestoneIdx, setEditingMilestoneIdx] = useState<number | null>(null);
-  const [milestoneForm, setMilestoneForm] = useState<{
-    title: string;
-    description: string;
-    targetDate: string | null;
-  }>({
-    title: '',
-    description: '',
-    targetDate: null,
-  });
-
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
 
-  // 1. Resolve target event from query params or localStorage
+  const modals = usePlanModalsState({
+    plan,
+    setPlan,
+    targetEvent,
+    setTargetEvent,
+  });
+
+  // Resolve target event from query params or localStorage
   useEffect(() => {
     async function resolveEvent() {
       if (queryEventId) {
@@ -163,41 +130,6 @@ export function AIPlanPreview() {
     resolveEvent();
   }, [queryEventId, activeEvent]);
 
-  // 2. Fetch or Generate AI Plan
-  useEffect(() => {
-    let ignore = false;
-    const evt = targetEvent;
-    if (!evt || evt.savedPlan) return;
-
-    async function generate(e: Record<string, unknown>) {
-      const eventName = String(e.eventName || 'Our Celebration');
-      const eventType = String(e.eventType || 'Celebration');
-      const eventDate = String(e.eventDate || e.date || 'TBD');
-      const location = String(e.location || 'India');
-      const guestCount = Number(e.guestCount) || 100;
-      const budget = Number(e.budget) || 0;
-      const currency = String(e.currency || '₹');
-      const theme = String(e.theme || 'Classic Elegance');
-      const requirements = String(e.requirements || '');
-
-      try {
-        const result = await generateEventPlan(
-          { eventName, eventType, eventDate, location, guestCount, budget, currency, theme, requirements },
-          idToken || ''
-        );
-        if (ignore) return;
-        const validated = validateAIPlan(result);
-        setPlan(validated);
-      } catch (err) {
-        if (!ignore) setError((err as Error).message || 'Failed to generate AI plan.');
-      } finally {
-        if (!ignore) setLoading(false);
-      }
-    }
-    void generate(evt);
-    return () => { ignore = true; };
-  }, [targetEvent, idToken]);
-
   const fetchOrGeneratePlan = useCallback(async () => {
     const evt = targetEvent;
     if (!evt) return;
@@ -226,6 +158,28 @@ export function AIPlanPreview() {
     }
   }, [targetEvent, idToken]);
 
+  useEffect(() => {
+    if (!targetEvent) return;
+
+    let isMounted = true;
+    async function loadData() {
+      setLoading(true);
+      setError(null);
+      try {
+        await fetchOrGeneratePlan();
+      } catch (err) {
+        if (isMounted) setError((err as Error).message || 'Failed to generate plan.');
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, [targetEvent, fetchOrGeneratePlan]);
+
   const totalAllocatedBudget = plan?.budgetBreakdown
     ? plan.budgetBreakdown.reduce((sum, b) => sum + (Number(b.estimatedAmount) || 0), 0)
     : 0;
@@ -233,278 +187,6 @@ export function AIPlanPreview() {
   const targetBudget = Number(targetEvent?.budget) || 0;
   const budgetDifference = targetBudget - totalAllocatedBudget;
 
-  // Handlers for Overview
-  const openOverviewModal = () => {
-    if (!targetEvent || !plan) return;
-    setOverviewForm({
-      eventName: String(targetEvent.eventName || 'Our Celebration'),
-      conceptSummary: plan.eventSummary,
-      location: String(targetEvent.location || 'India'),
-      guestCount: Number(targetEvent.guestCount) || 100,
-      budget: Number(targetEvent.budget) || 0,
-    });
-    setIsOverviewModalOpen(true);
-  };
-
-  const handleSaveOverview = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!overviewForm.eventName.trim()) {
-      toast.error('Event title cannot be empty.');
-      return;
-    }
-    setTargetEvent((prev) =>
-      prev
-        ? {
-            ...prev,
-            eventName: overviewForm.eventName.trim(),
-            location: overviewForm.location.trim(),
-            guestCount: overviewForm.guestCount,
-            budget: overviewForm.budget,
-          }
-        : null
-    );
-
-    setPlan((prev) =>
-      prev
-        ? {
-            ...prev,
-            eventSummary: overviewForm.conceptSummary.trim(),
-          }
-        : null
-    );
-
-    setIsOverviewModalOpen(false);
-    toast.success('Event details updated.');
-  };
-
-  const handleAddThemeTag = (e: React.FormEvent) => {
-    e.preventDefault();
-    const tag = newThemeTag.trim();
-    if (!tag || !plan) return;
-    if (plan.themeSuggestions.includes(tag)) {
-      toast.error('Theme already exists.');
-      return;
-    }
-    setPlan({
-      ...plan,
-      themeSuggestions: [...plan.themeSuggestions, tag],
-    });
-    setNewThemeTag('');
-    toast.success('Theme suggestion added.');
-  };
-
-  const handleDeleteThemeTag = (tagToRemove: string) => {
-    if (!plan) return;
-    setPlan({
-      ...plan,
-      themeSuggestions: plan.themeSuggestions.filter((t) => t !== tagToRemove),
-    });
-  };
-
-  // Handlers for Tasks
-  const openAddTask = () => {
-    setTaskForm({
-      title: '',
-      category: 'General',
-      priority: 'medium',
-      suggestedDueDate: '',
-    });
-    setTaskModalMode('add');
-  };
-
-  const openEditTask = (idx: number) => {
-    if (!plan || !plan.tasks[idx]) return;
-    const t = plan.tasks[idx];
-    setTaskForm({
-      title: t.title,
-      category: t.category,
-      priority: t.priority as 'high' | 'medium' | 'low',
-      suggestedDueDate: t.suggestedDueDate || '',
-    });
-    setEditingTaskIdx(idx);
-    setTaskModalMode('edit');
-  };
-
-  const handleSaveTask = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!plan) return;
-    if (!taskForm.title.trim()) {
-      toast.error('Task title is required.');
-      return;
-    }
-
-    if (taskModalMode === 'add') {
-      setPlan({
-        ...plan,
-        tasks: [taskForm, ...plan.tasks],
-      });
-      toast.success('New task added to plan.');
-    } else if (taskModalMode === 'edit' && editingTaskIdx !== null) {
-      const updated = [...plan.tasks];
-      updated[editingTaskIdx] = taskForm;
-      setPlan({
-        ...plan,
-        tasks: updated,
-      });
-      toast.success('Task updated successfully.');
-    }
-    setTaskModalMode(null);
-    setEditingTaskIdx(null);
-  };
-
-  const handleDeleteTask = (idx: number) => {
-    if (!plan) return;
-    const taskToDelete = plan.tasks[idx];
-    if (window.confirm(`Delete task "${taskToDelete.title}"?`)) {
-      setPlan({
-        ...plan,
-        tasks: plan.tasks.filter((_, i) => i !== idx),
-      });
-      toast.success('Task deleted.');
-    }
-  };
-
-  // Handlers for Budget
-  const openAddBudget = () => {
-    setBudgetForm({
-      category: '',
-      amount: '',
-      notes: '',
-    });
-    setBudgetModalMode('add');
-  };
-
-  const openEditBudget = (idx: number) => {
-    if (!plan || !plan.budgetBreakdown[idx]) return;
-    const b = plan.budgetBreakdown[idx];
-    setBudgetForm({
-      category: b.category,
-      amount: String(b.estimatedAmount),
-      notes: b.notes || '',
-    });
-    setEditingBudgetIdx(idx);
-    setBudgetModalMode('edit');
-  };
-
-  const handleSaveBudget = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!plan) return;
-    if (!budgetForm.category.trim()) {
-      toast.error('Category name is required.');
-      return;
-    }
-    const num = parseFloat(budgetForm.amount);
-    if (isNaN(num) || num < 0) {
-      toast.error('Please enter a valid, non-negative budget amount.');
-      return;
-    }
-
-    const newItem: BudgetItem = {
-      category: budgetForm.category.trim(),
-      estimatedAmount: num,
-      currency: '₹',
-      notes: budgetForm.notes.trim() || undefined,
-    };
-
-    if (budgetModalMode === 'add') {
-      setPlan({
-        ...plan,
-        budgetBreakdown: [...plan.budgetBreakdown, newItem],
-      });
-      toast.success('Budget category added.');
-    } else if (budgetModalMode === 'edit' && editingBudgetIdx !== null) {
-      const updated = [...plan.budgetBreakdown];
-      updated[editingBudgetIdx] = newItem;
-      setPlan({
-        ...plan,
-        budgetBreakdown: updated,
-      });
-      toast.success('Budget category updated.');
-    }
-    setBudgetModalMode(null);
-    setEditingBudgetIdx(null);
-  };
-
-  const handleDeleteBudget = (idx: number) => {
-    if (!plan) return;
-    const item = plan.budgetBreakdown[idx];
-    if (window.confirm(`Remove budget allocation for "${item.category}"?`)) {
-      setPlan({
-        ...plan,
-        budgetBreakdown: plan.budgetBreakdown.filter((_, i) => i !== idx),
-      });
-      toast.success('Budget item removed.');
-    }
-  };
-
-  // Handlers for Milestones
-  const openAddMilestone = () => {
-    setMilestoneForm({
-      title: '',
-      description: '',
-      targetDate: null,
-    });
-    setMilestoneModalMode('add');
-  };
-
-  const openEditMilestone = (idx: number) => {
-    if (!plan || !plan.milestones[idx]) return;
-    const m = plan.milestones[idx];
-    setMilestoneForm({
-      title: m.title,
-      description: m.description,
-      targetDate: m.targetDate ?? null,
-    });
-    setEditingMilestoneIdx(idx);
-    setMilestoneModalMode('edit');
-  };
-
-  const handleSaveMilestone = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!plan) return;
-    if (!milestoneForm.title.trim()) {
-      toast.error('Milestone title is required.');
-      return;
-    }
-
-    const newMilestone: MilestoneItem = {
-      title: milestoneForm.title.trim(),
-      description: milestoneForm.description.trim(),
-      targetDate: null,
-    };
-
-    if (milestoneModalMode === 'add') {
-      setPlan({
-        ...plan,
-        milestones: [...plan.milestones, newMilestone],
-      });
-      toast.success('New milestone added.');
-    } else if (milestoneModalMode === 'edit' && editingMilestoneIdx !== null) {
-      const updated = [...plan.milestones];
-      updated[editingMilestoneIdx] = newMilestone;
-      setPlan({
-        ...plan,
-        milestones: updated,
-      });
-      toast.success('Milestone updated.');
-    }
-    setMilestoneModalMode(null);
-    setEditingMilestoneIdx(null);
-  };
-
-  const handleDeleteMilestone = (idx: number) => {
-    if (!plan) return;
-    const m = plan.milestones[idx];
-    if (window.confirm(`Delete milestone "${m.title}"?`)) {
-      setPlan({
-        ...plan,
-        milestones: plan.milestones.filter((_, i) => i !== idx),
-      });
-      toast.success('Milestone removed.');
-    }
-  };
-
-  // Save approved plan
   const handleSavePlan = async () => {
     if (!plan || !targetEvent || planSaved || savingPlan) return;
 
@@ -612,22 +294,7 @@ export function AIPlanPreview() {
           Tailored blueprint generated for <strong>{eventName}</strong> based on your preferences.
         </p>
         {plan?._model === AI_OFFLINE_ENGINE_ID && (
-          <div
-            className="plan-offline-notice"
-            role="status"
-            style={{
-              marginTop: '12px',
-              padding: '8px 14px',
-              borderRadius: '8px',
-              background: 'rgba(217, 119, 6, 0.1)',
-              border: '1px solid rgba(217, 119, 6, 0.3)',
-              color: '#b45309',
-              fontSize: 'var(--text-sm)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
+          <div className="plan-offline-notice" role="status">
             <span>ℹ️</span>
             <span>Deterministic offline blueprint (AI proxy unavailable — generated locally by template engine)</span>
           </div>
@@ -677,20 +344,20 @@ export function AIPlanPreview() {
                 guestCount={guestCount}
                 targetBudget={targetBudget}
                 plan={plan}
-                newThemeTag={newThemeTag}
-                onOpenOverviewModal={openOverviewModal}
-                onNewThemeTagChange={setNewThemeTag}
-                onAddThemeTag={handleAddThemeTag}
-                onDeleteThemeTag={handleDeleteThemeTag}
+                newThemeTag={modals.newThemeTag}
+                onOpenOverviewModal={modals.openOverviewModal}
+                onNewThemeTagChange={modals.setNewThemeTag}
+                onAddThemeTag={modals.handleAddThemeTag}
+                onDeleteThemeTag={modals.handleDeleteThemeTag}
               />
             )}
 
             {activeTab === 'tasks' && (
               <PlanTasksTab
                 tasks={plan.tasks}
-                onOpenAddTask={openAddTask}
-                onOpenEditTask={openEditTask}
-                onDeleteTask={handleDeleteTask}
+                onOpenAddTask={modals.openAddTask}
+                onOpenEditTask={modals.openEditTask}
+                onDeleteTask={modals.handleDeleteTask}
               />
             )}
 
@@ -700,18 +367,18 @@ export function AIPlanPreview() {
                 totalAllocatedBudget={totalAllocatedBudget}
                 targetBudget={targetBudget}
                 budgetDifference={budgetDifference}
-                onOpenAddBudget={openAddBudget}
-                onOpenEditBudget={openEditBudget}
-                onDeleteBudget={handleDeleteBudget}
+                onOpenAddBudget={modals.openAddBudget}
+                onOpenEditBudget={modals.openEditBudget}
+                onDeleteBudget={modals.handleDeleteBudget}
               />
             )}
 
             {activeTab === 'timeline' && (
               <PlanTimelineTab
                 milestones={plan.milestones}
-                onOpenAddMilestone={openAddMilestone}
-                onOpenEditMilestone={openEditMilestone}
-                onDeleteMilestone={handleDeleteMilestone}
+                onOpenAddMilestone={modals.openAddMilestone}
+                onOpenEditMilestone={modals.openEditMilestone}
+                onDeleteMilestone={modals.handleDeleteMilestone}
               />
             )}
 
@@ -746,35 +413,35 @@ export function AIPlanPreview() {
 
       {/* Modals */}
       <OverviewModal
-        isOpen={isOverviewModalOpen}
-        form={overviewForm}
-        onFormChange={setOverviewForm}
-        onClose={() => setIsOverviewModalOpen(false)}
-        onSave={handleSaveOverview}
+        isOpen={modals.isOverviewModalOpen}
+        form={modals.overviewForm}
+        onFormChange={modals.setOverviewForm}
+        onClose={() => modals.setIsOverviewModalOpen(false)}
+        onSave={modals.handleSaveOverview}
       />
 
       <TaskModal
-        mode={taskModalMode}
-        form={taskForm}
-        onFormChange={setTaskForm}
-        onClose={() => setTaskModalMode(null)}
-        onSave={handleSaveTask}
+        mode={modals.taskModalMode}
+        form={modals.taskForm}
+        onFormChange={modals.setTaskForm}
+        onClose={() => modals.setTaskModalMode(null)}
+        onSave={modals.handleSaveTask}
       />
 
       <BudgetModal
-        mode={budgetModalMode}
-        form={budgetForm}
-        onFormChange={setBudgetForm}
-        onClose={() => setBudgetModalMode(null)}
-        onSave={handleSaveBudget}
+        mode={modals.budgetModalMode}
+        form={modals.budgetForm}
+        onFormChange={modals.setBudgetForm}
+        onClose={() => modals.setBudgetModalMode(null)}
+        onSave={modals.handleSaveBudget}
       />
 
       <MilestoneModal
-        mode={milestoneModalMode}
-        form={milestoneForm}
-        onFormChange={setMilestoneForm}
-        onClose={() => setMilestoneModalMode(null)}
-        onSave={handleSaveMilestone}
+        mode={modals.milestoneModalMode}
+        form={modals.milestoneForm}
+        onFormChange={modals.setMilestoneForm}
+        onClose={() => modals.setMilestoneModalMode(null)}
+        onSave={modals.handleSaveMilestone}
       />
 
       <AuthModal

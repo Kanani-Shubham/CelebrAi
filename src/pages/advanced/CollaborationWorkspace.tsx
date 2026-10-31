@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { UserPlus, MoreVertical, ShieldCheck, Edit3, Eye, ArrowRight } from 'lucide-react';
-import { INITIAL_TEAM, type TeamMember } from '../../data/mockData';
+import { INITIAL_TEAM, type TeamMember } from '../../data/seed';
 import './CollaborationWorkspace.css';
 
 export function CollaborationWorkspace() {

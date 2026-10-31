@@ -7,6 +7,7 @@
  */
 
 import { PRIMARY_MODEL, FALLBACK_MODEL, LEGACY_FALLBACK_MODEL, GROQ_BASE_URL } from './config.js';
+import { logger } from './logger.js';
 
 /**
  * Calls Groq chat completion API with a specified model.
@@ -97,13 +98,13 @@ export async function callGroq(apiKey, messages, options = {}) {
       const status = /** @type {any} */ (err).status;
       // Fallback on 400 (model bad request) or 404 (model not found) or 401
       if (status === 400 || status === 404) {
-        console.warn(`[callGroq] Primary model "${model}" failed (${status}), trying fallback "${FALLBACK_MODEL}"`);
+        logger.warn(`[callGroq] Primary model "${model}" failed (${status}), trying fallback "${FALLBACK_MODEL}"`);
         try {
           const fallbackRes = await callGroqWithModel(apiKey, FALLBACK_MODEL, messages, temperature, maxTokens, controller.signal);
           clearTimeout(timer);
           return fallbackRes;
         } catch {
-          console.warn(`[callGroq] Secondary fallback "${FALLBACK_MODEL}" failed, trying "${LEGACY_FALLBACK_MODEL}"`);
+          logger.warn(`[callGroq] Secondary fallback "${FALLBACK_MODEL}" failed, trying "${LEGACY_FALLBACK_MODEL}"`);
           const legacyRes = await callGroqWithModel(apiKey, LEGACY_FALLBACK_MODEL, messages, temperature, maxTokens, controller.signal);
           clearTimeout(timer);
           return legacyRes;

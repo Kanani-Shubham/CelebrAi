@@ -17,20 +17,8 @@ export function SubscriptionPlans() {
       </div>
 
       {/* Honest sandbox notice */}
-      <div style={{
-        background: '#EFF6FF',
-        border: '1px solid #BFDBFE',
-        borderRadius: 'var(--radius-lg)',
-        padding: '12px 16px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        maxWidth: '560px',
-        margin: '0 auto 20px',
-        fontSize: '13px',
-        color: '#1E40AF',
-      }}>
-        <Info size={18} style={{ flexShrink: 0 }} />
+      <div className="sub-sandbox-banner">
+        <Info size={18} className="flex-shrink-0" />
         <span>
           <strong>Evaluation Preview:</strong> Payment gateway integrations are running in sandbox preview mode. No live card charges will be billed.
         </span>
