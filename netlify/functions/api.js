@@ -96,7 +96,8 @@ export async function handler(event, _context) {
       body: JSON.stringify(result.body),
     };
   } catch (err) {
-    logger.error('[Netlify Function Error]', err.message);
+    const errMsg = err instanceof Error ? err.message : String(err);
+    logger.error('[Netlify Function Error]', errMsg);
     return {
       statusCode: 500,
       headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },

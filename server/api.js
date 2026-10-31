@@ -85,10 +85,15 @@ app.post('/api/ai/decor', async (req, res) => {
 });
 
 // ---- Global Error Handler ----
-app.use((err, _req, res, _next) => {
-  logger.error('[Express Global Error]', err.message);
+/**
+ * @type {(err: any, req: import('express').Request, res: import('express').Response, next: import('express').NextFunction) => void}
+ */
+const errorHandler = (err, _req, res, _next) => {
+  const errMsg = err && typeof err === 'object' && 'message' in err ? String(err.message) : String(err);
+  logger.error('[Express Global Error]', errMsg);
   res.status(500).json({ error: 'Internal server error' });
-});
+};
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   logger.info(`CelebrAI Express Adapter listening on http://localhost:${PORT} with model: ${PRIMARY_MODEL}`);

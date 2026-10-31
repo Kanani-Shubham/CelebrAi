@@ -24,16 +24,26 @@ const MODEL = PRIMARY_MODEL;
 /**
  * Deterministic offline blueprint generator.
  * Used if Groq API is unreachable or in offline demonstration mode.
+ * @param {{
+ *   safeName?: string;
+ *   safeType?: string;
+ *   safeDate?: string;
+ *   safeLocation?: string;
+ *   safeGuests?: number;
+ *   safeBudget?: number;
+ *   safeCurrency?: string;
+ *   safeTheme?: string;
+ * }} params
  */
 export function generateFallbackPlan({
-  safeName,
-  safeType,
-  safeDate,
-  safeLocation,
-  safeGuests,
-  safeBudget,
-  safeCurrency,
-  safeTheme,
+  safeName = '',
+  safeType = 'Event',
+  safeDate = 'TBD',
+  safeLocation = 'India',
+  safeGuests = 100,
+  safeBudget = 0,
+  safeCurrency = '₹',
+  safeTheme = 'Classic Elegant',
 }) {
   const budgetBreakdown = [
     { category: 'Venue', estimatedAmount: Math.round(safeBudget * 0.4), currency: safeCurrency, notes: 'Venue rental, setup, and basic AV' },
@@ -61,6 +71,7 @@ export function generateFallbackPlan({
   const tasks = allTasks.slice(0, taskCount);
 
   const eventTs = safeDate && safeDate !== 'TBD' ? new Date(safeDate).getTime() : null;
+  /** @param {number} daysBeforeEvent */
   function offsetDate(daysBeforeEvent) {
     if (!eventTs || isNaN(eventTs)) return null;
     const d = new Date(eventTs - daysBeforeEvent * 86400000);
@@ -101,6 +112,8 @@ export function generateFallbackPlan({
 /**
  * Common security gate for API handlers.
  * Verifies Rate Limit and Firebase Authentication Token.
+ * @param {string | undefined} authHeader
+ * @param {string} clientIp
  */
 async function enforceSecurity(authHeader, clientIp) {
   const rate = checkRateLimit(clientIp);
@@ -140,8 +153,24 @@ export function handleHealth() {
 
 /**
  * AI Chat completion handler.
+ * @param {{
+ *   body?: {
+ *     messages?: Array<{ role?: string; content?: string }>;
+ *     eventContext?: {
+ *       eventName?: string;
+ *       eventType?: string;
+ *       budget?: number;
+ *       guestCount?: number;
+ *       eventDate?: string;
+ *       location?: string;
+ *       currency?: string;
+ *     };
+ *   };
+ *   authHeader?: string;
+ *   clientIp?: string;
+ * }} options
  */
-export async function handleChat({ body = {}, authHeader, clientIp }) {
+export async function handleChat({ body = {}, authHeader, clientIp = 'unknown' }) {
   const securityViolation = await enforceSecurity(authHeader, clientIp);
   if (securityViolation) return securityViolation;
 
@@ -212,7 +241,8 @@ CRITICAL BEHAVIOR INSTRUCTIONS:
     reply = groqRes.content;
     usedModel = groqRes.model;
   } catch (groqErr) {
-    logger.warn('[handleChat] Groq unavailable, applying resilient response:', groqErr.message);
+    const groqErrMsg = groqErr instanceof Error ? groqErr.message : String(groqErr);
+    logger.warn('[handleChat] Groq unavailable, applying resilient response:', groqErrMsg);
     const lower = lastUserMsg.toLowerCase();
     if (/^(hi|hello|hey|greetings|good\s*(morning|afternoon|evening))\b/i.test(lower)) {
       reply = "Hello! I'm CelebrAI, your personal celebration co-planner. How can I assist you with your event today?";
@@ -226,8 +256,23 @@ CRITICAL BEHAVIOR INSTRUCTIONS:
 
 /**
  * Event Plan Generation handler.
+ * @param {{
+ *   body?: {
+ *     eventType?: string;
+ *     eventName?: string;
+ *     eventDate?: string;
+ *     location?: string;
+ *     guestCount?: number;
+ *     budget?: number;
+ *     currency?: string;
+ *     theme?: string;
+ *     requirements?: string;
+ *   };
+ *   authHeader?: string;
+ *   clientIp?: string;
+ * }} options
  */
-export async function handleGeneratePlan({ body = {}, authHeader, clientIp }) {
+export async function handleGeneratePlan({ body = {}, authHeader, clientIp = 'unknown' }) {
   const securityViolation = await enforceSecurity(authHeader, clientIp);
   if (securityViolation) return securityViolation;
 
@@ -310,7 +355,8 @@ Requirements: 8-12 tasks, 5-7 budget items summing close to ${safeBudget}, 4-5 m
 
     return { status: 200, body: { ...plan, _model: groqRes.model } };
   } catch (err) {
-    logger.warn('[handleGeneratePlan] Groq plan generation failed, invoking deterministic fallback:', err.message);
+    const errMsg = err instanceof Error ? err.message : String(err);
+    logger.warn('[handleGeneratePlan] Groq plan generation failed, invoking deterministic fallback:', errMsg);
     const fallback = generateFallbackPlan({
       safeName,
       safeType,
@@ -327,8 +373,22 @@ Requirements: 8-12 tasks, 5-7 budget items summing close to ${safeBudget}, 4-5 m
 
 /**
  * Invitation text generation handler.
+ * @param {{
+ *   body?: {
+ *     eventDetails?: {
+ *       eventName?: string;
+ *       eventDate?: string;
+ *       location?: string;
+ *       hostName?: string;
+ *     };
+ *     tone?: string;
+ *     type?: string;
+ *   };
+ *   authHeader?: string;
+ *   clientIp?: string;
+ * }} options
  */
-export async function handleGenerateInvitation({ body = {}, authHeader, clientIp }) {
+export async function handleGenerateInvitation({ body = {}, authHeader, clientIp = 'unknown' }) {
   const securityViolation = await enforceSecurity(authHeader, clientIp);
   if (securityViolation) return securityViolation;
 
@@ -359,7 +419,8 @@ Write only the invitation text itself — elegant, warm, and ready to copy. No i
     );
     return { status: 200, body: { text: groqRes.content, model: groqRes.model } };
   } catch (err) {
-    logger.warn('[handleGenerateInvitation] Groq failed, applying template:', err.message);
+    const errMsg = err instanceof Error ? err.message : String(err);
+    logger.warn('[handleGenerateInvitation] Groq failed, applying template:', errMsg);
     const text = `Together with their families,\n${safeHost}\ncordially invite you to celebrate\n${safeName}\n\nDate: ${safeDate}\nVenue: ${safeLoc || 'To be announced'}\n\nYour presence and blessings will make our special day complete.`;
     return { status: 200, body: { text, model: 'fallback-template' } };
   }
@@ -367,8 +428,19 @@ Write only the invitation text itself — elegant, warm, and ready to copy. No i
 
 /**
  * Decor suggestions handler.
+ * @param {{
+ *   body?: {
+ *     eventDetails?: {
+ *       eventType?: string;
+ *       guestCount?: number;
+ *     };
+ *     style?: string;
+ *   };
+ *   authHeader?: string;
+ *   clientIp?: string;
+ * }} options
  */
-export async function handleSuggestDecor({ body = {}, authHeader, clientIp }) {
+export async function handleSuggestDecor({ body = {}, authHeader, clientIp = 'unknown' }) {
   const securityViolation = await enforceSecurity(authHeader, clientIp);
   if (securityViolation) return securityViolation;
 
@@ -406,7 +478,8 @@ export async function handleSuggestDecor({ body = {}, authHeader, clientIp }) {
 
     return { status: 200, body: { ideas: ideas.map(String), model: groqRes.model } };
   } catch (err) {
-    logger.warn('[handleSuggestDecor] Groq failed, applying curated list:', err.message);
+    const errMsg = err instanceof Error ? err.message : String(err);
+    logger.warn('[handleSuggestDecor] Groq failed, applying curated list:', errMsg);
     const ideas = [
       `Fairy light ceiling canopy with cascading floral drops for a ${safeStyle} feel.`,
       `Customized entrance welcome arch embellished with ${safeStyle} botanicals.`,
