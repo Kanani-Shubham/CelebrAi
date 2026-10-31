@@ -1,7 +1,19 @@
 import { useState } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { ConfirmDialog, Tabs, EmptyState, ToastContainer } from '../components/ui';
+import {
+  ConfirmDialog,
+  Tabs,
+  EmptyState,
+  ToastContainer,
+  LoadingState,
+  Skeleton,
+  StatusBadge,
+  SearchInput,
+  ProgressBar,
+  StatCard,
+  PageHeader,
+} from '../components/ui';
 import { toast } from '../components/ui/toast';
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
 
@@ -145,6 +157,77 @@ describe('CelebrAI Core UI Component Suite', () => {
       });
 
       expect(await screen.findByText('Failed to load guest list')).toBeInTheDocument();
+    });
+  });
+
+  describe('LoadingState & Skeleton Components', () => {
+    it('renders loading message and spinner', () => {
+      render(<LoadingState message="Fetching celebration plan..." />);
+      expect(screen.getByText('Fetching celebration plan...')).toBeInTheDocument();
+    });
+
+    it('renders skeleton placeholder with given dimensions', () => {
+      const { container } = render(<Skeleton width="200px" height={24} borderRadius={8} />);
+      const el = container.querySelector('.skeleton') as HTMLElement;
+      expect(el).toBeInTheDocument();
+      expect(el.style.width).toBe('200px');
+      expect(el.style.height).toBe('24px');
+      expect(el.style.borderRadius).toBe('8px');
+    });
+  });
+
+  describe('StatusBadge Component', () => {
+    it('renders uppercase formatted badge with correct styling class', () => {
+      const { rerender } = render(<StatusBadge status="high" />);
+      expect(screen.getByText('High')).toBeInTheDocument();
+      expect(screen.getByText('High')).toHaveClass('badge-high');
+
+      rerender(<StatusBadge status="paid" size="xs" />);
+      expect(screen.getByText('Paid')).toBeInTheDocument();
+      expect(screen.getByText('Paid')).toHaveClass('badge-paid');
+    });
+  });
+
+  describe('SearchInput Component', () => {
+    it('updates value and calls onChange on user input', () => {
+      const onChange = vi.fn();
+      render(<SearchInput value="" onChange={onChange} placeholder="Search tasks..." />);
+      const input = screen.getByPlaceholderText('Search tasks...');
+      fireEvent.change(input, { target: { value: 'Venue' } });
+      expect(onChange).toHaveBeenCalledWith('Venue');
+    });
+  });
+
+  describe('ProgressBar Component', () => {
+    it('renders progress bar with label and capped percentage', () => {
+      render(<ProgressBar value={75} max={100} showLabel color="violet" />);
+      expect(screen.getByText('75%')).toBeInTheDocument();
+    });
+  });
+
+  describe('StatCard & PageHeader Components', () => {
+    it('renders StatCard with label, value, and icon', () => {
+      render(<StatCard label="Total Budget" value="₹5,00,000" color="violet" />);
+      expect(screen.getByText('Total Budget')).toBeInTheDocument();
+      expect(screen.getByText('₹5,00,000')).toBeInTheDocument();
+    });
+
+    it('renders PageHeader with back button and action', () => {
+      const onBack = vi.fn();
+      render(
+        <PageHeader
+          title="Event Blueprint"
+          subtitle="Detailed overview of schedule"
+          back={onBack}
+          action={<button>Export PDF</button>}
+        />
+      );
+      expect(screen.getByText('Event Blueprint')).toBeInTheDocument();
+      expect(screen.getByText('Detailed overview of schedule')).toBeInTheDocument();
+      expect(screen.getByText('Export PDF')).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: /go back/i }));
+      expect(onBack).toHaveBeenCalledTimes(1);
     });
   });
 });

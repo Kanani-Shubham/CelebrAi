@@ -38,3 +38,4 @@ export function DashboardCountdownHero({ event, countdown }: DashboardCountdownH
     </div>
   );
 }
+

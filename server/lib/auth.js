@@ -94,3 +94,4 @@ export async function verifyFirebaseToken(authHeader) {
     email: payload.email,
   };
 }
+

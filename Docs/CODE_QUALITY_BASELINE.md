@@ -75,3 +75,4 @@ Despite passing static checks, an in-depth audit of the codebase revealed severa
    - Extract focused sub-components from `AIAssistant.tsx` (Chat message list, composer, header) and `HomeDashboard.tsx`.
 5. **Batch 5 — Test Verification & Final Audit**:
    - Verify `npm run lint`, `npx tsc -b`, `npm test`, and `npm run build` after every single batch.
+

@@ -29,6 +29,7 @@ export function generateFallbackPlan({
   safeName,
   safeType,
   safeDate,
+  safeLocation,
   safeGuests,
   safeBudget,
   safeCurrency,
@@ -74,8 +75,11 @@ export function generateFallbackPlan({
     { title: 'Event day execution', targetDate: offsetDate(0), description: 'On-site coordination, vendor arrivals, and schedule management.' },
   ];
 
+  const locationSuffix = safeLocation && safeLocation !== 'India' ? ` in ${safeLocation}` : '';
+  const titlePart = safeName ? ` "${safeName}"` : '';
+
   return {
-    eventSummary: `Master blueprint for ${safeName}: A meticulously organized ${safeType.toLowerCase()} designed for ${safeGuests} guests with a ${safeTheme.toLowerCase()} ambiance, managed within ${safeCurrency} ${safeBudget.toLocaleString('en-IN')}.`,
+    eventSummary: `A meticulously organized ${safeType.toLowerCase()}${titlePart}${locationSuffix} designed for ${safeGuests} guests with a ${safeTheme.toLowerCase()} ambiance, managed within ${safeCurrency} ${safeBudget.toLocaleString('en-IN')}.`,
     themeSuggestions: [
       `${safeTheme} Classic`,
       'Minimalist Modern Elegance',
@@ -413,3 +417,4 @@ export async function handleSuggestDecor({ body = {}, authHeader, clientIp }) {
     return { status: 200, body: { ideas, model: 'fallback-template' } };
   }
 }
+

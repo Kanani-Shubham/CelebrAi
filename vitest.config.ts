@@ -7,8 +7,6 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    pool: 'forks',
-    testTimeout: 15000,
     setupFiles: ['./src/__tests__/setupTests.ts'],
     coverage: {
       provider: 'v8',
@@ -19,6 +17,8 @@ export default defineConfig({
         'src/utils/taskCalculations.ts',
         'src/utils/dateUtils.ts',
         'src/components/ui/toast.ts',
+        'src/components/ui/index.tsx',
+        'src/components/common/ErrorBoundary.tsx',
         'src/services/storage/indexedDBAvatar.ts',
       ],
       thresholds: {

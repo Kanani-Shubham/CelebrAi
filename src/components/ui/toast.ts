@@ -31,3 +31,4 @@ export function subscribeToasts(listener: (toasts: Toast[]) => void) {
     toastListeners = toastListeners.filter(fn => fn !== listener);
   };
 }
+
