@@ -15,7 +15,7 @@
 | **Public GitHub Repository Link** | `https://github.com/Kanani-Shubham/CelebrAi` | Verified public repository; clean Git tree under 10 MB. |
 | **Project Deployed Link** | `https://celebr-ai.netlify.app/` | Fully functional, live production deployment on Netlify. |
 | **Project Demo Video Submission** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Official project demo video walkthrough. |
-| **LinkedIn Post** | `[ADD_PUBLIC_LINKEDIN_POST_URL]` | Direct URL to the public LinkedIn post showcasing CelebrAI (do NOT use profile URL). |
+| **LinkedIn Post** | `https://lnkd.in/p/d4VrMW3Y` | Direct URL to the public LinkedIn announcement showcasing CelebrAI. |
 | **Instagram Reels Challenge URL** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Separate submission track for the Hack2Skill Instagram Reels Challenge. |
 
 > **IMPORTANT SEPARATION NOTE:** The Instagram Reel link (`https://www.instagram.com/reel/DfJckDCIOv7/`) belongs exclusively in the Instagram Reels submission field. Do not place the Instagram Reel URL in the LinkedIn field.
@@ -58,5 +58,5 @@ All AI calls pass through isolated server-side proxies (Express & Netlify Functi
 - [x] **Static Code Analysis**: 0 Oxlint errors across 78 files; clean TypeScript compilation (`tsc -b`).
 - [x] **Screenshot Evidence**: 39 verified screenshots committed in `Docs/screenshots/` (21 desktop, 18 mobile).
 - [x] **Demo Video URL Attached**: Verified live at `https://www.instagram.com/reel/DfJckDCIOv7/`.
-- [ ] **LinkedIn URL Attached**: Replace `[ADD_PUBLIC_LINKEDIN_POST_URL]` after publishing.
+- [x] **LinkedIn URL Attached**: Verified live at `https://lnkd.in/p/d4VrMW3Y`.
 

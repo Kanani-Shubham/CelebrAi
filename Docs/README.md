@@ -49,7 +49,7 @@ Audit of CelebrAI's editorial luxury aesthetic against WCAG 2.1 AA standards. Hi
 Catalog indexing all **39 verified screen captures** (21 high-resolution desktop 1920×1080 and 18 mobile responsive captures), complete with filenames, pixel dimensions, file sizes, and functional screen descriptions.
 
 ### 8. [Hack2Skill Official Submission Reference](HACK2SKILL_SUBMISSION.md)
-Curated submission guide with exact repository links, deployed Netlify URLs, Instagram Reel links, demo video placeholders, and pre-formatted 1024-character text responses for the Challenge 5 submission form.
+Curated submission guide with exact repository links, deployed Netlify URLs, Instagram Reel links, demo video links, LinkedIn post URL, and pre-formatted 1024-character text responses for the Challenge 5 submission form.
 
 ### 9. [Hack2Skill Final Evaluation Audit](HACK2SKILL_FINAL_AUDIT.md)
 Comprehensive executive report scoring CelebrAI across the six official Hack2Skill evaluation factors (Code Quality, Security, Efficiency, Testing, Accessibility, Problem Statement Alignment) with direct evidence citations and verified execution results.
@@ -59,6 +59,8 @@ Comprehensive executive report scoring CelebrAI across the six official Hack2Ski
 ## ⚡ Quick Links
 - **Public GitHub Repository**: [https://github.com/Kanani-Shubham/CelebrAi](https://github.com/Kanani-Shubham/CelebrAi)
 - **Live Deployed Application**: [https://celebr-ai.netlify.app/](https://celebr-ai.netlify.app/)
+- **Demo Video Walkthrough**: [https://www.instagram.com/reel/DfJckDCIOv7/](https://www.instagram.com/reel/DfJckDCIOv7/)
+- **LinkedIn Announcement**: [https://lnkd.in/p/d4VrMW3Y](https://lnkd.in/p/d4VrMW3Y)
 - **Instagram Reel**: [https://www.instagram.com/reel/DfJckDCIOv7/](https://www.instagram.com/reel/DfJckDCIOv7/)
 - **Lead Developer**: Shubham Kanani (`shubhamkanani.2006@gmail.com`)
 

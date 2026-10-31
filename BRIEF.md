@@ -72,5 +72,5 @@ CelebrAI includes all 36 feature screens accessible via direct routes or the per
 - **GitHub Repository**: [https://github.com/Kanani-Shubham/CelebrAi](https://github.com/Kanani-Shubham/CelebrAi)
 - **Instagram Reel**: [https://www.instagram.com/reel/DfJckDCIOv7/](https://www.instagram.com/reel/DfJckDCIOv7/)
 - **Demo Video**: [https://www.instagram.com/reel/DfJckDCIOv7/](https://www.instagram.com/reel/DfJckDCIOv7/)
-- **LinkedIn Post**: `[ADD_PUBLIC_LINKEDIN_POST_URL]`
+- **LinkedIn Post**: [https://lnkd.in/p/d4VrMW3Y](https://lnkd.in/p/d4VrMW3Y)
 - **Lead Developer**: Shubham Kanani (`shubhamkanani.2006@gmail.com`)

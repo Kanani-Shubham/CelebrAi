@@ -13,6 +13,7 @@
   <a href="https://celebr-ai.netlify.app/"><img src="https://img.shields.io/badge/Live_Demo-celebr--ai.netlify.app-171F20?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo"></a>
   <a href="https://github.com/Kanani-Shubham/CelebrAi"><img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="Source Code"></a>
   <a href="https://www.instagram.com/reel/DfJckDCIOv7/"><img src="https://img.shields.io/badge/Demo_Video-Instagram_Reel-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Demo Video"></a>
+  <a href="https://lnkd.in/p/d4VrMW3Y"><img src="https://img.shields.io/badge/LinkedIn-Announcement-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Post"></a>
   <a href="#-hack2skill-ai-evaluation--six-parameter-engineering-matrix"><img src="https://img.shields.io/badge/Hack2Skill-6_Factor_Evaluation-4B3F72?style=for-the-badge" alt="Evaluation Matrix"></a>
   <a href="#-parameter-4--testing"><img src="https://img.shields.io/badge/Vitest-134%2F134_Passing-22c55e?style=for-the-badge&logo=vitest&logoColor=white" alt="Tests"></a>
 </p>
@@ -516,7 +517,7 @@ Generates the optimized chunk-split production bundle inside `dist/`.
 | **Project Deployed Link** | `https://celebr-ai.netlify.app/` | Fully functional Netlify live release |
 | **Instagram Reel** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Official Instagram Reels challenge link |
 | **Demo Video** | `https://www.instagram.com/reel/DfJckDCIOv7/` | Demo video & application walkthrough |
-| **LinkedIn Announcement** | `[ADD_PUBLIC_LINKEDIN_POST_URL]` | Public project post |
+| **LinkedIn Announcement** | `https://lnkd.in/p/d4VrMW3Y` | Public project announcement on LinkedIn |
 
 *For exact 1024-character copy-paste form answers, see [Docs/HACK2SKILL_SUBMISSION.md](Docs/HACK2SKILL_SUBMISSION.md).*
 
